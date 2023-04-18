@@ -28,7 +28,7 @@ Your Vite config (vite.config.ts) should use Cinnabon's BuildSettings as per the
 
 ```js
 import { defineConfig } from "vite"
-import { BuildSettings } from "cinnabon/src"
+import { BuildSettings } from "cinnabon/src/settings"
 
 const { jsxInject, jsxFactory, jsxFragment } = BuildSettings.esbuild
 
