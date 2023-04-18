@@ -1,5 +1,5 @@
 import esbuild from "esbuild"
-import { BuildSettings } from "./src"
+import { BuildSettings } from "./src/settings.js"
 const { jsx, jsxFactory, jsxFragment } = BuildSettings.esbuild
 
 esbuild
@@ -12,6 +12,7 @@ esbuild
     jsxImportSource: "import * as Cinnabon from '@/'",
     outdir: "src/dist",
     bundle: true,
+    minify: true,
   })
   .catch((error) => {
     console.error("build failed", error)

@@ -85,26 +85,34 @@ Cinnabon comes out of the box with support for two-way-binding, suspenseful comp
 ### **Suspense:**
 
 ```ts
-type ProductCategoriesResponse = string[] | Error
-async function getProductCategories(): Promise<string[] | Error> {
+import { Suspense } from "cinnabon/src"
+import { Either } from "cinnabon/src/types"
+import { sleep } from "cinnabon/src/utils"
+
+type ProductCategoriesResponse = Either<{ error: Error }, { data: string[] }>
+
+async function getProductCategories(): Promise<ProductCategoriesResponse> {
   try {
     const res = await fetch("https://dummyjson.com/products/categories")
     if (!res.ok)
       throw new Error(res.statusText ?? "Failed to load product categories")
-    return await res.json()
+    await sleep(500)
+
+    const data = await res.json()
+    return { data }
   } catch (error) {
-    return error as Error
+    return { error: error as Error }
   }
 }
 
-const SuspenseExample = () => {
+export const SuspenseExample = () => {
   return (
-    <Suspense cache promise={getProductCategories}>
-      {(loading: boolean, data: ProductCategoriesResponse) => {
-        if (data instanceof Error) return <p>{data.message}</p>
-
+    <Suspense promise={getProductCategories}>
+      {(loading: boolean, res: ProductCategoriesResponse) => {
+        if (res.error) return <p>{res.error}</p>
         if (loading) return <p>loading...</p>
-        return <ul>{...categories.map((c) => <li>{c}</li>)}</ul>
+
+        return <ul>{...res.data.map((c) => <li>{c}</li>)}</ul>
       }}
     </Suspense>
   )

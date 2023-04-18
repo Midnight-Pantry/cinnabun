@@ -66,7 +66,6 @@ export class Component<T extends HTMLElement> {
     onrejected?: ((reason: any) => PromiseLike<never>) | null | undefined
   ) {
     if (onfulfilled) {
-      console.log("promise fulfilled")
       this.promiseCache = onfulfilled
       this.unRender()
       this.reRender()
@@ -89,7 +88,7 @@ export class Component<T extends HTMLElement> {
   reRender() {
     if (!this.shouldRender()) return
     const { element, idx } = this.getMountLocation()
-    let thisEl = this.element ?? this.render(true)
+    let thisEl = this.element ?? this.bake(true)
     if (element) {
       const c = element.children[idx]
       if (c) {
@@ -135,7 +134,7 @@ export class Component<T extends HTMLElement> {
     return prop
   }
 
-  render(isRerender: boolean = false): T | Node {
+  bake(isRerender: boolean = false): T | Node {
     const {
       children,
       onMounted,
@@ -289,7 +288,7 @@ export class Component<T extends HTMLElement> {
       )
       return child.value.toString()
     }
-    if (child instanceof Component) return child.render()
+    if (child instanceof Component) return child.bake()
     if (typeof child === "function") {
       const res = this.renderChild(child(...this.childArgs))
       //@ts-ignore

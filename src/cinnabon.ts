@@ -5,21 +5,21 @@ export { h, fragment } from "."
 export class Cinnabon {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
 
-  static mount(app: Component<any>, root: HTMLElement) {
-    const wrapper = new Component<any>(root.tagName, {
+  static serve(app: Component<any>, root: HTMLElement) {
+    const tray = new Component<any>(root.tagName, {
       children: [app],
     })
-    wrapper.element = root
-    wrapper.render()
+    tray.element = root
+    tray.bake()
   }
 
-  static render(component: Component<any> | { (): Component<any> }): Node {
+  static bake(component: Component<any> | { (): Component<any> }): Node {
     if (typeof component === "function") {
       const val = component()
       if (typeof val === "string" || typeof val === "number") return val
-      return Cinnabon.render(val)
+      return Cinnabon.bake(val)
     }
-    return component.render()
+    return component.bake()
   }
   static getInputType(val: any): string {
     switch (typeof val) {
