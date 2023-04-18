@@ -121,11 +121,11 @@ async function getProductCategories(): Promise<ProductCategoriesResponse> {
 export const SuspenseExample = () => {
   return (
     <Suspense promise={getProductCategories}>
-      {(loading: boolean, res: ProductCategoriesResponse) => {
-        if (res.error) return <p>{res.error}</p>
+      {(loading: boolean, res?: ProductCategoriesResponse) => {
+        if (res?.error) return <p>{res.error}</p>
         if (loading) return <p>loading...</p>
 
-        return <ul>{...res.data.map((c) => <li>{c}</li>)}</ul>
+        return res && <ul>{...res.data.map((c) => <li>{c}</li>)}</ul>
       }}
     </Suspense>
   )
