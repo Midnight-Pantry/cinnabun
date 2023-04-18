@@ -1,0 +1,18 @@
+{
+  "name": "cinnabon",
+  "version": "1.0.8",
+  "description": "A reactive, component-based js rendering library",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "esbuild": "^0.17.17",
+    "typescript": "^5.0.4"
+  }
+}
