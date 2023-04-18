@@ -24,7 +24,7 @@ Add the following entry to your typescript config (tsconfig.json):
 }
 ```
 
-Your Vite config (vite.config.ts) should use the Cinnabon's BuildSettings as per the following:
+Your Vite config (vite.config.ts) should use Cinnabon's BuildSettings as per the following:
 
 ```js
 import { defineConfig } from "vite"
