@@ -10,9 +10,9 @@
 
 # Getting Started
 
-Run the following to add Cinnabon:
+Run the following to add Cinnabun:
 
-`npm i cinnabon`
+`npm i cinnabun`
 
 Add the following entry to your typescript config (tsconfig.json):
 
@@ -24,11 +24,11 @@ Add the following entry to your typescript config (tsconfig.json):
 }
 ```
 
-Your Vite config (vite.config.ts) should use Cinnabon's BuildSettings as per the following:
+Your Vite config (vite.config.ts) should use Cinnabun's BuildSettings as per the following:
 
 ```js
 import { defineConfig } from "vite"
-import { BuildSettings } from "cinnabon/src/settings"
+import { BuildSettings } from "cinnabun/src/settings"
 
 const { jsxInject, jsxFactory, jsxFragment } = BuildSettings.esbuild
 
@@ -42,27 +42,27 @@ export default defineConfig({
 })
 ```
 
-With your compilation settings configured, you can create a simple Cinnabon application as per the following:
+With your compilation settings configured, you can create a simple Cinnabun application as per the following:
 <br />
 <br />
 
 _index.ts_
 
 ```js
-import { Cinnabon } from "cinnabon/src/cinnabon"
+import { Cinnabun } from "cinnabun/src/cinnabun"
 import "./style.css"
 
 import { App } from "./App"
 
 const root = document.getElementById("app")!
-Cinnabon.bake(App(), root)
+Cinnabun.bake(App(), root)
 
 ```
 
 _App.ts_
 
 ```js
-import { createSignal } from "cinnabon/src"
+import { createSignal } from "cinnabun/src"
 
 export const App = () => {
   const count = createSignal(0)
@@ -78,29 +78,29 @@ export const App = () => {
 _main.ts_
 
 ```js
-import { Cinnabon } from "cinnabon/src/cinnabon"
+import { Cinnabun } from "cinnabun/src/cinnabun"
 import "./style.css"
 
 import { App } from "./App"
 
 const root = document.getElementById("app")!
-Cinnabon.mount(App(), root)
+Cinnabun.mount(App(), root)
 ```
 
 <br>
 
 # But what if I want to create a _real_ application?
 
-Cinnabon comes out of the box with support for two-way-binding, suspenseful components and more.
+Cinnabun comes out of the box with support for two-way-binding, suspenseful components and more.
 
 <br>
 
 ### **Suspense:**
 
 ```ts
-import { Suspense } from "cinnabon/src"
-import { Either } from "cinnabon/src/types"
-import { sleep } from "cinnabon/src/utils"
+import { Suspense } from "cinnabun/src"
+import { Either } from "cinnabun/src/types"
+import { sleep } from "cinnabun/src/utils"
 
 type ProductCategoriesResponse = Either<{ error: Error }, { data: string[] }>
 
@@ -137,6 +137,8 @@ export const SuspenseExample = () => {
 ### **Two-way binding:**
 
 ```js
+import { createSignal } from "cinnabun/src"
+
 const TwoWayBindingExample = () => {
   const count = createSignal(0)
 
