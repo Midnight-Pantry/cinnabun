@@ -2,7 +2,7 @@ import { Component } from "."
 import { ComponentProps, WatchedElementRef } from "./types"
 export { h, fragment } from "."
 
-export class Cinnabon {
+export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
 
   static bake(app: Component<any>, root: HTMLElement) {
@@ -17,7 +17,7 @@ export class Cinnabon {
     if (typeof component === "function") {
       const val = component()
       if (typeof val === "string" || typeof val === "number") return val
-      return Cinnabon.render(val)
+      return Cinnabun.render(val)
     }
     return component.render()
   }
@@ -59,7 +59,7 @@ export class Cinnabon {
       el.append(
         typeof c === "string"
           ? c
-          : Cinnabon.svg(typeof c === "function" ? c() : c)
+          : Cinnabun.svg(typeof c === "function" ? c() : c)
       )
     }
 
@@ -74,7 +74,7 @@ export const setComponentReferences = (func: {
   (arr: WatchedElementRef[]): WatchedElementRef[]
 }) => {
   componentReferences = func(componentReferences)
-  if (Cinnabon.DEBUG_COMPONENT_REFCOUNT)
+  if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
     console.debug(
       "onDestroyCallbacks",
       componentReferences.length,
@@ -83,7 +83,7 @@ export const setComponentReferences = (func: {
 }
 export const addComponentReference = (ref: WatchedElementRef) => {
   componentReferences.push(ref)
-  if (Cinnabon.DEBUG_COMPONENT_REFCOUNT)
+  if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
     console.debug(
       "onDestroyCallbacks",
       componentReferences.length,

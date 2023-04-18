@@ -1,9 +1,9 @@
 import {
-  Cinnabon,
+  Cinnabun,
   addComponentReference,
   componentReferences,
   setComponentReferences,
-} from "./cinnabon"
+} from "./cinnabun"
 
 import { Signal } from "./signal"
 import {
@@ -165,7 +165,7 @@ export class Component<T extends HTMLElement> {
       return f
     }
 
-    if (this.tag === "svg") return Cinnabon.svg(this)
+    if (this.tag === "svg") return Cinnabun.svg(this)
     if (!this.element) {
       this.element = document.createElement(this.tag) as T
       this.bindEvents({

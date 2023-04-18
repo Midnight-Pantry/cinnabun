@@ -9,7 +9,7 @@ esbuild
     jsx,
     jsxFactory,
     jsxFragment,
-    jsxImportSource: "import * as Cinnabon from '@/'",
+    jsxImportSource: "import * as Cinnabun from '@/'",
     outdir: "src/dist",
     bundle: true,
     minify: true,

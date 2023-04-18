@@ -1,7 +1,11 @@
 {
-  "name": "cinnabon",
-  "version": "1.0.15",
+  "name": "cinnabun",
+  "version": "0.0.1",
   "description": "A reactive, component-based js rendering library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Robby6Strings/cinnabun"
+  },
   "main": "index.js",
   "type": "module",
   "scripts": {

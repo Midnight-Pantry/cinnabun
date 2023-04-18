@@ -1,4 +1,4 @@
-# **Cinnabon JS**🥧
+# **Cinnabun JS**🥧
 
 #### _Your next app will rise_
 
