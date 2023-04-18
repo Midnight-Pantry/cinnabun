@@ -46,6 +46,19 @@ With your compilation settings configured, you can create a simple Cinnabon appl
 <br />
 <br />
 
+_index.ts_
+
+```js
+import { Cinnabon } from "cinnabon/src/cinnabon"
+import "./style.css"
+
+import { App } from "./App"
+
+const root = document.getElementById("app")!
+Cinnabon.bake(App(), root)
+
+```
+
 _App.ts_
 
 ```js

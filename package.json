@@ -1,6 +1,6 @@
 {
   "name": "cinnabon",
-  "version": "1.0.12",
+  "version": "1.0.14",
   "description": "A reactive, component-based js rendering library",
   "main": "index.js",
   "type": "module",
