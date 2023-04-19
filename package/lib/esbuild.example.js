@@ -5,12 +5,12 @@ const { jsx, jsxFactory, jsxFragment } = esBuildSettings
 esbuild
   .build({
     sourcemap: "linked",
-    entryPoints: ["./src/index.ts"],
+    entryPoints: ["./src/test.ts"],
     jsx,
     jsxFactory,
     jsxFragment,
     jsxImportSource: "import * as Cinnabun from '@/'",
-    outdir: "src/dist",
+    outdir: "dist",
     bundle: true,
     minify: true,
   })

@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/Robby6Strings/cinnabun"
   },
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
     "build": "tsc"

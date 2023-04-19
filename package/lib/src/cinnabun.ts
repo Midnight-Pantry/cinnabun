@@ -5,7 +5,7 @@ export { h, fragment } from "."
 export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
 
-  static bake(app: Component<any>, root: HTMLElement) {
+  static bake(app: Component<any>, root: HTMLElement): void {
     const tray = new Component<any>(root.tagName, {
       children: [app],
     })
