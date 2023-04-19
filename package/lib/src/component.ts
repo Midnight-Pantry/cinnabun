@@ -405,7 +405,7 @@ export class RouterComponent extends Component<any> {
     routeMatch: RegExpMatchArray | null
   } {
     let paramNames: any[] = []
-    const cPath: string = c.props.path
+    const cPath: string = this.getParentPath() + c.props.path
     let regexPath =
       cPath.replace(/([:*])(\w+)/g, (_full, _colon, name) => {
         paramNames.push(name)

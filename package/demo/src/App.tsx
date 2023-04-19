@@ -1,6 +1,11 @@
 import { Link, Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
-import { SignalsExample, ContextExample, SuspenseExample } from "./examples"
+import {
+  SignalsExample,
+  ContextExample,
+  SuspenseExample,
+  NestedRoutingExample,
+} from "./examples"
 
 export const App = () => {
   return (
@@ -18,6 +23,13 @@ export const App = () => {
           <li>
             <Link to="/suspense" innerText="Suspense" store={pathStore} />
           </li>
+          <li>
+            <Link
+              to="/nested-routing"
+              innerText="Nested Routing"
+              store={pathStore}
+            />
+          </li>
         </ul>
       </nav>
       <main style={{ textAlign: "center" }}>
@@ -25,23 +37,9 @@ export const App = () => {
           <Route path="/" component={<SignalsExample />} />
           <Route path="/context" component={<ContextExample />} />
           <Route path="/suspense" component={<SuspenseExample />} />
-          {/* <Route path="/test" component={<NestedRoutingExample />} /> */}
+          <Route path="/nested-routing" component={<NestedRoutingExample />} />
         </Router>
       </main>
     </>
-  )
-}
-
-const NestedRoutingExample = () => {
-  return (
-    <div>
-      <button>Test</button>
-      <Router store={pathStore}>
-        {" "}
-        {/* implicitly knows that it lives in /test */}
-        <Route path="/abc" component={<h1>test</h1>} />{" "}
-        {/* path should be evaluated as /test/abc */}
-      </Router>
-    </div>
   )
 }
