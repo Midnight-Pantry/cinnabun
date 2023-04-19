@@ -1,8 +1,5 @@
 import * as Cinnabun from "cinnabun"
-type AppArgs = {
-  test?: number
-}
-export const App = (args?: AppArgs) => {
-  console.log(args?.test)
+
+export const App = () => {
   return <div>Test</div>
 }

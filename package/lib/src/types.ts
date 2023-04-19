@@ -70,3 +70,10 @@ export type LinkProps = ComponentProps<HTMLAnchorElement> & {
   to: string
   useHash?: boolean
 }
+
+export type SerializedComponent = {
+  props?: {
+    [key: string]: any
+  }
+  children?: SerializedComponent[]
+}

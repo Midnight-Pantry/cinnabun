@@ -1,5 +1,5 @@
 import { Component } from "."
-import { ComponentProps, WatchedElementRef } from "./types"
+import { ComponentProps, SerializedComponent, WatchedElementRef } from "./types"
 export { h, fragment } from "."
 
 export class Cinnabun {
@@ -13,27 +13,27 @@ export class Cinnabun {
     tray.render()
   }
 
-  static render(component: Component<any> | { (): Component<any> }): Node {
-    if (typeof component === "function") {
-      const val = component()
-      if (typeof val === "string" || typeof val === "number") return val
-      return Cinnabun.render(val)
+  static serverBake(app: Component<any>): {
+    componentTree: SerializedComponent
+    html: string
+  } {
+    let htmlData = { html: "" }
+    const componentTree = app.serialize(htmlData)
+    return {
+      componentTree,
+      html: htmlData.html,
     }
-    return component.render()
   }
-  static getInputType(val: any): string {
-    switch (typeof val) {
-      case "boolean":
-        return "checkbox"
-      case "number":
-        return "number"
-      case "string":
-      case undefined:
-        return "text"
+
+  static renderDynamic(
+    cmpntOrCmpntFunc: Component<any> | { (): Component<any> }
+  ): Node {
+    if (typeof cmpntOrCmpntFunc === "function") {
+      const val = cmpntOrCmpntFunc()
+      if (typeof val === "string" || typeof val === "number") return val
+      return Cinnabun.renderDynamic(val)
     }
-    throw new Error(
-      "unable to get input type for val with type: " + typeof val + " - " + val
-    )
+    return cmpntOrCmpntFunc.render()
   }
 
   static element<T extends HTMLElement>(
@@ -65,6 +65,12 @@ export class Cinnabun {
 
     //@ts-ignore
     return el as SVGElement
+  }
+  static svgToString(_: Component<any>): string {
+    return "not implemented"
+  }
+  static serializeSvg(_: Component<any>): SerializedComponent {
+    return {}
   }
 }
 

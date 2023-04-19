@@ -12,6 +12,7 @@ import {
   ComponentChild,
   ComponentEventProps,
   ClassConstructor,
+  SerializedComponent,
 } from "./types"
 
 export class Component<T extends HTMLElement> {
@@ -132,6 +133,62 @@ export class Component<T extends HTMLElement> {
     if (typeof prop === "function")
       return this.getPrimitive(prop(), signalCallback)
     return prop
+  }
+
+  serialize(data: { html: string }): SerializedComponent {
+    const {
+      children,
+      onMounted,
+      onChange,
+      onClick,
+      onDestroyed,
+      subscription,
+      promise,
+      render,
+      ...rest
+    } = this.props
+    if (!render || !this.tag) {
+      return { props: this.props, children: this.serializeChildren(data) }
+    }
+
+    //setComponentReferences((arr) => arr.filter((c) => c.component !== this))
+
+    if (this.tag === "svg") return Cinnabun.serializeSvg(this)
+
+    const res: SerializedComponent = { props: this.props, children: [] }
+
+    data.html += `<${this.tag} ${Object.entries(rest).map(
+      ([k, v]) => `${k}="${v}" `
+    )}>`
+
+    for (let i = 0; i < this.children.length; i++) {
+      const c = this.children[i]
+      if (typeof c === "string" || typeof c === "number") {
+        data.html += c
+        continue
+      }
+      if (typeof c === "function") {
+        res.children!.push(c(...this.childArgs).serialize(data))
+        continue
+      }
+
+      res.children!.push(c.serialize(data))
+    }
+    data.html += `</${this.tag}>`
+    return res
+  }
+
+  serializeChildren(data: { html: string }): SerializedComponent[] {
+    return this.children.map((c: ComponentChild) => {
+      if (typeof c === "string" || typeof c === "number") {
+        data.html += c
+        return {}
+      }
+      if (typeof c === "function") {
+        return c(...this.childArgs).serialize(data)
+      }
+      return c.serialize(data)
+    })
   }
 
   render(isRerender: boolean = false): T | Node {
