@@ -25,7 +25,7 @@ export const App = () => {
           <Route path="/" component={<SignalsExample />} />
           <Route path="/context" component={<ContextExample />} />
           <Route path="/suspense" component={<SuspenseExample />} />
-          <Route path="/test" component={<NestedRoutingExample />} />
+          {/* <Route path="/test" component={<NestedRoutingExample />} /> */}
         </Router>
       </main>
     </>
@@ -39,8 +39,8 @@ const NestedRoutingExample = () => {
       <Router store={pathStore}>
         {" "}
         {/* implicitly knows that it lives in /test */}
-        <Route path="/test" component={<h1>test</h1>} />{" "}
-        {/* path should be evaluated as /test/test */}
+        <Route path="/abc" component={<h1>test</h1>} />{" "}
+        {/* path should be evaluated as /test/abc */}
       </Router>
     </div>
   )

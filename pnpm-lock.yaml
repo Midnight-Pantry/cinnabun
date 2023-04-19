@@ -7,7 +7,7 @@ importers:
 
   package/demo:
     specifiers:
-      cinnabun: workspace:^0.0.3
+      cinnabun: workspace:^0.0.5
       typescript: ^4.9.3
       vite: ^4.2.0
     dependencies:

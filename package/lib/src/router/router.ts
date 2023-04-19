@@ -1,46 +1,19 @@
 import { Signal, Component } from ".."
-import { RouterComponent } from "../component"
+import { RouteComponent, RouterComponent } from "../component"
 import { PropsSetter } from "../types"
 
 interface RouterProps {
   store: Signal<string>
 }
 
-function matchRoute(
-  c: Component<any>,
-  path: string
-): {
-  params: any
-  routeMatch: RegExpMatchArray | null
-} {
-  let paramNames: any[] = []
-  const cPath: string = c.props.path
-  let regexPath =
-    cPath.replace(/([:*])(\w+)/g, (_full, _colon, name) => {
-      paramNames.push(name)
-      return "([^/]+)"
-    }) + "(?:/|$)"
-
-  let params: any = {}
-  let routeMatch = path.match(new RegExp(regexPath))
-  if (routeMatch !== null) {
-    params = routeMatch.slice(1).reduce((str, value, index) => {
-      if (str === null) params = {}
-      params[paramNames[index]] = value
-      return params
-    }, null)
-  }
-  return { params, routeMatch }
-}
-
-export const Router = ({ store }: RouterProps, children: Component<any>[]) => {
+export const Router = ({ store }: RouterProps, children: RouteComponent[]) => {
   const subscription = (_: PropsSetter, self: Component<any>) => {
     return store.subscribe((val) => {
       // sort to make sure we match on more complex routes first
       self.children.sort((a, b) => {
         return (
-          (b as Component<any>).props.pathDepth -
-          (a as Component<any>).props.pathDepth
+          (b as RouteComponent).props.pathDepth -
+          (a as RouteComponent).props.pathDepth
         )
       })
       let len = self.children.length
@@ -50,8 +23,8 @@ export const Router = ({ store }: RouterProps, children: Component<any>[]) => {
       self.unRender()
 
       for (let i = 0; i < self.children.length; i++) {
-        const c = self.children[i] as Component<any>
-        const matchRes = matchRoute(c, val)
+        const c = self.children[i] as RouteComponent
+        const matchRes = (self as RouterComponent).matchRoute(c, val)
         if (matchRes.routeMatch) {
           c.props.render = !!matchRes.routeMatch
           c.props.params = matchRes.params
