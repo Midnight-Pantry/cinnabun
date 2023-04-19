@@ -11,10 +11,7 @@ import {
   ComponentProps,
   ComponentChild,
   ComponentEventProps,
-  GenericComponent,
   ClassConstructor,
-  RouteProps,
-  PropsSetter,
 } from "./types"
 
 export class Component<T extends HTMLElement> {
