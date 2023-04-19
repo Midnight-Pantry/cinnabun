@@ -10,6 +10,7 @@ export class Cinnabun {
 
     const tray = new Component(rootElement.tagName)
     tray.element = rootElement
+
     tray.props = {
       ...rootComponent.props,
       children: rootComponent.children
@@ -31,8 +32,8 @@ export class Cinnabun {
     c.props = {
       ...component.props,
       children: component.children
-        ? component.children.map((c) => {
-            return Cinnabun.hydrateComponent(c, element)
+        ? component.children.map((c, i) => {
+            return Cinnabun.hydrateComponent(c, element?.children[i])
           })
         : [],
     }
@@ -52,9 +53,9 @@ export class Cinnabun {
     html: string
   } {
     let htmlData = { html: "" }
-    const componentTree = app.serialize(htmlData)
+    const serialized = app.serialize(htmlData)
     return {
-      componentTree,
+      componentTree: { children: [serialized] },
       html: htmlData.html,
     }
   }
