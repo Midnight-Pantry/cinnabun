@@ -32,6 +32,7 @@ export const App = () => {
           </li>
         </ul>
       </nav>
+
       <main style={{ textAlign: "center" }}>
         <Router store={pathStore}>
           <Route path="/" component={<SignalsExample />} />
@@ -40,6 +41,8 @@ export const App = () => {
           <Route path="/nested-routing" component={<NestedRoutingExample />} />
         </Router>
       </main>
+
+      <ul>{...[1, 2, 3, 4].map((c) => <li>{c.toString()}</li>)}</ul>
     </>
   )
 }

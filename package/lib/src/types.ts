@@ -72,10 +72,10 @@ export type LinkProps = ComponentProps<HTMLAnchorElement> & {
 }
 
 export type SerializedComponent = {
-  props?: {
+  p?: {
     [key: string]: any
   }
-  children?: SerializedComponent[]
+  c?: SerializedComponent[]
 }
 
 export type SSRProps = {

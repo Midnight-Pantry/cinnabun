@@ -6,21 +6,22 @@ export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
 
   static hydrate(rootComponent: SerializedComponent, rootElement: HTMLElement) {
-    console.log("hydrate", rootComponent, rootElement)
-
+    //console.log("hydrate", rootComponent, rootElement)
+    console.time("hydration")
     const tray = new Component(rootElement.tagName)
     tray.element = rootElement
 
     tray.props = {
-      ...rootComponent.props,
-      children: rootComponent.children
-        ? rootComponent.children.map((c, i) => {
+      ...rootComponent.p,
+      children: rootComponent.c
+        ? rootComponent.c.map((c, i) => {
             return Cinnabun.hydrateComponent(c, rootElement.children[i])
           })
         : [],
     }
 
-    console.log("hydrated", tray)
+    console.timeEnd("hydration")
+    //console.log("hydrated", tray)
   }
 
   static hydrateComponent(
@@ -30,9 +31,9 @@ export class Cinnabun {
     const c = new Component<any>(element?.tagName ?? "")
     if (element) c.element = element
     c.props = {
-      ...component.props,
-      children: component.children
-        ? component.children.map((c, i) => {
+      ...component.p,
+      children: component.c
+        ? component.c.map((c, i) => {
             return Cinnabun.hydrateComponent(c, element?.children[i])
           })
         : [],
@@ -55,7 +56,7 @@ export class Cinnabun {
     let htmlData = { html: "" }
     const serialized = app.serialize(htmlData)
     return {
-      componentTree: { children: [serialized] },
+      componentTree: { c: [serialized] },
       html: htmlData.html,
     }
   }

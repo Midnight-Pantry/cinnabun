@@ -8,9 +8,9 @@ const PORT = process.env.PORT || 3000
 const app = express()
 
 app.get("/", (_, res) => {
-  //console.time("render")
+  console.time("render time")
   const { html, componentTree } = Cinnabun.serverBake(App())
-  //console.timeEnd("render")
+  console.timeEnd("render time")
 
   fs.readFile(
     path.resolve("./dist/public/index.html"),

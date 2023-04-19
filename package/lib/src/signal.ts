@@ -43,6 +43,12 @@ export class Signal<T> {
     this.logSubscriberCount()
   }
 
+  serialize(): string {
+    const res = JSON.stringify(this.value)
+    console.log("srlz signal", res)
+    return res
+  }
+
   logSubscriberCount() {
     if (LOG_NUM_SUBS)
       console.debug(this._name + " subscribers:", this._subscribers.size)

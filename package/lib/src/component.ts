@@ -148,14 +148,12 @@ export class Component<T extends HTMLElement> {
       ...rest
     } = this.props
     if (!render || !this.tag) {
-      return { props: this.props, children: this.serializeChildren(data) }
+      return { p: this.props, c: this.serializeChildren(data) }
     }
-
-    //setComponentReferences((arr) => arr.filter((c) => c.component !== this))
 
     if (this.tag === "svg") return Cinnabun.serializeSvg(this)
 
-    const res: SerializedComponent = { props: this.props, children: [] }
+    const res: SerializedComponent = { p: this.props, c: [] }
 
     data.html += `<${this.tag} ${Object.entries(rest).map(
       ([k, v]) => `${k}="${v}" `
@@ -167,12 +165,17 @@ export class Component<T extends HTMLElement> {
         data.html += c
         continue
       }
+      if (c instanceof Signal) {
+        data.html += c.value
+        // TODO - use this to hoist/create ref?
+        continue
+      }
       if (typeof c === "function") {
-        res.children!.push(c(...this.childArgs).serialize(data))
+        res.c!.push(c(...this.childArgs).serialize(data))
         continue
       }
 
-      res.children!.push(c.serialize(data))
+      res.c!.push(c.serialize(data))
     }
     data.html += `</${this.tag}>`
     return res
