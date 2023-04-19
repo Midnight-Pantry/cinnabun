@@ -1,4 +1,7 @@
-// import { Cinnabun } from "cinnabun"
+import { Cinnabun } from "cinnabun"
+import { SSRProps } from "cinnabun/src/types"
 
-// const x = new Cinnabun()
-console.log("client bundle", 123)
+if ("__cbData" in window) {
+  const { tree, root } = window.__cbData as SSRProps
+  Cinnabun.hydrate(tree, root)
+}

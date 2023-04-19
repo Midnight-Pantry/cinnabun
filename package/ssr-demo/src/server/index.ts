@@ -28,8 +28,8 @@ app.get("/", (_, res) => {
             '<script id="server-props"></script>',
             `<script id="server-props">
               const root = document.getElementById('root');
-              console.log(root);
-              const data = ${JSON.stringify(componentTree)}
+              window.__cbData = {root, tree: ${JSON.stringify(componentTree)}}
+              console.log("serverProps", window.__cbData);
             </script>`
           )
       )

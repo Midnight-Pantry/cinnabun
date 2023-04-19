@@ -12,22 +12,21 @@ const sharedSettings = {
   jsxImportSource: "Cinnabun",
 }
 
-esbuild
-  .build({
+Promise.all([
+  esbuild.build({
     sourcemap: "linked",
     entryPoints: ["./src/server/index.ts"],
     outdir: "dist/server",
     platform: "node",
     ...sharedSettings,
-  })
-  .then(() =>
-    esbuild.build({
-      sourcemap: "linked",
-      entryPoints: ["./src/client/index.ts"],
-      outdir: "dist/public",
-      ...sharedSettings,
-    })
-  )
+  }),
+  esbuild.build({
+    sourcemap: "linked",
+    entryPoints: ["./src/client/index.ts"],
+    outdir: "dist/public",
+    ...sharedSettings,
+  }),
+])
   .then(() => {
     console.log("build complete.")
   })

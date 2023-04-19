@@ -77,3 +77,8 @@ export type SerializedComponent = {
   }
   children?: SerializedComponent[]
 }
+
+export type SSRProps = {
+  tree: SerializedComponent
+  root: HTMLElement
+}

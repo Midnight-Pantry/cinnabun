@@ -5,6 +5,40 @@ export { h, fragment } from "."
 export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
 
+  static hydrate(rootComponent: SerializedComponent, rootElement: HTMLElement) {
+    console.log("hydrate", rootComponent, rootElement)
+
+    const tray = new Component(rootElement.tagName)
+    tray.element = rootElement
+    tray.props = {
+      ...rootComponent.props,
+      children: rootComponent.children
+        ? rootComponent.children.map((c, i) => {
+            return Cinnabun.hydrateComponent(c, rootElement.children[i])
+          })
+        : [],
+    }
+
+    console.log("hydrated", tray)
+  }
+
+  static hydrateComponent(
+    component: SerializedComponent,
+    element?: Element
+  ): Component<any> {
+    const c = new Component<any>(element?.tagName ?? "")
+    if (element) c.element = element
+    c.props = {
+      ...component.props,
+      children: component.children
+        ? component.children.map((c) => {
+            return Cinnabun.hydrateComponent(c, element)
+          })
+        : [],
+    }
+    return c
+  }
+
   static bake(app: Component<any>, root: HTMLElement): void {
     const tray = new Component<any>(root.tagName, {
       children: [app],
