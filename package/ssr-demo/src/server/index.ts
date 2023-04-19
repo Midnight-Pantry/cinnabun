@@ -2,14 +2,16 @@ import express from "express"
 import fs from "fs"
 import path from "path"
 import { Cinnabun } from "cinnabun"
-import { App } from "./App"
+import { App } from "../App"
 
 const PORT = process.env.PORT || 3000
 const app = express()
 
 app.get("/", (_, res) => {
+  console.time("render")
   const { html, componentTree } = Cinnabun.serverBake(App())
-  console.log(html, componentTree)
+  console.timeEnd("render")
+  // console.log(html, componentTree)
 
   fs.readFile(
     path.resolve("./dist/public/index.html"),
@@ -34,7 +36,9 @@ app.get("/", (_, res) => {
   )
 })
 
-app.use(express.static(path.resolve(__dirname, ".", "dist"), { maxAge: "30d" }))
+app.use(
+  express.static(path.resolve(__dirname, ".", "dist/public"), { maxAge: "30d" })
+)
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`)

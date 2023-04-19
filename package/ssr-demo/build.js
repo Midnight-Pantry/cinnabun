@@ -3,8 +3,8 @@ const esbuild = require("esbuild")
 esbuild
   .build({
     sourcemap: "linked",
-    entryPoints: ["./src/index.ts"],
-    outdir: "dist",
+    entryPoints: ["./src/server/index.ts"],
+    outdir: "dist/server",
     bundle: true,
     minify: true,
     platform: "node",
@@ -16,10 +16,10 @@ esbuild
     jsxFragment: "Cinnabun.fragment",
     jsxImportSource: "Cinnabun",
   })
-  .catch((error) => {
-    console.error("build failed", error)
-    process.exit(1)
-  })
   .then(() => {
     console.log("build complete.")
+  })
+  .catch((error) => {
+    console.error("build failed: ", error)
+    process.exit(1)
   })

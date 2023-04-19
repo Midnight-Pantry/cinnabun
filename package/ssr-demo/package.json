@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "dev": "node build && node dist"
+    "dev": "node build && node dist/server"
   },
   "keywords": [],
   "author": "",
