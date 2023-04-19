@@ -1,4 +1,5 @@
 import { Signal, Component } from ".."
+import { RouterComponent } from "../component"
 import { PropsSetter } from "../types"
 
 interface RouterProps {
@@ -60,5 +61,5 @@ export const Router = ({ store }: RouterProps, children: Component<any>[]) => {
       if (self.mounted) self.reRender()
     })
   }
-  return new Component<any>("", { subscription, children })
+  return new RouterComponent(subscription, children)
 }

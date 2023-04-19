@@ -1,0 +1,22 @@
+{
+  "name": "cinnabun",
+  "version": "0.0.2",
+  "description": "A reactive, component-based js rendering library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Robby6Strings/cinnabun"
+  },
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "esbuild": "^0.17.17",
+    "typescript": "^5.0.4"
+  }
+}

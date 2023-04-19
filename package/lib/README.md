@@ -28,9 +28,9 @@ Your Vite config (vite.config.ts) should use Cinnabun's BuildSettings as per the
 
 ```js
 import { defineConfig } from "vite"
-import { BuildSettings } from "cinnabun/src/settings"
+import esBuildSettings from "cinnabun/settings.esbuild"
 
-const { jsxInject, jsxFactory, jsxFragment } = BuildSettings.esbuild
+const { jsxInject, jsxFactory, jsxFragment } = esBuildSettings
 
 export default defineConfig({
   esbuild: {
@@ -49,20 +49,18 @@ With your compilation settings configured, you can create a simple Cinnabun appl
 _index.ts_
 
 ```js
-import { Cinnabun } from "cinnabun/src/cinnabun"
 import "./style.css"
-
+import { Cinnabun } from "cinnabun"
 import { App } from "./App"
 
 const root = document.getElementById("app")!
 Cinnabun.bake(App(), root)
-
 ```
 
 _App.ts_
 
 ```js
-import { createSignal } from "cinnabun/src"
+import { createSignal } from "cinnabun"
 
 export const App = () => {
   const count = createSignal(0)
@@ -73,18 +71,6 @@ export const App = () => {
     </>
   )
 }
-```
-
-_main.ts_
-
-```js
-import { Cinnabun } from "cinnabun/src/cinnabun"
-import "./style.css"
-
-import { App } from "./App"
-
-const root = document.getElementById("app")!
-Cinnabun.mount(App(), root)
 ```
 
 <br>
@@ -98,9 +84,9 @@ Cinnabun comes out of the box with support for two-way-binding, suspenseful comp
 ### **Suspense:**
 
 ```ts
-import { Suspense } from "cinnabun/src"
-import { Either } from "cinnabun/src/types"
-import { sleep } from "cinnabun/src/utils"
+import { Suspense } from "cinnabun"
+import { Either } from "cinnabun/types"
+import { sleep } from "cinnabun/utils"
 
 type ProductCategoriesResponse = Either<{ error: Error }, { data: string[] }>
 
@@ -137,7 +123,7 @@ export const SuspenseExample = () => {
 ### **Two-way binding:**
 
 ```js
-import { createSignal } from "cinnabun/src"
+import { createSignal } from "cinnabun"
 
 const TwoWayBindingExample = () => {
   const count = createSignal(0)
@@ -156,3 +142,10 @@ const TwoWayBindingExample = () => {
   )
 }
 ```
+
+<br>
+
+# TODO
+
+- Nested routes
+- SSR

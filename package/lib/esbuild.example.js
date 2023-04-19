@@ -1,6 +1,6 @@
 import esbuild from "esbuild"
-import { BuildSettings } from "./src/settings.js"
-const { jsx, jsxFactory, jsxFragment } = BuildSettings.esbuild
+import esBuildSettings from "./settings.esbuild.js"
+const { jsx, jsxFactory, jsxFragment } = esBuildSettings
 
 esbuild
   .build({

@@ -12,10 +12,12 @@ import {
   ComponentChild,
   ComponentEventProps,
   GenericComponent,
+  ClassConstructor,
+  RouteProps,
 } from "./types"
 
 export class Component<T extends HTMLElement> {
-  parent: GenericComponent | null = null
+  parent: Component<any> | null = null
   children: ComponentChild[] = []
   funcElements: HTMLElement[] = []
   element: T | undefined
@@ -354,6 +356,15 @@ export class Component<T extends HTMLElement> {
   onDestroy() {
     if (this.props.onDestroyed) this.props.onDestroyed(this)
   }
+
+  getParentOfType<Class extends ClassConstructor<Component<any>>>(
+    classRef: Class
+  ): InstanceType<Class> | undefined {
+    if (!this.parent) return undefined
+    if (this.parent instanceof classRef)
+      return this.parent as InstanceType<Class>
+    return undefined
+  }
 }
 
 export class SuspenseComponent extends Component<any> {
@@ -369,5 +380,33 @@ export class SuspenseComponent extends Component<any> {
 export class FragmentComponent extends Component<any> {
   constructor(children: ComponentChild[]) {
     super("", { children })
+  }
+}
+
+export class RouterComponent extends Component<any> {
+  constructor(subscription: ComponentSubscription, children: RouteComponent[]) {
+    super("", { subscription, children })
+  }
+
+  getParentPath() {
+    let parentPath = ""
+    let parentRoute = this.getParentOfType(RouteComponent)
+
+    while (parentRoute) {
+      parentPath = parentRoute.props.path + parentPath
+      parentRoute = parentRoute.getParentOfType(RouteComponent)
+    }
+    return parentPath
+  }
+}
+
+export class RouteComponent extends Component<any> {
+  constructor(path: string, component: Component<any>) {
+    super("", {
+      path,
+      pathDepth: path.split("").filter((chr) => chr === "/").length,
+      children: [component],
+      render: false,
+    })
   }
 }

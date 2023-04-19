@@ -1,6 +1,10 @@
 import { Component } from "./"
 import { Signal } from "./"
 
+export type ClassConstructor<InstanceType = any> = {
+  new (...args: any[]): InstanceType
+}
+
 type Only<T, U> = {
   [P in keyof T]: T[P]
 } & {
