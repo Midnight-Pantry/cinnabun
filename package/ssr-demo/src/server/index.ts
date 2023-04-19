@@ -8,10 +8,9 @@ const PORT = process.env.PORT || 3000
 const app = express()
 
 app.get("/", (_, res) => {
-  console.time("render")
+  //console.time("render")
   const { html, componentTree } = Cinnabun.serverBake(App())
-  console.timeEnd("render")
-  // console.log(html, componentTree)
+  //console.timeEnd("render")
 
   fs.readFile(
     path.resolve("./dist/public/index.html"),
@@ -24,20 +23,24 @@ app.get("/", (_, res) => {
 
       return res.send(
         indexHtml
+          .replace('<div id="root"></div>', `<div id="root">${html}</div>`)
           .replace(
             '<script id="server-props"></script>',
-            `<script id="server-props">${JSON.stringify(
-              componentTree
-            )}</script>`
+            `<script id="server-props">
+              const root = document.getElementById('root');
+              console.log(root);
+              const data = ${JSON.stringify(componentTree)}
+            </script>`
           )
-          .replace('<div id="root"></div>', `<div id="root">${html}</div>`)
       )
     }
   )
 })
 
 app.use(
-  express.static(path.resolve(__dirname, ".", "dist/public"), { maxAge: "30d" })
+  express.static(path.resolve(__dirname, ".", "../../dist/public"), {
+    maxAge: "30d",
+  })
 )
 
 app.listen(PORT, () => {

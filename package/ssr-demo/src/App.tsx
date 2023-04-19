@@ -5,7 +5,7 @@ export const App = () => {
     <div>
       <div>
         <button>Test</button>
-        <input></input>
+        <input type="text" />
       </div>
     </div>
   )
