@@ -10,6 +10,7 @@ export { h, fragment } from "."
 
 export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
+  static readonly isClient: boolean = "window" in globalThis
 
   static hydrate(app: Component<any>, ssrProps: SSRProps) {
     //TODO: use app instance to validate against && apply complex props?

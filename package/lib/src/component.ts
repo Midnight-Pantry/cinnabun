@@ -14,6 +14,7 @@ import {
   ClassConstructor,
   SerializedComponent,
 } from "./types"
+//import { Node } from "./types.dom"
 
 export class Component<T extends HTMLElement> {
   parent: Component<any> | null = null
@@ -89,14 +90,24 @@ export class Component<T extends HTMLElement> {
   reRender() {
     if (!this.shouldRender()) return
     const { element, idx } = this.getMountLocation()
-    let thisEl = this.element ?? this.render(true)
+
     if (element) {
       const c = element.children[idx]
-      if (c) {
-        element.insertBefore(thisEl, c)
+
+      if (this.element) {
+        this.renderChildren()
+        this.insertToParent(element, c, this.element)
       } else {
-        element.append(thisEl)
+        this.insertToParent(element, c, this.render(true))
       }
+    }
+  }
+
+  insertToParent(parentElement: Node, prevChild: Node, element: T | Node) {
+    if (prevChild) {
+      parentElement.insertBefore(element, prevChild)
+    } else {
+      parentElement.appendChild(element)
     }
   }
 
@@ -107,9 +118,11 @@ export class Component<T extends HTMLElement> {
     if (bindFns.length > 0) {
       for (const [k, v] of bindFns) {
         const propName = k.substring(k.indexOf(":") + 1)
+
+        // possibly shouldn't be using this.renderChildren?
         this._props[propName] = this.getPrimitive(v, this.renderChildren)
 
-        if (propName === "render") {
+        if (propName === "render" && Cinnabun.isClient) {
           //debugger
           if (!this._props.render || !this.parent?._props.render) {
             this.unRender()
@@ -118,7 +131,7 @@ export class Component<T extends HTMLElement> {
           }
         } else if (propName === "children") {
           if (this._props.children) this.replaceChildren(this._props.children)
-          this.renderChildren()
+          if (Cinnabun.isClient) this.renderChildren()
         } else if (this.element) {
           Object.assign(this.element, { [propName]: this._props[propName] })
         }
@@ -324,6 +337,7 @@ export class Component<T extends HTMLElement> {
     }
     if (this.element) return this.element.remove()
     for (const c of this.children) {
+      console.log(typeof Element)
       if (c instanceof Component<any>) {
         c.unRender()
       } else if (c instanceof Node) {

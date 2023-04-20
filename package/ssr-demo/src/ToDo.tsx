@@ -7,7 +7,7 @@ interface ToDoItem {
 }
 const todos = createSignal<ToDoItem[]>([{ text: "Test", done: false }])
 
-const ToDoList = () => {
+const ToDoItems = () => {
   const removeToDo = (idx: number) => {
     todos.value.splice(idx, 1)
     todos.value = todos.value
@@ -29,13 +29,18 @@ export const ToDo = () => {
   const addToDo = () => {
     todos.value = [...todos.value, { text: inputVal.value, done: false }]
     inputVal.value = ""
-    console.log(todos)
   }
 
   return (
     <div>
-      <ul watch={todos} bind:render={() => todos.value.length > 0}>
-        {() => <ToDoList />}
+      <ul
+        watch={todos}
+        bind:render={() => {
+          debugger
+          return todos.value.length > 0
+        }}
+      >
+        {() => <ToDoItems />}
       </ul>
       <input
         placeholder="write a new todo"
