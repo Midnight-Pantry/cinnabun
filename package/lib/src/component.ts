@@ -14,7 +14,6 @@ import {
   ClassConstructor,
   SerializedComponent,
 } from "./types"
-//import { Node } from "./types.dom"
 
 export class Component<T extends HTMLElement> {
   parent: Component<any> | null = null
@@ -215,7 +214,8 @@ export class Component<T extends HTMLElement> {
 
       res.children!.push(c.serialize(data))
     }
-    data.html += `</${this.tag}>`
+
+    if (this.tag !== "br") data.html += `</${this.tag}>`
     return res
   }
 

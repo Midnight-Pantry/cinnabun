@@ -55,15 +55,13 @@ export class Cinnabun {
     if (typeof c === "function")
       return Cinnabun.hydrateComponentFunc(parent, c, sc, element)
 
+    if (c.tag.toLowerCase() === "article") debugger
+
     c.element = element
-    try {
-      if (sc && sc.props && Object.keys(sc.props).length) {
-        Object.assign(c.props, sc.props)
-      }
-      c.bindEvents(c.props)
-    } catch (error) {
-      debugger
+    if (sc && sc.props && Object.keys(sc.props).length) {
+      Object.assign(c.props, sc.props)
     }
+    c.bindEvents(c.props)
 
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]

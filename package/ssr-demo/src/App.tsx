@@ -16,6 +16,7 @@ export const App = () => {
   return (
     <div test="outer div">
       <Counter />
+      <br />
       <ToDo />
     </div>
   )
