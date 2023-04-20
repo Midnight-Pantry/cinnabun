@@ -13,6 +13,6 @@
     "vite": "^4.2.0"
   },
   "dependencies": {
-    "cinnabun": "workspace:^0.0.6"
+    "cinnabun": "workspace:^0.0.7"
   }
 }
