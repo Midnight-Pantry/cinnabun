@@ -148,12 +148,12 @@ export class Component<T extends HTMLElement> {
       ...rest
     } = this.props
     if (!render || !this.tag) {
-      return { p: this.props, c: this.serializeChildren(data) }
+      return { props: this.props, children: this.serializeChildren(data) }
     }
 
     if (this.tag === "svg") return Cinnabun.serializeSvg(this)
 
-    const res: SerializedComponent = { p: this.props, c: [] }
+    const res: SerializedComponent = { props: this.props, children: [] }
 
     data.html += `<${this.tag} ${Object.entries(rest).map(
       ([k, v]) => `${k}="${v}" `
@@ -171,11 +171,11 @@ export class Component<T extends HTMLElement> {
         continue
       }
       if (typeof c === "function") {
-        res.c!.push(c(...this.childArgs).serialize(data))
+        res.children!.push(c(...this.childArgs).serialize(data))
         continue
       }
 
-      res.c!.push(c.serialize(data))
+      res.children!.push(c.serialize(data))
     }
     data.html += `</${this.tag}>`
     return res
@@ -185,7 +185,7 @@ export class Component<T extends HTMLElement> {
     return this.children.map((c: ComponentChild) => {
       if (typeof c === "string" || typeof c === "number") {
         data.html += c
-        return {}
+        return { children: [], props: {} }
       }
       if (typeof c === "function") {
         return c(...this.childArgs).serialize(data)

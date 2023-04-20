@@ -1,44 +1,70 @@
-import { Component } from "."
-import { ComponentProps, SerializedComponent, WatchedElementRef } from "./types"
+import { Component, Signal } from "."
+import {
+  ComponentChild,
+  ComponentProps,
+  SSRProps,
+  SerializedComponent,
+  WatchedElementRef,
+} from "./types"
 export { h, fragment } from "."
 
 export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
 
-  static hydrate(rootComponent: SerializedComponent, rootElement: HTMLElement) {
-    //console.log("hydrate", rootComponent, rootElement)
-    console.time("hydration")
-    const tray = new Component(rootElement.tagName)
-    tray.element = rootElement
+  static hydrate(app: Component<any>, ssrProps: SSRProps) {
+    //TODO: use app instance to validate against && apply complex props?
+    console.time("hydration time")
+    const tray = new Component(ssrProps.root.tagName)
+    tray.element = ssrProps.root
+    tray.children = [app]
+    app.element = ssrProps.root.children[0]
 
-    tray.props = {
-      ...rootComponent.p,
-      children: rootComponent.c
-        ? rootComponent.c.map((c, i) => {
-            return Cinnabun.hydrateComponent(c, rootElement.children[i])
-          })
-        : [],
+    if (
+      ssrProps.component?.props &&
+      Object.keys(ssrProps.component.props).length
+    )
+      Object.assign(app.props, ssrProps.component.props)
+
+    const baseSerializedChild = ssrProps.component.children[0]
+    if (!baseSerializedChild) throw new Error("dafoooq")
+
+    for (let i = 0; i < app.children.length; i++) {
+      const c = app.children[i]
+      const sc = baseSerializedChild.children[i]
+      const domNode = ssrProps.root.children[0].children[i]
+
+      Cinnabun.hydrateComponent(c, sc, domNode)
     }
 
-    console.timeEnd("hydration")
-    //console.log("hydrated", tray)
+    console.timeEnd("hydration time")
+    console.log("hydrated", tray)
   }
 
   static hydrateComponent(
-    component: SerializedComponent,
+    c: ComponentChild,
+    sc: SerializedComponent,
     element?: Element
-  ): Component<any> {
-    const c = new Component<any>(element?.tagName ?? "")
-    if (element) c.element = element
-    c.props = {
-      ...component.p,
-      children: component.c
-        ? component.c.map((c, i) => {
-            return Cinnabun.hydrateComponent(c, element?.children[i])
-          })
-        : [],
+  ) {
+    if (
+      typeof c === "string" ||
+      typeof c === "number" ||
+      typeof c === "function" ||
+      c instanceof Signal
+    ) {
+      return
     }
-    return c
+    c.element = element
+    if (sc.props && Object.keys(sc.props).length) {
+      Object.assign(c.props, sc.props)
+      c.bindEvents(c.props)
+    }
+
+    for (let i = 0; i < c.children.length; i++) {
+      const child = c.children[i]
+      const sChild = sc.children[i]
+      const domNode = element?.children[i]
+      Cinnabun.hydrateComponent(child, sChild, domNode)
+    }
   }
 
   static bake(app: Component<any>, root: HTMLElement): void {
@@ -56,7 +82,7 @@ export class Cinnabun {
     let htmlData = { html: "" }
     const serialized = app.serialize(htmlData)
     return {
-      componentTree: { c: [serialized] },
+      componentTree: { children: [serialized], props: {} },
       html: htmlData.html,
     }
   }
@@ -106,7 +132,7 @@ export class Cinnabun {
     return "not implemented"
   }
   static serializeSvg(_: Component<any>): SerializedComponent {
-    return {}
+    return { children: [], props: {} }
   }
 }
 

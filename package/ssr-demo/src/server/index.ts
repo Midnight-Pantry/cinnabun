@@ -28,19 +28,21 @@ app.get("/", (_, res) => {
             '<script id="server-props"></script>',
             `<script id="server-props">
               const root = document.getElementById('root');
-              window.__cbData = {root, tree: ${JSON.stringify(componentTree)}}
+              window.__cbData = {root, component: ${JSON.stringify(
+                componentTree
+              )}}
             </script>`
           )
       )
     }
   )
 })
-
-app.use(
-  express.static(path.resolve(__dirname, ".", "../../dist/public"), {
-    maxAge: "30d",
-  })
-)
+app.use(express.static(path.resolve(__dirname, ".", "../../dist/public")))
+// app.use(
+//   express.static(path.resolve(__dirname, ".", "../../dist/public"), {
+//     maxAge: "30d",
+//   })
+// )
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`)
