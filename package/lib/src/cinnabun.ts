@@ -13,7 +13,8 @@ export class Cinnabun {
 
   static hydrate(app: Component<any>, ssrProps: SSRProps) {
     //TODO: use app instance to validate against && apply complex props?
-    console.time("hydration time")
+    const hStart = performance.now()
+
     const tray = new Component(ssrProps.root.tagName)
     tray.element = ssrProps.root
     tray.children = [app]
@@ -36,7 +37,7 @@ export class Cinnabun {
       Cinnabun.hydrateComponent(c, sc, domNode)
     }
 
-    console.timeEnd("hydration time")
+    console.log("hydration time", performance.now() - hStart)
     console.log("hydrated", tray)
   }
 
@@ -63,6 +64,9 @@ export class Cinnabun {
       const child = c.children[i]
       const sChild = sc.children[i]
       const domNode = element?.children[i]
+      if (child instanceof Signal) {
+        c.renderChild(child)
+      }
       Cinnabun.hydrateComponent(child, sChild, domNode)
     }
   }

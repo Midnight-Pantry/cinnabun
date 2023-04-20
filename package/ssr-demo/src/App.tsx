@@ -1,25 +1,22 @@
 import * as Cinnabun from "cinnabun"
+import { Counter } from "./Counter"
+import { ToDo } from "./ToDo"
 
-const count = Cinnabun.createSignal(23)
+const PerfTest = (n: number) => {
+  return (
+    <ul>
+      {...Array(n)
+        .fill(0)
+        .map((_, i) => <li>{i.toString()}</li>)}
+    </ul>
+  )
+}
 
 export const App = () => {
   return (
     <div test="outer div">
-      <h1 test="h1">{count}</h1>
-      <button
-        onClick={() => {
-          count.value++
-          console.log("clicked", count)
-        }}
-      >
-        Click me
-      </button>
-      {() => <h1>test</h1>}
-      <ul>
-        {...Array(10_000)
-          .fill(0)
-          .map((_, i) => <li>{i.toString()}</li>)}
-      </ul>
+      <Counter />
+      <ToDo />
     </div>
   )
 }

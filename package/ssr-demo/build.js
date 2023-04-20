@@ -25,6 +25,7 @@ Promise.all([
     entryPoints: ["./src/client/index.ts"],
     outdir: "dist/public",
     ...sharedSettings,
+    banner: { js: `var isClient = true;` },
   }),
 ])
   .then(() => {

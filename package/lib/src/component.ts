@@ -110,6 +110,7 @@ export class Component<T extends HTMLElement> {
         this._props[propName] = this.getPrimitive(v, this.renderChildren)
 
         if (propName === "render") {
+          //debugger
           if (!this._props.render || !this.parent?._props.render) {
             this.unRender()
           } else if (this._props.render) {
@@ -155,9 +156,9 @@ export class Component<T extends HTMLElement> {
 
     const res: SerializedComponent = { props: this.props, children: [] }
 
-    data.html += `<${this.tag} ${Object.entries(rest).map(
-      ([k, v]) => `${k}="${v}" `
-    )}>`
+    data.html += `<${this.tag} ${Object.entries(rest)
+      .filter(([k]) => !k.includes("bind:"))
+      .map(([k, v]) => `${k}="${v}" `)}>`
 
     for (let i = 0; i < this.children.length; i++) {
       const c = this.children[i]
@@ -167,7 +168,6 @@ export class Component<T extends HTMLElement> {
       }
       if (c instanceof Signal) {
         data.html += c.value
-        // TODO - use this to hoist/create ref?
         continue
       }
       if (typeof c === "function") {
@@ -297,6 +297,7 @@ export class Component<T extends HTMLElement> {
 
     if (Object.keys(rest).length) {
       for (const [k, v] of Object.entries(rest)) {
+        if (k.includes("bind:")) continue
         Object.assign(this.element, {
           [k]: this.getPrimitive(v, this.updateElement),
         })
