@@ -18,6 +18,7 @@ export const App = () => {
       <Counter />
       <br />
       <ToDo />
+      <p render={false}>Don't render me!</p>
     </div>
   )
 }

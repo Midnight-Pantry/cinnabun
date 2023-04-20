@@ -184,27 +184,34 @@ export class Component<T extends HTMLElement> {
       render,
       ...rest
     } = this.props
-    if (!render || !this.tag) {
-      return { props: this.props, children: this.serializeChildren(data) }
+    const shouldRender = this.shouldRender()
+
+    if (!shouldRender || !this.tag) {
+      return {
+        props: this.props,
+        children: this.serializeChildren(data, shouldRender),
+      }
     }
 
-    if (this.tag === "svg") return Cinnabun.serializeSvg(this)
+    if (shouldRender && this.tag === "svg") return Cinnabun.serializeSvg(this)
 
     const res: SerializedComponent = { props: this.props, children: [] }
 
-    data.html += `<${this.tag} ${Object.entries(rest)
-      .filter(([k]) => !k.includes("bind:"))
-      .map(([k, v]) => `${k}="${v}" `)}>`
+    if (shouldRender) {
+      data.html += `<${this.tag} ${Object.entries(rest)
+        .filter(([k]) => !k.includes("bind:"))
+        .map(([k, v]) => `${k}="${v}" `)}>`
+    }
 
     for (let i = 0; i < this.children.length; i++) {
       const c = this.children[i]
       if (typeof c === "string" || typeof c === "number") {
-        data.html += c
+        if (shouldRender) data.html += c
         res.children.push({ props: {}, children: [] })
         continue
       }
       if (c instanceof Signal) {
-        data.html += c.value
+        if (shouldRender) data.html += c.value
         continue
       }
       if (typeof c === "function") {
@@ -215,14 +222,17 @@ export class Component<T extends HTMLElement> {
       res.children!.push(c.serialize(data))
     }
 
-    if (this.tag !== "br") data.html += `</${this.tag}>`
+    if (shouldRender && this.tag !== "br") data.html += `</${this.tag}>`
     return res
   }
 
-  serializeChildren(data: { html: string }): SerializedComponent[] {
+  serializeChildren(
+    data: { html: string },
+    shouldRender: boolean
+  ): SerializedComponent[] {
     return this.children.map((c: ComponentChild) => {
       if (typeof c === "string" || typeof c === "number") {
-        data.html += c
+        if (shouldRender) data.html += c
         return { children: [], props: {} }
       }
       if (typeof c === "function") {
