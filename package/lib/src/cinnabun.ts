@@ -1,6 +1,7 @@
 import { Component, Signal } from "."
 import {
   ComponentChild,
+  ComponentFunc,
   ComponentProps,
   SSRProps,
   SerializedComponent,
@@ -13,7 +14,7 @@ export class Cinnabun {
   static readonly isClient: boolean = "window" in globalThis
 
   static hydrate(app: Component<any>, ssrProps: SSRProps) {
-    //TODO: use app instance to validate against && apply complex props?
+    console.log("hydrating", ssrProps)
     const hStart = performance.now()
 
     const tray = new Component(ssrProps.root.tagName)
@@ -35,7 +36,7 @@ export class Cinnabun {
       const sc = baseSerializedChild.children[i]
       const domNode = ssrProps.root.children[0].children[i]
 
-      Cinnabun.hydrateComponent(c, sc, domNode)
+      Cinnabun.hydrateComponent(app, c, sc, domNode)
     }
 
     console.log("hydration time", performance.now() - hStart)
@@ -43,33 +44,45 @@ export class Cinnabun {
   }
 
   static hydrateComponent(
+    parent: Component<any>,
     c: ComponentChild,
     sc: SerializedComponent,
-    element?: Element
+    element?: Element | ChildNode | undefined
   ) {
-    if (
-      typeof c === "string" ||
-      typeof c === "number" ||
-      typeof c === "function" ||
-      c instanceof Signal
-    ) {
+    if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
       return
     }
+    if (typeof c === "function")
+      return Cinnabun.hydrateComponentFunc(parent, c, sc, element)
+
     c.element = element
-    if (sc.props && Object.keys(sc.props).length) {
-      Object.assign(c.props, sc.props)
+    try {
+      if (sc && sc.props && Object.keys(sc.props).length) {
+        Object.assign(c.props, sc.props)
+      }
       c.bindEvents(c.props)
+    } catch (error) {
+      debugger
     }
 
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
       const sChild = sc.children[i]
-      const domNode = element?.children[i]
+      const domNode = element?.childNodes[i]
       if (child instanceof Signal) {
         c.renderChild(child)
       }
-      Cinnabun.hydrateComponent(child, sChild, domNode)
+      Cinnabun.hydrateComponent(c, child, sChild, domNode)
     }
+  }
+
+  static hydrateComponentFunc(
+    parent: Component<any>,
+    c: ComponentFunc,
+    sc: SerializedComponent,
+    element?: Element | ChildNode | undefined
+  ) {
+    Cinnabun.hydrateComponent(parent, c(...parent.childArgs), sc, element)
   }
 
   static bake(app: Component<any>, root: HTMLElement): void {

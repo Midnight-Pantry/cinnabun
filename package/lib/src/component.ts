@@ -201,6 +201,7 @@ export class Component<T extends HTMLElement> {
       const c = this.children[i]
       if (typeof c === "string" || typeof c === "number") {
         data.html += c
+        res.children.push({ props: {}, children: [] })
         continue
       }
       if (c instanceof Signal) {

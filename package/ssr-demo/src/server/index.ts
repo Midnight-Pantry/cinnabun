@@ -4,6 +4,8 @@ import path from "path"
 import { Cinnabun } from "cinnabun"
 import { App } from "../App"
 
+const rootId = "app"
+
 const PORT = process.env.PORT || 3000
 const app = express()
 
@@ -23,11 +25,14 @@ app.get("/", (_, res) => {
 
       return res.send(
         indexHtml
-          .replace('<div id="root"></div>', `<div id="root">${html}</div>`)
+          .replace(
+            `<div id="${rootId}"></div>`,
+            `<div id="${rootId}">${html}</div>`
+          )
           .replace(
             '<script id="server-props"></script>',
             `<script id="server-props">
-              const root = document.getElementById('root');
+              const root = document.getElementById('${rootId}');
               window.__cbData = {root, component: ${JSON.stringify(
                 componentTree
               )}}
