@@ -5,9 +5,12 @@ interface ToDoItem {
   text: string
   done: boolean
 }
-const todos = createSignal<ToDoItem[]>([{ text: "Test", done: false }])
+const todos = createSignal<ToDoItem[]>([
+  { text: "Make a coffee", done: false },
+  { text: "Write a cool new app", done: false },
+])
 
-const ToDoItems = () => {
+const ToDoList = () => {
   const removeToDo = (idx: number) => {
     todos.value.splice(idx, 1)
     todos.value = todos.value
@@ -16,8 +19,7 @@ const ToDoItems = () => {
     <>
       {...todos.value.map((item, i) => (
         <li>
-          {item.text}
-          <input type="checkbox" onChange={() => removeToDo(i)} />
+          {item.text} <input type="checkbox" onChange={() => removeToDo(i)} />
         </li>
       ))}
     </>
@@ -34,16 +36,12 @@ export const ToDo = () => {
   return (
     <div>
       <ul
+        style={{ marginBottom: "1rem" }}
         watch={todos}
-        bind:render={() => {
-          debugger
-          return todos.value.length > 0
-        }}
-      >
-        {() => <ToDoItems />}
-      </ul>
+        bind:children={() => [ToDoList]}
+      />
       <input
-        placeholder="write a new todo"
+        placeholder="Add a new item"
         watch={inputVal}
         bind:value={() => inputVal.value}
         onChange={(e) => {

@@ -87,18 +87,42 @@ export class Component<T extends HTMLElement> {
     return true
   }
 
+  unRender() {
+    try {
+      if (this.funcElements.length > 0) {
+        for (const fc of this.funcElements) {
+          if ("remove" in fc) fc.remove()
+        }
+        this.funcElements = []
+      }
+      if (this.element) {
+        //Array.from(this.element.children).forEach((c) => c.remove())
+        return this.element.remove()
+      }
+      for (const c of this.children) {
+        if (c instanceof Component<any>) {
+          c.unRender()
+        } else if (c instanceof Node) {
+          c.parentNode?.removeChild(c)
+        }
+      }
+    } catch (error) {
+      debugger
+    }
+  }
+
   reRender() {
     if (!this.shouldRender()) return
     const { element, idx } = this.getMountLocation()
 
     if (element) {
-      const c = element.children[idx]
+      const prevChild = element.children[idx]
 
       if (this.element) {
         this.renderChildren()
-        this.insertToParent(element, c, this.element)
+        this.insertToParent(element, prevChild, this.element)
       } else {
-        this.insertToParent(element, c, this.render(true))
+        this.insertToParent(element, prevChild, this.render(true))
       }
     }
   }
@@ -326,24 +350,6 @@ export class Component<T extends HTMLElement> {
         (c instanceof Component && c._props.render) ||
         c instanceof Signal
     )
-  }
-
-  unRender() {
-    if (this.funcElements.length > 0) {
-      for (const fc of this.funcElements) {
-        fc.remove()
-      }
-      this.funcElements = []
-    }
-    if (this.element) return this.element.remove()
-    for (const c of this.children) {
-      console.log(typeof Element)
-      if (c instanceof Component<any>) {
-        c.unRender()
-      } else if (c instanceof Node) {
-        c.parentNode?.removeChild(c)
-      }
-    }
   }
 
   renderChildren() {

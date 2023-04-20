@@ -7,10 +7,6 @@ interface ToDoItem {
 const todos = createSignal<ToDoItem[]>([
   { text: "Make a coffee", done: false },
   { text: "Write a cool new app", done: false },
-  { text: "Make a coffee", done: false },
-  { text: "Write a cool new app", done: false },
-  { text: "Make a coffee", done: false },
-  { text: "Write a cool new app", done: false },
 ])
 
 const ToDoList = () => {
@@ -41,10 +37,8 @@ export const ToDo = () => {
       <ul
         style={{ marginBottom: "1rem" }}
         watch={todos}
-        bind:children={() => [<ToDoList />]}
-      >
-        {() => <ToDoList />}
-      </ul>
+        bind:children={() => [ToDoList]}
+      />
       <input
         placeholder="Add a new item"
         watch={inputVal}

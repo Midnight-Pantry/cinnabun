@@ -7,14 +7,7 @@ export const Counter = () => {
   return (
     <div>
       <h1 test="h1">{count}</h1>
-      <button
-        onClick={() => {
-          count.value++
-          console.log("clicked", count)
-        }}
-      >
-        Click me
-      </button>
+      <button onClick={() => count.value++}>Click me</button>
     </div>
   )
 }
