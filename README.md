@@ -144,3 +144,10 @@ const TwoWayBindingExample = () => {
 ```
 
 <br>
+
+## Known bugs
+
+- SSR
+  - weird things happening when a component with render=false preceeds a component that rerenders
+  - styles get serialized to [object Object]
+  - fragments break the dom-vdom hydration
