@@ -12,6 +12,15 @@ export { h, fragment } from "."
 export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
   static readonly isClient: boolean = "window" in globalThis
+  static path: string = "/"
+  static hash: string = ""
+
+  static setPath(newPath: string) {
+    Cinnabun.path = newPath
+  }
+  static setHash(newHash: string) {
+    Cinnabun.hash = newHash
+  }
 
   static hydrate(app: Component<any>, ssrProps: SSRProps) {
     console.log("hydrating", ssrProps)

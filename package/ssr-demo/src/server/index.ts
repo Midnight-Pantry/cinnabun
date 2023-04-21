@@ -16,6 +16,7 @@ app.use("/static", express.static(publicDir))
 app.get("/favicon.ico", (_, res) => {
   res.status(404).send()
 })
+
 app.get(/.*/, (_, res) => {
   console.time("render time")
   const { html, componentTree } = Cinnabun.serverBake(App())
