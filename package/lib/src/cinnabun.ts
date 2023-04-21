@@ -29,7 +29,6 @@ export class Cinnabun {
       Object.assign(app.props, ssrProps.component.props)
 
     const baseSerializedChild = ssrProps.component.children[0]
-    if (!baseSerializedChild) throw new Error("dafoooq")
 
     for (let i = 0; i < app.children.length; i++) {
       const c = app.children[i]

@@ -185,7 +185,6 @@ export class Component<T extends HTMLElement> {
       ...rest
     } = this.props
     const shouldRender = this.shouldRender()
-
     if (!shouldRender || !this.tag) {
       return {
         props: this.props,
@@ -193,15 +192,13 @@ export class Component<T extends HTMLElement> {
       }
     }
 
-    if (shouldRender && this.tag === "svg") return Cinnabun.serializeSvg(this)
+    if (this.tag === "svg") return Cinnabun.serializeSvg(this)
 
     const res: SerializedComponent = { props: this.props, children: [] }
 
-    if (shouldRender) {
-      data.html += `<${this.tag} ${Object.entries(rest)
-        .filter(([k]) => !k.includes("bind:"))
-        .map(([k, v]) => `${k}="${v}" `)}>`
-    }
+    data.html += `<${this.tag} ${Object.entries(rest)
+      .filter(([k]) => !k.includes("bind:"))
+      .map(([k, v]) => `${k}="${v}" `)}>`
 
     for (let i = 0; i < this.children.length; i++) {
       const c = this.children[i]
@@ -222,7 +219,7 @@ export class Component<T extends HTMLElement> {
       res.children!.push(c.serialize(data))
     }
 
-    if (shouldRender && this.tag !== "br") data.html += `</${this.tag}>`
+    if (this.tag !== "br") data.html += `</${this.tag}>`
     return res
   }
 

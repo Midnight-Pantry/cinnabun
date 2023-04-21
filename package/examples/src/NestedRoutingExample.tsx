@@ -1,0 +1,17 @@
+import { Signal } from "cinnabun"
+import { Link, Router, Route } from "cinnabun/router"
+
+export const NestedRoutingExample = ({
+  pathStore,
+}: {
+  pathStore: Signal<string>
+}) => {
+  return (
+    <div>
+      <Link to="/nested-routing/abc" store={pathStore} innerText="abc" />
+      <Router store={pathStore}>
+        <Route path="/abc" component={<h1>test</h1>} />
+      </Router>
+    </div>
+  )
+}

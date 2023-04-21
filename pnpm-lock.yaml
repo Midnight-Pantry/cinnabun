@@ -16,6 +16,12 @@ importers:
       typescript: 4.9.5
       vite: 4.2.2
 
+  package/examples:
+    specifiers:
+      cinnabun: workspace:^0.0.7
+    dependencies:
+      cinnabun: link:../lib
+
   package/lib:
     specifiers:
       '@types/node': ^18.15.11

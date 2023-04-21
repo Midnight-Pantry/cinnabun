@@ -1,6 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import { Counter } from "./Counter"
 import { ToDo } from "./ToDo"
+import { SuspenseExample } from "./SuspenseExample"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
@@ -22,6 +23,7 @@ export const App = () => {
         {/* <p render={false}>Don't render me!</p> */}
         <ToDo />
         {/* <PerfTest n={10_000} /> */}
+        <SuspenseExample />
       </main>
     </div>
   )
