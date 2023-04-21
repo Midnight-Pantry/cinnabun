@@ -36,18 +36,20 @@ importers:
 
   package/ssr-demo:
     specifiers:
+      '@cinnabun/examples': workspace:^1.0.0
       '@types/express': ^4.17.17
-      '@types/node': ^18.15.11
+      '@types/node': ^18.15.13
       cinnabun: workspace:^0.0.7
       esbuild: ^0.17.17
       express: ^4.18.2
     dependencies:
+      '@cinnabun/examples': link:../examples
       cinnabun: link:../lib
       esbuild: 0.17.17
       express: 4.18.2
     devDependencies:
       '@types/express': 4.17.17
-      '@types/node': 18.15.11
+      '@types/node': 18.15.13
 
 packages:
 
@@ -231,19 +233,19 @@ packages:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 18.15.11
+      '@types/node': 18.15.13
     dev: true
 
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 18.15.13
     dev: true
 
   /@types/express-serve-static-core/4.17.33:
     resolution: {integrity: sha512-TPBqmR/HRYI3eC2E5hmiivIzv+bidAfXofM+sbonAGvyDhySGw9/PQZFt2BLOrjUUR++4eJVpx6KnLQK1Fk9tA==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 18.15.13
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
     dev: true
@@ -265,6 +267,10 @@ packages:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
     dev: true
 
+  /@types/node/18.15.13:
+    resolution: {integrity: sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==}
+    dev: true
+
   /@types/qs/6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
     dev: true
@@ -277,7 +283,7 @@ packages:
     resolution: {integrity: sha512-NUo5XNiAdULrJENtJXZZ3fHtfMolzZwczzBbnAeBbqBwG+LaG6YaJtuwzwGSQZ2wsCrxjEhNNjAkKigy3n8teQ==}
     dependencies:
       '@types/mime': 3.0.1
-      '@types/node': 18.15.11
+      '@types/node': 18.15.13
     dev: true
 
   /accepts/1.3.8:

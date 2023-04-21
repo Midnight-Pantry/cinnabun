@@ -9,13 +9,16 @@ const rootId = "app"
 const PORT = process.env.PORT || 3000
 const app = express()
 
-app.get("/", (_, res) => {
+const publicDir = path.resolve(__dirname, ".", "../../dist/static")
+app.use("/static", express.static(publicDir))
+
+app.get(/.*/, (_, res) => {
   console.time("render time")
   const { html, componentTree } = Cinnabun.serverBake(App())
   console.timeEnd("render time")
 
   fs.readFile(
-    path.resolve("./dist/public/index.html"),
+    path.resolve(path.resolve(__dirname, ".", "../../dist/public/index.html")),
     "utf8",
     (err, indexHtml) => {
       if (err) {
@@ -42,7 +45,7 @@ app.get("/", (_, res) => {
     }
   )
 })
-app.use(express.static(path.resolve(__dirname, ".", "../../dist/public")))
+
 // app.use(
 //   express.static(path.resolve(__dirname, ".", "../../dist/public"), {
 //     maxAge: "30d",

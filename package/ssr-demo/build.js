@@ -23,9 +23,8 @@ Promise.all([
   esbuild.build({
     sourcemap: "linked",
     entryPoints: ["./src/client/index.ts"],
-    outdir: "dist/public",
+    outdir: "dist/static",
     ...sharedSettings,
-    banner: { js: `var isClient = true;` },
   }),
 ])
   .then(() => {

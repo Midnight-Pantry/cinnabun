@@ -1,3 +1,4 @@
+import * as Cinnabun from "cinnabun"
 import { createSignal } from "cinnabun"
 import { Greeter } from "./Greeter"
 
@@ -19,7 +20,7 @@ export const SignalsExample = () => {
       />
       <br />
       <br />
-      <Greeter count={count} />
+      {/* <Greeter count={count} /> */}
     </>
   )
 }

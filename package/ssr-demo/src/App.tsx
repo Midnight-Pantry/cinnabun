@@ -1,7 +1,8 @@
 import * as Cinnabun from "cinnabun"
+import { ToDoExample, SignalsExample } from "@cinnabun/examples"
 import { Counter } from "./Counter"
-import { ToDo } from "./ToDo"
-import { SuspenseExample } from "./SuspenseExample"
+import { Route, Router } from "cinnabun/router"
+import { pathStore } from "./state"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
@@ -18,12 +19,15 @@ export const App = () => {
     <div>
       <h1>Cinnabun JS - SSR</h1>
       <main>
+        {/* <SignalsExample /> */}
         <Counter />
-        <br />
         {/* <p render={false}>Don't render me!</p> */}
-        <ToDo />
+        <ToDoExample />
         {/* <PerfTest n={10_000} /> */}
-        <SuspenseExample />
+        {/* <SuspenseExample /> */}
+        {/* <Router store={pathStore}>
+          <Route path="/" component={<h1>Test</h1>} />
+        </Router> */}
       </main>
     </div>
   )
