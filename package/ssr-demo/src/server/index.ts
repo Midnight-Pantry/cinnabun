@@ -1,6 +1,7 @@
 import express from "express"
 import fs from "fs"
 import path from "path"
+import compression from "compression"
 import { Cinnabun } from "cinnabun"
 import { App } from "../App"
 
@@ -8,10 +9,13 @@ const rootId = "app"
 
 const PORT = process.env.PORT || 3000
 const app = express()
+app.use(compression())
 
 const publicDir = path.resolve(__dirname, ".", "../../dist/static")
 app.use("/static", express.static(publicDir))
-
+app.get("/favicon.ico", (_, res) => {
+  res.status(404).send()
+})
 app.get(/.*/, (_, res) => {
   console.time("render time")
   const { html, componentTree } = Cinnabun.serverBake(App())

@@ -16,14 +16,14 @@ const ToDoList = () => {
     todos.value = todos.value
   }
   return (
-    <div>
+    <ul>
       {...todos.value.map((item, i) => (
         <li>
           {item.text}
           <input type="checkbox" onChange={() => removeToDo(i)} />
         </li>
       ))}
-    </div>
+    </ul>
   )
 }
 
@@ -36,11 +36,7 @@ export const ToDoExample = () => {
 
   return (
     <div>
-      <ul
-        style={{ marginBottom: "1rem" }}
-        watch={todos}
-        bind:children={() => [ToDoList]}
-      />
+      <div watch={todos} bind:children={() => [ToDoList]} />
       <input
         placeholder="Add a new item"
         watch={inputVal}

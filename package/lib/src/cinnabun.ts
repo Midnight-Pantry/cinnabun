@@ -15,7 +15,7 @@ export class Cinnabun {
 
   static hydrate(app: Component<any>, ssrProps: SSRProps) {
     console.log("hydrating", ssrProps)
-    const hStart = performance.now()
+    console.time("hydration time")
 
     const tray = new Component(ssrProps.root.tagName)
     tray.element = ssrProps.root
@@ -38,7 +38,7 @@ export class Cinnabun {
       Cinnabun.hydrateComponent(app, c, sc, domNode)
     }
 
-    console.log("hydration time", performance.now() - hStart)
+    console.timeEnd("hydration time")
     console.log("hydrated", tray)
   }
 
@@ -60,6 +60,7 @@ export class Cinnabun {
     if (sc && sc.props && Object.keys(sc.props).length) {
       Object.assign(c.props, sc.props)
     }
+    c.updateElement()
     c.bindEvents(c.props)
 
     for (let i = 0; i < c.children.length; i++) {

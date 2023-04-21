@@ -183,21 +183,24 @@ export class Component<T extends HTMLElement> {
       promise,
       render,
       ...rest
-    } = this.props
+    } = this._props
     const shouldRender = this.shouldRender()
     if (!shouldRender || !this.tag) {
       return {
-        props: this.props,
+        props: this._props,
         children: this.serializeChildren(data, shouldRender),
       }
     }
 
     if (this.tag === "svg") return Cinnabun.serializeSvg(this)
 
-    const res: SerializedComponent = { props: this.props, children: [] }
+    const res: SerializedComponent = {
+      props: this._props,
+      children: [],
+    }
 
     data.html += `<${this.tag} ${Object.entries(rest)
-      .filter(([k]) => !k.includes("bind:"))
+      .filter(([k]) => k !== "style" && !k.includes("bind:"))
       .map(([k, v]) => `${k}="${v}" `)}>`
 
     for (let i = 0; i < this.children.length; i++) {
