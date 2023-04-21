@@ -13,6 +13,7 @@
     "vite": "^4.2.0"
   },
   "dependencies": {
+    "@cinnabun/examples": "workspace:^1.0.0",
     "cinnabun": "workspace:^0.0.7"
   }
 }

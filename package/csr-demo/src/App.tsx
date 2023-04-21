@@ -5,8 +5,8 @@ import {
   ContextExample,
   SuspenseExample,
   NestedRoutingExample,
-} from "./examples"
-import { ToDo } from "./examples/ToDoExample"
+  ToDoExample,
+} from "@cinnabun/examples"
 
 export const App = () => {
   return (
@@ -42,8 +42,11 @@ export const App = () => {
           <Route path="/" component={<SignalsExample />} />
           <Route path="/context" component={<ContextExample />} />
           <Route path="/suspense" component={<SuspenseExample />} />
-          <Route path="/nested-routing" component={<NestedRoutingExample />} />
-          <Route path="/todo" component={<ToDo />} />
+          <Route
+            path="/nested-routing"
+            component={<NestedRoutingExample pathStore={pathStore} />}
+          />
+          <Route path="/todo" component={<ToDoExample />} />
         </Router>
       </main>
 
