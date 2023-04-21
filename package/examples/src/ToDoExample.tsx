@@ -16,13 +16,14 @@ const ToDoList = () => {
     todos.value = todos.value
   }
   return (
-    <>
+    <div>
       {...todos.value.map((item, i) => (
         <li>
-          {item.text} <input type="checkbox" onChange={() => removeToDo(i)} />
+          {item.text}
+          <input type="checkbox" onChange={() => removeToDo(i)} />
         </li>
       ))}
-    </>
+    </div>
   )
 }
 

@@ -1,8 +1,6 @@
 import * as Cinnabun from "cinnabun"
-import { ToDoExample, SignalsExample } from "@cinnabun/examples"
+import { ToDoExample } from "@cinnabun/examples"
 import { Counter } from "./Counter"
-import { Route, Router } from "cinnabun/router"
-import { pathStore } from "./state"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
