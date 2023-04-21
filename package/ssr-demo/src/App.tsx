@@ -11,16 +11,25 @@ const PerfTest = ({ n }: { n: number }) => {
   )
 }
 
+const Seperator = () => (
+  <div>
+    <br />
+    <hr />
+    <br />
+  </div>
+)
+
 export const App = () => {
   return (
     <div>
       <h1>Cinnabun JS - SSR</h1>
       <main>
         <SignalsExample />
-        <br />
+        <Seperator />
         <ToDoExample />
-        <br />
-        <PerfTest n={5_000} />
+        <Seperator />
+
+        <PerfTest n={50_000} />
       </main>
     </div>
   )

@@ -10,33 +10,32 @@ const todos = createSignal<ToDoItem[]>([
   { text: "Write a cool new app", done: false },
 ])
 
-const ToDoList = () => {
-  const removeToDo = (idx: number) => {
-    todos.value.splice(idx, 1)
-    todos.value = todos.value
-  }
-  return (
-    <ul>
-      {...todos.value.map((item, i) => (
-        <li>
-          {item.text}
-          <input type="checkbox" onChange={() => removeToDo(i)} />
-        </li>
-      ))}
-    </ul>
-  )
-}
-
 export const ToDoExample = () => {
   const inputVal = createSignal<string>("")
   const addToDo = () => {
     todos.value = [...todos.value, { text: inputVal.value, done: false }]
     inputVal.value = ""
   }
+  const removeToDo = (idx: number) => {
+    todos.value.splice(idx, 1)
+    todos.value = todos.value
+  }
 
   return (
     <div>
-      <div watch={todos} bind:children={() => [ToDoList]} />
+      <div watch={todos} bind:render={() => true}>
+        {() => (
+          <ul>
+            {...todos.value.map((item, i) => (
+              <li>
+                {item.text}
+                <input type="checkbox" onChange={() => removeToDo(i)} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <br />
       <input
         placeholder="Add a new item"
         watch={inputVal}
@@ -52,6 +51,13 @@ export const ToDoExample = () => {
       >
         Add
       </button>
+      <br />
+      <span
+        watch={todos}
+        bind:innerText={() =>
+          `${todos.value.length} item${todos.value.length == 1 ? "" : "s"}`
+        }
+      />
     </div>
   )
 }
