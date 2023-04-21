@@ -14,11 +14,11 @@ const PerfTest = ({ n }: { n: number }) => {
 }
 
 const Seperator = () => (
-  <div>
+  <>
     <br />
     <hr />
     <br />
-  </div>
+  </>
 )
 
 const Routes = () => {
@@ -39,7 +39,7 @@ export const App = () => {
         <ToDoExample />
         <Seperator />
 
-        <PerfTest n={50_000} />
+        <PerfTest n={5_000} />
       </main>
     </div>
   )

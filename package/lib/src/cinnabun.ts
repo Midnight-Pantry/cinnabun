@@ -14,6 +14,7 @@ export class Cinnabun {
   static readonly isClient: boolean = "window" in globalThis
   static path: string = "/"
   static hash: string = ""
+  static fragMap: Map<Element | ChildNode, number> = new Map()
 
   static setPath(newPath: string) {
     Cinnabun.path = newPath
@@ -29,7 +30,9 @@ export class Cinnabun {
     const tray = new Component(ssrProps.root.tagName)
     tray.element = ssrProps.root
     tray.children = [app]
-    app.element = ssrProps.root.children[0]
+    if (app.tag) {
+      app.element = ssrProps.root.children[0]
+    }
 
     if (
       ssrProps.component?.props &&
@@ -55,7 +58,7 @@ export class Cinnabun {
     parent: Component<any>,
     c: ComponentChild,
     sc: SerializedComponent,
-    element?: Element | ChildNode | undefined
+    element?: Element | ChildNode | undefined | null
   ) {
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
       return
@@ -63,31 +66,42 @@ export class Cinnabun {
     if (typeof c === "function")
       return Cinnabun.hydrateComponentFunc(parent, c, sc, element)
 
+    if (!c.tag) debugger
     //if (c.tag.toLowerCase() === "article") debugger
     if (sc && sc.props && Object.keys(sc.props).length) {
       Object.assign(c.props, sc.props)
     }
-    let el
+    let el: Element | ChildNode | undefined | null
+    let childOffset: number = 0
+    let didSetCache = false
     if (c.tag) {
-      el = element
       c.element = element
       c.updateElement()
+      el = element
     } else {
-      el = {
-        childNodes: [],
-      } as { childNodes: ChildNode[] }
-      let nextSibling: Element | ChildNode | null | undefined = element
-      while (nextSibling) {
-        el.childNodes.push(nextSibling)
-        nextSibling = nextSibling.nextSibling
+      el = element?.parentElement
+      if (el) {
+        const cache = Cinnabun.fragMap.get(el)
+        if (cache) childOffset = cache
+        Cinnabun.fragMap.set(el, (cache ?? 0) + c.children.length)
+        didSetCache = true
       }
     }
+
     c.bindEvents(c.props)
 
     for (let i = 0; i < c.children.length; i++) {
+      let domNode = el?.childNodes[i + childOffset]
+      if (!didSetCache && el) {
+        const cache = Cinnabun.fragMap.get(el)
+        if (cache) {
+          childOffset = cache
+          domNode = el?.childNodes[childOffset]
+        }
+      }
       const child = c.children[i]
       const sChild = sc.children[i]
-      const domNode = el?.childNodes[i]
+
       if (child instanceof Signal) {
         c.renderChild(child)
       }
@@ -99,7 +113,7 @@ export class Cinnabun {
     parent: Component<any>,
     c: ComponentFunc,
     sc: SerializedComponent,
-    element?: Element | ChildNode | undefined
+    element?: Element | ChildNode | undefined | null
   ) {
     Cinnabun.hydrateComponent(parent, c(...parent.childArgs), sc, element)
   }
