@@ -64,18 +64,30 @@ export class Cinnabun {
       return Cinnabun.hydrateComponentFunc(parent, c, sc, element)
 
     //if (c.tag.toLowerCase() === "article") debugger
-
-    c.element = element
     if (sc && sc.props && Object.keys(sc.props).length) {
       Object.assign(c.props, sc.props)
     }
-    c.updateElement()
+    let el
+    if (c.tag) {
+      el = element
+      c.element = element
+      c.updateElement()
+    } else {
+      el = {
+        childNodes: [],
+      } as { childNodes: ChildNode[] }
+      let nextSibling: Element | ChildNode | null | undefined = element
+      while (nextSibling) {
+        el.childNodes.push(nextSibling)
+        nextSibling = nextSibling.nextSibling
+      }
+    }
     c.bindEvents(c.props)
 
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
       const sChild = sc.children[i]
-      const domNode = element?.childNodes[i]
+      const domNode = el?.childNodes[i]
       if (child instanceof Signal) {
         c.renderChild(child)
       }
