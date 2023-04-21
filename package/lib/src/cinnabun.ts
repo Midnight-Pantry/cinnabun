@@ -66,7 +66,7 @@ export class Cinnabun {
     if (typeof c === "function")
       return Cinnabun.hydrateComponentFunc(parent, c, sc, element)
 
-    if (!c.tag) debugger
+    //if (!c.tag) debugger
     //if (c.tag.toLowerCase() === "article") debugger
     if (sc && sc.props && Object.keys(sc.props).length) {
       Object.assign(c.props, sc.props)

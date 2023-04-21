@@ -258,7 +258,7 @@ export class Component<T extends HTMLElement> {
     if (!this.tag) {
       const f = document.createDocumentFragment()
       if (subscription) this.subscribeTo(subscription)
-      f.append(...this.getRenderableChildren().map((c) => this.renderChild(c)))
+      f.append(...this.getRenderedChildren())
       this.mounted = true
 
       if (!isRerender && this instanceof SuspenseComponent) {
@@ -353,6 +353,10 @@ export class Component<T extends HTMLElement> {
     }
   }
 
+  getRenderedChildren() {
+    return this.getRenderableChildren().map(this.renderChild.bind(this))
+  }
+
   getRenderableChildren() {
     return this.children.filter(
       (c) =>
@@ -366,11 +370,7 @@ export class Component<T extends HTMLElement> {
   renderChildren() {
     if (!this.props.render) return
     if (!this.element) return
-
-    const children = this.getRenderableChildren().map(
-      this.renderChild.bind(this)
-    )
-    this.element.replaceChildren(...children)
+    this.element.replaceChildren(...this.getRenderedChildren())
   }
 
   renderChild(child: any): string | Node {
