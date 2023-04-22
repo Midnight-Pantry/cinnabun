@@ -80,54 +80,6 @@ export class Component<T extends HTMLElement> {
     }
   }
 
-  shouldRender(): boolean {
-    if (!this._props.render) return false
-    if (this.parent) return this.parent?.shouldRender()
-    return true
-  }
-
-  unRender() {
-    try {
-      if (this.funcElements.length > 0) {
-        for (const fc of this.funcElements) {
-          if ("remove" in fc) fc.remove()
-        }
-        this.funcElements = []
-      }
-      if (this.element) {
-        //Array.from(this.element.children).forEach((c) => c.remove())
-        return this.element.remove()
-      }
-      for (const c of this.children) {
-        if (c instanceof Component<any>) {
-          c.unRender()
-        } else if (c instanceof Node) {
-          c.parentNode?.removeChild(c)
-        }
-      }
-    } catch (error) {
-      debugger
-    }
-  }
-
-  reRender() {
-    if (!this.shouldRender()) return
-    const { element, idx } = this.getMountLocation()
-
-    if (element) {
-      const el = this.element ?? this.render()
-      if (this.element) this.renderChildren()
-
-      //element.children[idx] is our actual previous child but be need to insert before the next.
-      const prevChild = element.children[idx + 1]
-      if (prevChild) {
-        element.insertBefore(el, prevChild)
-      } else {
-        element.appendChild(el)
-      }
-    }
-  }
-
   applyBindProps() {
     const bindFns = Object.entries(this.props).filter(([k]) =>
       k.startsWith("bind:")
@@ -244,59 +196,18 @@ export class Component<T extends HTMLElement> {
     })
   }
 
-  render(isRerender: boolean = false): T | Node {
-    const {
-      children,
-      onMounted,
-      onChange,
-      onClick,
-      onDestroyed,
-      subscription,
-      promise,
-    } = this.props
+  subscribeTo(subscription: ComponentSubscription) {
+    if (this.subscription) return
+    this.subscription = subscription
 
-    setComponentReferences((arr) => arr.filter((c) => c.component !== this))
-
-    if (!this.tag) {
-      const f = document.createDocumentFragment()
-      if (subscription) this.subscribeTo(subscription)
-      f.append(...this.getRenderedChildren())
-      this.mounted = true
-
-      if (!isRerender && this instanceof SuspenseComponent) {
-        if (!this.promise && promise) {
-          this.promise = promise as { (): Promise<any> }
-          this.promise().then(this.handlePromise.bind(this))
-        } else if (this.promise && !this._props.cache) {
-          this.promise().then(this.handlePromise.bind(this))
-        }
-      }
-
-      return f
+    const setProps = (props: ComponentProps<T>) => {
+      this.props = Object.assign(this.props, props)
     }
-
-    if (this.tag === "svg") return Cinnabun.svg(this)
-    if (!this.element) {
-      this.element = document.createElement(this.tag) as T
-      this.bindEvents({
-        onChange,
-        onClick,
-      })
-    }
-
-    if (children) this.replaceChildren(children)
-
-    this.renderChildren()
-
-    this.updateElement()
-
-    this.bindEvents({ onDestroyed })
-
-    if (subscription) this.subscribeTo(subscription)
-
-    this.mounted = true
-    if (onMounted) onMounted(this)
-    return this.element
+    const unsubscriber = this.subscription(setProps, this as Component<any>)
+    addComponentReference({
+      component: this,
+      onDestroyed: () => unsubscriber(),
+    })
   }
 
   bindEvents({ onChange, onClick, onDestroyed }: ComponentEventProps<T>) {
@@ -392,18 +303,108 @@ export class Component<T extends HTMLElement> {
     return child
   }
 
-  subscribeTo(subscription: ComponentSubscription) {
-    if (this.subscription) return
-    this.subscription = subscription
+  shouldRender(): boolean {
+    if (!this._props.render) return false
+    if (this.parent) return this.parent?.shouldRender()
+    return true
+  }
 
-    const setProps = (props: ComponentProps<T>) => {
-      this.props = Object.assign(this.props, props)
+  unRender() {
+    try {
+      if (this.funcElements.length > 0) {
+        for (const fc of this.funcElements) {
+          if ("remove" in fc) fc.remove()
+        }
+        this.funcElements = []
+      }
+      if (this.element) {
+        //Array.from(this.element.children).forEach((c) => c.remove())
+        return this.element.remove()
+      }
+      for (const c of this.children) {
+        if (c instanceof Component<any>) {
+          c.unRender()
+        } else if (c instanceof Node) {
+          c.parentNode?.removeChild(c)
+        }
+      }
+    } catch (error) {
+      debugger
     }
-    const unsubscriber = this.subscription(setProps, this as Component<any>)
-    addComponentReference({
-      component: this,
-      onDestroyed: () => unsubscriber(),
-    })
+  }
+
+  reRender() {
+    if (!this.shouldRender()) return
+
+    const el = this.element ?? this.render()
+    if (this.element) this.renderChildren()
+    if (el.isConnected) return
+
+    const { element, idx } = this.getMountLocation()
+    if (element) {
+      //element.children[idx] is our actual previous child but be need to insert before the next.
+      const prevChild = element.children[idx + 1]
+      if (prevChild) {
+        element.insertBefore(el, prevChild)
+      } else {
+        element.appendChild(el)
+      }
+    }
+  }
+
+  render(isRerender: boolean = false): T | Node {
+    const {
+      children,
+      onMounted,
+      onChange,
+      onClick,
+      onDestroyed,
+      subscription,
+      promise,
+    } = this.props
+
+    setComponentReferences((arr) => arr.filter((c) => c.component !== this))
+
+    if (!this.tag) {
+      const f = document.createDocumentFragment()
+      if (subscription) this.subscribeTo(subscription)
+      f.append(...this.getRenderedChildren())
+      this.mounted = true
+
+      if (!isRerender && this instanceof SuspenseComponent) {
+        if (!this.promise && promise) {
+          this.promise = promise as { (): Promise<any> }
+          this.promise().then(this.handlePromise.bind(this))
+        } else if (this.promise && !this._props.cache) {
+          this.promise().then(this.handlePromise.bind(this))
+        }
+      }
+
+      return f
+    }
+
+    if (this.tag === "svg") return Cinnabun.svg(this)
+    if (!this.element) {
+      this.element = document.createElement(this.tag) as T
+      this.bindEvents({
+        onChange,
+        onClick,
+      })
+    }
+
+    if (children) this.replaceChildren(children)
+
+    this.renderChildren()
+
+    this.updateElement()
+
+    this.bindEvents({ onDestroyed })
+
+    if (subscription) this.subscribeTo(subscription)
+
+    this.mounted = true
+    if (onMounted) onMounted(this)
+    return this.element
   }
 
   getMountLocation(start = 0): { element: HTMLElement | null; idx: number } {

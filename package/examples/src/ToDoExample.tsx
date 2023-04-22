@@ -24,7 +24,7 @@ export const ToDoExample = () => {
 
   return (
     <>
-      <div class="todo-list" watch={todos} bind:render={() => true}>
+      <div className="todo-list" watch={todos} bind:render={() => true}>
         {() => (
           <ul>
             {...todos.value.map((item, i) => (
