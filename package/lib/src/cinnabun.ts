@@ -30,6 +30,7 @@ export class Cinnabun {
     const tray = new Component(ssrProps.root.tagName)
     tray.element = ssrProps.root
     tray.children = [app]
+    debugger
     if (app.tag) {
       app.element = ssrProps.root.children[0]
     }
@@ -45,7 +46,9 @@ export class Cinnabun {
     for (let i = 0; i < app.children.length; i++) {
       const c = app.children[i]
       const sc = baseSerializedChild.children[i]
-      const domNode = ssrProps.root.children[0].children[i]
+      const domNode = app.tag
+        ? ssrProps.root.children[0].children[i]
+        : ssrProps.root.children[i]
 
       Cinnabun.hydrateComponent(app, c, sc, domNode)
     }

@@ -31,7 +31,7 @@ const Routes = () => {
 
 export const App = () => {
   return (
-    <div>
+    <>
       <h1>Cinnabun JS - SSR</h1>
       <main>
         <SignalsExample />
@@ -41,6 +41,6 @@ export const App = () => {
 
         <PerfTest n={5_00} />
       </main>
-    </div>
+    </>
   )
 }
