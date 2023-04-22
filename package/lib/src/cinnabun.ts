@@ -23,6 +23,18 @@ export class Cinnabun {
     Cinnabun.hash = newHash
   }
 
+  static validate(component: Component<any>) {
+    if (component.tag) {
+      if (!component.element) debugger
+      if (
+        component.element.tagName.toLowerCase() !== component.tag.toLowerCase()
+      )
+        debugger
+    }
+    for (const c of component.children) {
+      if (c instanceof Component) Cinnabun.validate(c)
+    }
+  }
   static hydrate(app: Component<any>, ssrProps: SSRProps) {
     console.log("hydrating", ssrProps)
     console.time("hydration time")
@@ -30,28 +42,15 @@ export class Cinnabun {
     const tray = new Component(ssrProps.root.tagName)
     tray.element = ssrProps.root
     tray.children = [app]
-    if (app.tag) {
-      app.element = ssrProps.root.children[0]
-    }
 
-    if (
-      ssrProps.component?.props &&
-      Object.keys(ssrProps.component.props).length
+    Cinnabun.hydrateComponent(
+      tray,
+      app,
+      ssrProps.component.children[0],
+      ssrProps.root
     )
-      Object.assign(app.props, ssrProps.component.props)
 
-    const baseSerializedChild = ssrProps.component.children[0]
-
-    for (let i = 0; i < app.children.length; i++) {
-      const c = app.children[i]
-      const sc = baseSerializedChild.children[i]
-      const domNode = app.tag
-        ? ssrProps.root.children[0].children[i]
-        : ssrProps.root.children[i]
-
-      Cinnabun.hydrateComponent(app, c, sc, domNode)
-    }
-
+    Cinnabun.validate(tray)
     console.timeEnd("hydration time")
     console.log("hydrated", tray)
   }
@@ -60,64 +59,46 @@ export class Cinnabun {
     parent: Component<any>,
     c: ComponentChild,
     sc: SerializedComponent,
-    element?: Element | ChildNode | undefined | null
+    parentElement: Element | ChildNode
   ) {
+    const childOffset: number = Cinnabun.fragMap.get(parentElement) ?? 0
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
+      Cinnabun.fragMap.set(parentElement, childOffset + 1)
       return
     }
-    if (typeof c === "function")
-      return Cinnabun.hydrateComponentFunc(parent, c, sc, element)
+    if (typeof c === "function") {
+      Cinnabun.hydrateComponent(
+        parent,
+        c(...parent.childArgs),
+        sc,
+        parentElement
+      )
+      return
+    }
 
-    //if (!c.tag) debugger
-    //if (c.tag.toLowerCase() === "article") debugger
     if (sc && sc.props && Object.keys(sc.props).length) {
       Object.assign(c.props, sc.props)
     }
-    let el: Element | ChildNode | undefined | null
-    let childOffset: number = 0
-    let didSetCache = false
+
     if (c.tag) {
-      c.element = element
+      c.element = parentElement.childNodes[childOffset]
+      Cinnabun.fragMap.set(parentElement, childOffset + 1)
       c.updateElement()
-      el = element
-    } else {
-      el = element?.parentElement
-      if (el) {
-        const cache = Cinnabun.fragMap.get(el)
-        if (cache) childOffset = cache
-        Cinnabun.fragMap.set(el, (cache ?? 0) + c.children.length)
-        didSetCache = true
-      }
     }
 
     c.bindEvents(c.props)
 
     for (let i = 0; i < c.children.length; i++) {
-      let domNode = el?.childNodes[i + childOffset]
-      if (!didSetCache && el) {
-        const cache = Cinnabun.fragMap.get(el)
-        if (cache) {
-          childOffset = cache
-          domNode = el?.childNodes[childOffset]
-        }
-      }
       const child = c.children[i]
       const sChild = sc.children[i]
 
       if (child instanceof Signal) {
         c.renderChild(child)
       }
-      Cinnabun.hydrateComponent(c, child, sChild, domNode)
+      const el = c.element ?? parentElement
+      Cinnabun.hydrateComponent(c, child, sChild, el)
     }
-  }
-
-  static hydrateComponentFunc(
-    parent: Component<any>,
-    c: ComponentFunc,
-    sc: SerializedComponent,
-    element?: Element | ChildNode | undefined | null
-  ) {
-    Cinnabun.hydrateComponent(parent, c(...parent.childArgs), sc, element)
+    c.parent = parent
   }
 
   static bake(app: Component<any>, root: HTMLElement): void {

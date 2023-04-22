@@ -17,6 +17,7 @@ export const ToDoExample = () => {
     inputVal.value = ""
   }
   const removeToDo = (idx: number) => {
+    console.log("asdasd")
     todos.value.splice(idx, 1)
     todos.value = todos.value
   }
@@ -52,12 +53,14 @@ export const ToDoExample = () => {
         Add
       </button>
       <br />
-      <span
-        watch={todos}
-        bind:innerText={() =>
-          `${todos.value.length} item${todos.value.length == 1 ? "" : "s"}`
-        }
-      />
+      {() => (
+        <span
+          watch={todos}
+          bind:innerText={() =>
+            `${todos.value.length} item${todos.value.length == 1 ? "" : "s"}`
+          }
+        />
+      )}
     </>
   )
 }

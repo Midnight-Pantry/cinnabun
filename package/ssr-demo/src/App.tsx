@@ -33,14 +33,10 @@ export const App = () => {
   return (
     <>
       <h1>Cinnabun JS - SSR</h1>
-      <main>
-        <SignalsExample />
-        <Seperator />
+      <SignalsExample />
+      <>
         <ToDoExample />
-        <Seperator />
-
-        <PerfTest n={5_00} />
-      </main>
+      </>
     </>
   )
 }

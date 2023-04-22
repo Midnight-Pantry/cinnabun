@@ -115,22 +115,15 @@ export class Component<T extends HTMLElement> {
     const { element, idx } = this.getMountLocation()
 
     if (element) {
+      const el = this.element ?? this.render()
+      if (this.element) this.renderChildren()
+
       const prevChild = element.children[idx]
-
-      if (this.element) {
-        this.renderChildren()
-        this.insertToParent(element, prevChild, this.element)
+      if (prevChild) {
+        element.insertBefore(el, prevChild)
       } else {
-        this.insertToParent(element, prevChild, this.render(true))
+        element.appendChild(el)
       }
-    }
-  }
-
-  insertToParent(parentElement: Node, prevChild: Node, element: T | Node) {
-    if (prevChild) {
-      parentElement.insertBefore(element, prevChild)
-    } else {
-      parentElement.appendChild(element)
     }
   }
 
