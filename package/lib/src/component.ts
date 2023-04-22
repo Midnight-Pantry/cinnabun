@@ -163,9 +163,9 @@ export class Component<T extends HTMLElement> {
       children: [],
     }
 
-    data.html += `<${this.tag} ${Object.entries(rest)
+    data.html += `<${this.tag}${Object.entries(rest)
       .filter(([k]) => k !== "style" && !k.startsWith("bind:"))
-      .map(([k, v]) => `${this.serializePropName(k)}="${v}" `)
+      .map(([k, v]) => ` ${this.serializePropName(k)}="${v}"`)
       .join("")}>`
 
     for (let i = 0; i < this.children.length; i++) {
