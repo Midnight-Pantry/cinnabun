@@ -1,24 +1,20 @@
 import { LinkProps } from "../types"
 import { Component, Signal } from ".."
-import { Cinnabun } from "../cinnabun"
+//import { Cinnabun } from "../cinnabun"
 
 export const setHash = (store: Signal<string>, newHash: string) => {
   if (store.value === newHash) return
-  if (!Cinnabun.isClient) {
-    Cinnabun.setHash(newHash)
-  } else {
-    window.location.hash = newHash
-  }
+  window.location.hash = newHash
   store.value = newHash
 }
 
 export const setPath = (store: Signal<string>, newPath: string) => {
   if (window.location.pathname === newPath) return
-  if (!Cinnabun.isClient) {
-    Cinnabun.setPath(newPath)
-  } else {
-    window.history.pushState({}, "", newPath)
-  }
+  // if (!Cinnabun.isClient) {
+  //   Cinnabun.setServerRequestPath(newPath)
+  // } else {
+  // }
+  window.history.pushState({}, "", newPath)
   store.value = newPath
 }
 

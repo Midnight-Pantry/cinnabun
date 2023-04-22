@@ -17,8 +17,9 @@ app.get("/favicon.ico", (_, res) => {
   res.status(404).send()
 })
 
-app.get(/.*/, (_, res) => {
+app.get(/.*/, (req, res) => {
   console.time("render time")
+  Cinnabun.setServerRequestPath(req.path)
   const { html, componentTree } = Cinnabun.serverBake(App())
   console.timeEnd("render time")
 

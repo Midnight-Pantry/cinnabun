@@ -139,6 +139,7 @@ export class Component<T extends HTMLElement> {
       ...rest
     } = this._props
     const shouldRender = this.shouldRender()
+    if (shouldRender && subscription) this.subscribeTo(subscription)
     if (!shouldRender || !this.tag) {
       return {
         props: this.serializeProps(),
@@ -484,6 +485,13 @@ export class FragmentComponent extends Component<any> {
 export class RouterComponent extends Component<any> {
   constructor(subscription: ComponentSubscription, children: RouteComponent[]) {
     super("", { subscription, children })
+    // sort to make sure we match on more complex routes first
+    this.children.sort((a, b) => {
+      return (
+        (b as RouteComponent).props.pathDepth -
+        (a as RouteComponent).props.pathDepth
+      )
+    })
   }
 
   getParentPath() {

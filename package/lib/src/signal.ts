@@ -44,9 +44,7 @@ export class Signal<T> {
   }
 
   serialize(): string {
-    const res = JSON.stringify(this.value)
-    console.log("srlz signal", res)
-    return res
+    return JSON.stringify(this.value)
   }
 
   logSubscriberCount() {

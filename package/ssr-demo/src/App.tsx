@@ -1,6 +1,6 @@
 import * as Cinnabun from "cinnabun"
 import { SignalsExample, ToDoExample } from "@cinnabun/examples"
-import { Route, Router } from "cinnabun/router"
+import { Link, Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
 
 const PerfTest = ({ n }: { n: number }) => {
@@ -24,7 +24,8 @@ const Seperator = () => (
 const Routes = () => {
   return (
     <Router store={pathStore}>
-      <Route path="/" component={<h1>Home</h1>} />
+      <Route path="/" component={<article>Home</article>} />
+      <Route path="/test" component={<article>Test</article>} />
     </Router>
   )
 }
@@ -35,9 +36,15 @@ export const App = () => {
       <h1>Cinnabun JS - SSR</h1>
       <SignalsExample />
       <hr style={{ width: "300px", margin: "1rem" }} />
-      <>
-        <ToDoExample />
-      </>
+      <Link store={pathStore} to="/">
+        Home
+      </Link>
+      <Link store={pathStore} to="/test">
+        Test
+      </Link>
+      <Routes />
+      <hr style={{ width: "300px", margin: "1rem" }} />
+      <ToDoExample />
     </>
   )
 }

@@ -1,7 +1,6 @@
 import { Component, Signal } from "."
 import {
   ComponentChild,
-  ComponentFunc,
   ComponentProps,
   SSRProps,
   SerializedComponent,
@@ -12,19 +11,15 @@ export { h, fragment } from "."
 export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
   static readonly isClient: boolean = "window" in globalThis
-  static path: string = "/"
-  static hash: string = ""
+  static serverRequestPath = "/"
   static fragMap: Map<Element | ChildNode, number> = new Map()
 
-  static setPath(newPath: string) {
-    Cinnabun.path = newPath
-  }
-  static setHash(newHash: string) {
-    Cinnabun.hash = newHash
+  static setServerRequestPath(newPath: string) {
+    Cinnabun.serverRequestPath = newPath
   }
 
   static validate(component: Component<any>) {
-    if (component.tag) {
+    if (component.tag && component.shouldRender()) {
       if (!component.element) debugger
       if (
         component.element.tagName.toLowerCase() !== component.tag.toLowerCase()
@@ -80,6 +75,8 @@ export class Cinnabun {
     if (sc && sc.props && Object.keys(sc.props).length) {
       Object.assign(c.props, sc.props)
     }
+
+    if (!c.shouldRender()) return
 
     if (c.tag) {
       c.element = parentElement.childNodes[childOffset]
