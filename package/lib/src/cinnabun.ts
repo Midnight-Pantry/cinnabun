@@ -30,7 +30,6 @@ export class Cinnabun {
     const tray = new Component(ssrProps.root.tagName)
     tray.element = ssrProps.root
     tray.children = [app]
-    debugger
     if (app.tag) {
       app.element = ssrProps.root.children[0]
     }
