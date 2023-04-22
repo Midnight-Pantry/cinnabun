@@ -41,6 +41,8 @@ export const App = () => {
       <RoutesExample />
       <Divider />
       <ToDoExample />
+      <Divider />
+      <PerfTest n={500} />
     </>
   )
 }

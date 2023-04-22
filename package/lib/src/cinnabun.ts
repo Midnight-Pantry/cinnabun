@@ -1,5 +1,4 @@
 import { Component, Signal } from "."
-import { RouterComponent } from "./component"
 import {
   ComponentChild,
   ComponentProps,
