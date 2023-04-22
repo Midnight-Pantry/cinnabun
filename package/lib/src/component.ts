@@ -187,7 +187,8 @@ export class Component<T extends HTMLElement> {
       res.children!.push(c.serialize(data))
     }
 
-    if (this.tag.toLowerCase() !== "br") data.html += `</${this.tag}>`
+    if (["br", "hr", "img", "input"].indexOf(this.tag.toLowerCase()) === -1)
+      data.html += `</${this.tag}>`
     return res
   }
 

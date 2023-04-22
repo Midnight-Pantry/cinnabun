@@ -142,10 +142,3 @@ const TwoWayBindingExample = () => {
   )
 }
 ```
-
-<br>
-
-# TODO
-
-- Nested routes
-- SSR

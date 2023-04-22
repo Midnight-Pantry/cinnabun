@@ -18,16 +18,17 @@ export class Cinnabun {
     Cinnabun.serverRequestPath = newPath
   }
 
-  static validate(component: Component<any>) {
+  static async validateHydration(component: Component<any>) {
     if (component.tag && component.shouldRender()) {
-      if (!component.element) debugger
-      if (
-        component.element.tagName.toLowerCase() !== component.tag.toLowerCase()
-      )
-        debugger
+      const hasElement = component.element
+      const elementMatchesTag =
+        hasElement &&
+        component.element.tagName.toLowerCase() === component.tag.toLowerCase()
+
+      console.assert(elementMatchesTag)
     }
     for (const c of component.children) {
-      if (c instanceof Component) Cinnabun.validate(c)
+      if (c instanceof Component) Cinnabun.validateHydration(c)
     }
   }
   static hydrate(app: Component<any>, ssrProps: SSRProps) {
@@ -45,9 +46,9 @@ export class Cinnabun {
       ssrProps.root
     )
 
-    Cinnabun.validate(tray)
     console.timeEnd("hydration time")
     console.log("hydrated", tray)
+    Cinnabun.validateHydration(tray)
   }
 
   static hydrateComponent(

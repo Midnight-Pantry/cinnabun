@@ -42,7 +42,7 @@ export const App = () => {
       <Divider />
       <ToDoExample />
       <Divider />
-      <PerfTest n={500} />
+      <PerfTest n={1_000} />
     </>
   )
 }
