@@ -46,6 +46,9 @@ export const App = () => {
             <li>
               <Link to="/todo" innerText="ToDo" store={pathStore} />
             </li>
+            <li>
+              <Link to="/perf" innerText="Performance test" store={pathStore} />
+            </li>
           </ul>
         </nav>
 
@@ -59,10 +62,17 @@ export const App = () => {
               component={<NestedRoutingExample pathStore={pathStore} />}
             />
             <Route path="/todo" component={<ToDoExample />} />
+            <Route
+              path="/perf"
+              component={
+                <>
+                  <PerfTest n={1_000} />
+                </>
+              }
+            />
           </Router>
         </main>
       </div>
-      <PerfTest n={1_000} />
     </>
   )
 }

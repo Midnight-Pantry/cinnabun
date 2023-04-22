@@ -80,6 +80,15 @@ export class Component<T extends HTMLElement> {
     }
   }
 
+  setPromise(promise: { (): Promise<any> }) {
+    if (!this.promise && promise) {
+      this.promise = promise
+      this.promise().then(this.handlePromise.bind(this))
+    } else if (this.promise && !this._props.cache) {
+      this.promise().then(this.handlePromise.bind(this))
+    }
+  }
+
   applyBindProps() {
     const bindFns = Object.entries(this.props).filter(([k]) =>
       k.startsWith("bind:")
@@ -388,12 +397,7 @@ export class Component<T extends HTMLElement> {
       this.mounted = true
 
       if (!isRerender && this instanceof SuspenseComponent) {
-        if (!this.promise && promise) {
-          this.promise = promise as { (): Promise<any> }
-          this.promise().then(this.handlePromise.bind(this))
-        } else if (this.promise && !this._props.cache) {
-          this.promise().then(this.handlePromise.bind(this))
-        }
+        this.setPromise(promise)
       }
 
       return f
