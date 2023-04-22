@@ -366,14 +366,17 @@ export class Component<T extends HTMLElement> {
     if (el.isConnected) return
 
     const { element, idx } = this.getMountLocation()
-    if (element) {
-      //element.children[idx] is our actual previous child but be need to insert before the next.
-      const prevChild = element.children[idx + 1]
-      if (prevChild) {
-        element.insertBefore(el, prevChild)
-      } else {
-        element.appendChild(el)
-      }
+    if (!element) {
+      console.error("Failed to get component mount element", this, el)
+      return
+    }
+
+    //element.children[idx] is our actual previous child but be need to insert before the next.
+    const prevChild = element.children[idx + 1]
+    if (prevChild) {
+      element.insertBefore(el, prevChild)
+    } else {
+      element.appendChild(el)
     }
   }
 
