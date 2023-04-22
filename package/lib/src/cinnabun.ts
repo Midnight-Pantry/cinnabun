@@ -1,5 +1,4 @@
 import { Component, Signal } from "."
-import { SuspenseComponent } from "./component"
 import {
   ComponentChild,
   ComponentProps,
