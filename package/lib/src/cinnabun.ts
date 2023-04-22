@@ -72,6 +72,8 @@ export class Cinnabun {
       return
     }
 
+    c.parent = parent
+
     if (sc && sc.props && Object.keys(sc.props).length) {
       Object.assign(c.props, sc.props)
     }
@@ -95,7 +97,6 @@ export class Cinnabun {
       }
       Cinnabun.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
-    c.parent = parent
   }
 
   static bake(app: Component<any>, root: HTMLElement): void {

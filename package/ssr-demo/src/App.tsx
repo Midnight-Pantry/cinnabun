@@ -33,9 +33,9 @@ const Routes = () => {
 export const App = () => {
   return (
     <>
-      <h1>Cinnabun JS - SSR</h1>
+      {/* <h1>Cinnabun JS - SSR</h1>
       <SignalsExample />
-      <hr style={{ width: "300px", margin: "1rem" }} />
+      <hr style={{ width: "300px", margin: "1rem" }} /> */}
       <Link store={pathStore} to="/">
         Home
       </Link>
@@ -44,7 +44,7 @@ export const App = () => {
       </Link>
       <Routes />
       <hr style={{ width: "300px", margin: "1rem" }} />
-      <ToDoExample />
+      {/* <ToDoExample /> */}
     </>
   )
 }

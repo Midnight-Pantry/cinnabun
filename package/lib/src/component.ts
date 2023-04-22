@@ -126,6 +126,15 @@ export class Component<T extends HTMLElement> {
     return res
   }
 
+  serializePropName(val: string): string {
+    switch (val) {
+      case "className":
+        return "class"
+      default:
+        return val
+    }
+  }
+
   serialize(data: { html: string }): SerializedComponent {
     const {
       children,
@@ -155,8 +164,9 @@ export class Component<T extends HTMLElement> {
     }
 
     data.html += `<${this.tag} ${Object.entries(rest)
-      .filter(([k]) => k !== "style" && !k.includes("bind:"))
-      .map(([k, v]) => `${k}="${v}" `)}>`
+      .filter(([k]) => k !== "style" && !k.startsWith("bind:"))
+      .map(([k, v]) => `${this.serializePropName(k)}="${v}" `)
+      .join("")}>`
 
     for (let i = 0; i < this.children.length; i++) {
       const c = this.children[i]
@@ -177,7 +187,7 @@ export class Component<T extends HTMLElement> {
       res.children!.push(c.serialize(data))
     }
 
-    if (this.tag !== "br") data.html += `</${this.tag}>`
+    if (this.tag.toLowerCase() !== "br") data.html += `</${this.tag}>`
     return res
   }
 
