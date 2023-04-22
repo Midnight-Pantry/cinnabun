@@ -427,7 +427,11 @@ export class Component<T extends HTMLElement> {
       if (c === this) break
       if (c instanceof Component) {
         for (const child of c.children) {
-          if (child instanceof Component && child.element) start++
+          if (child instanceof Component && child.element) {
+            start++
+          } else if (typeof child === "string" || typeof child === "number") {
+            start++
+          }
         }
       }
     }

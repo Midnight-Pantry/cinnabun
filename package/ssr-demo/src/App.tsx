@@ -13,38 +13,34 @@ const PerfTest = ({ n }: { n: number }) => {
   )
 }
 
-const Seperator = () => (
-  <>
-    <br />
-    <hr />
-    <br />
-  </>
-)
+const Divider = () => <hr style={{ width: "300px", margin: "1rem" }} />
 
-const Routes = () => {
-  return (
-    <Router store={pathStore}>
-      <Route path="/" component={<article>Home</article>} />
-      <Route path="/test" component={<article>Test</article>} />
-    </Router>
-  )
-}
-
-export const App = () => {
+const RoutesExample = () => {
   return (
     <>
-      {/* <h1>Cinnabun JS - SSR</h1>
-      <SignalsExample />
-      <hr style={{ width: "300px", margin: "1rem" }} /> */}
       <Link store={pathStore} to="/">
         Home
       </Link>
       <Link store={pathStore} to="/test">
         Test
       </Link>
-      <Routes />
-      <hr style={{ width: "300px", margin: "1rem" }} />
-      {/* <ToDoExample /> */}
+      <Router store={pathStore}>
+        <Route path="/" component={<article>Home</article>} />
+        <Route path="/test" component={<article>Test</article>} />
+      </Router>
+    </>
+  )
+}
+
+export const App = () => {
+  return (
+    <>
+      <h1>Cinnabun JS - SSR</h1>
+      <SignalsExample />
+      <Divider />
+      <RoutesExample />
+      <Divider />
+      <ToDoExample />
     </>
   )
 }

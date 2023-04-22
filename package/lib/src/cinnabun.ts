@@ -1,4 +1,5 @@
 import { Component, Signal } from "."
+import { RouterComponent } from "./component"
 import {
   ComponentChild,
   ComponentProps,
@@ -86,7 +87,10 @@ export class Cinnabun {
       c.updateElement()
     }
 
+    if (c.props.subscription) c.subscribeTo(c.props.subscription)
     c.bindEvents(c.props)
+
+    c.mounted = true
 
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
