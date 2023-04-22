@@ -180,7 +180,9 @@ export class Component<T extends HTMLElement> {
         continue
       }
       if (typeof c === "function") {
-        res.children!.push(c(...this.childArgs).serialize(data))
+        const val = c(...this.childArgs)
+        val.parent = this
+        res.children!.push(val.serialize(data))
         continue
       }
 
@@ -202,7 +204,9 @@ export class Component<T extends HTMLElement> {
         return { children: [], props: {} }
       }
       if (typeof c === "function") {
-        return c(...this.childArgs).serialize(data)
+        const val = c(...this.childArgs)
+        val.parent = this
+        return val.serialize(data)
       }
       return c.serialize(data)
     })

@@ -1,4 +1,5 @@
 import { Component, Signal } from "."
+import { SuspenseComponent } from "./component"
 import {
   ComponentChild,
   ComponentProps,
@@ -25,7 +26,8 @@ export class Cinnabun {
         hasElement &&
         component.element.tagName.toLowerCase() === component.tag.toLowerCase()
 
-      console.assert(elementMatchesTag)
+      if (!elementMatchesTag)
+        console.error("component hydration failed", component)
     }
     for (const c of component.children) {
       if (c instanceof Component) Cinnabun.validateHydration(c)

@@ -49,13 +49,6 @@ export const App = () => {
           <Route path="/todo" component={<ToDoExample />} />
         </Router>
       </main>
-
-      {/* <ul>{...[1, 2, 3, 4].map((c) => <li>{c.toString()}</li>)}</ul> */}
-      <p style={{ margin: "1rem", marginLeft: "auto", fontSize: ".65rem" }}>
-        <a target="_new" href="https://www.patreon.com/LankyMoose592">
-          Become a Patron to support ongoing development ☕
-        </a>
-      </p>
     </div>
   )
 }

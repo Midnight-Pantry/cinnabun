@@ -1,5 +1,11 @@
 import * as Cinnabun from "cinnabun"
-import { SignalsExample, ToDoExample } from "@cinnabun/examples"
+import {
+  ContextExample,
+  NestedRoutingExample,
+  SignalsExample,
+  SuspenseExample,
+  ToDoExample,
+} from "@cinnabun/examples"
 import { Link, Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
 
@@ -13,35 +19,49 @@ const PerfTest = ({ n }: { n: number }) => {
   )
 }
 
-const Divider = () => <hr style={{ width: "300px", margin: "1rem" }} />
-
-const RoutesExample = () => {
-  return (
-    <>
-      <Link store={pathStore} to="/">
-        Home
-      </Link>
-      <Link store={pathStore} to="/test">
-        Test
-      </Link>
-      <Router store={pathStore}>
-        <Route path="/" component={<article>Home</article>} />
-        <Route path="/test" component={<article>Test</article>} />
-      </Router>
-    </>
-  )
-}
-
 export const App = () => {
   return (
     <>
-      <h1>Cinnabun JS - SSR</h1>
-      <SignalsExample />
-      <Divider />
-      <RoutesExample />
-      <Divider />
-      <ToDoExample />
-      <Divider />
+      <div style={{ display: "flex", minHeight: "100vh" }}>
+        <h1>Cinnabun JS - SSR</h1>
+        <br />
+        <nav>
+          <ul>
+            <li>
+              <Link to="/" innerText="Signals" store={pathStore} />
+            </li>
+            <li>
+              <Link to="/context" innerText="Context" store={pathStore} />
+            </li>
+            <li>
+              <Link to="/suspense" innerText="Suspense" store={pathStore} />
+            </li>
+            <li>
+              <Link
+                to="/nested-routing"
+                innerText="Nested Routing"
+                store={pathStore}
+              />
+            </li>
+            <li>
+              <Link to="/todo" innerText="ToDo" store={pathStore} />
+            </li>
+          </ul>
+        </nav>
+
+        <main style={{ textAlign: "center", flexGrow: "1" }}>
+          <Router store={pathStore}>
+            <Route path="/" component={<SignalsExample />} />
+            <Route path="/context" component={<ContextExample />} />
+            <Route path="/suspense" component={<SuspenseExample />} />
+            <Route
+              path="/nested-routing"
+              component={<NestedRoutingExample pathStore={pathStore} />}
+            />
+            <Route path="/todo" component={<ToDoExample />} />
+          </Router>
+        </main>
+      </div>
       <PerfTest n={1_000} />
     </>
   )
