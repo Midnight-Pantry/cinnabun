@@ -68,6 +68,7 @@ export type RouteProps = {
 export type LinkProps = ComponentProps<HTMLAnchorElement> & {
   store: Signal<string>
   to: string
+  activeClass?: string
   useHash?: boolean
 }
 

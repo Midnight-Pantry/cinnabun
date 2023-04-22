@@ -1,5 +1,6 @@
 import { LinkProps } from "../types"
 import { Component, Signal } from ".."
+import { Cinnabun } from "../cinnabun"
 //import { Cinnabun } from "../cinnabun"
 
 export const setHash = (store: Signal<string>, newHash: string) => {
@@ -19,7 +20,7 @@ export const setPath = (store: Signal<string>, newPath: string) => {
 }
 
 export const Link = (props: LinkProps, children: Component<any>[]) => {
-  const { to, store, useHash, ...rest } = props
+  const { to, store, activeClass, useHash, ...rest } = props
 
   const handleClick = (e: Event) => {
     e.preventDefault()
@@ -29,7 +30,12 @@ export const Link = (props: LinkProps, children: Component<any>[]) => {
 
   return new Component("a", {
     watch: store,
-    ["bind:className"]: () => (store.value === to ? "active" : ""),
+    ["bind:className"]: () => {
+      const pathMatch =
+        (Cinnabun.isClient ? store.value : Cinnabun.serverRequestPath) === to
+
+      return pathMatch ? activeClass ?? "active" : ""
+    },
     href: to,
     onClick: handleClick,
     children,
