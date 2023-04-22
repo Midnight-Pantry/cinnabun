@@ -39,7 +39,7 @@ export const App = () => {
         <ToDoExample />
         <Seperator />
 
-        <PerfTest n={5_000} />
+        <PerfTest n={5_00} />
       </main>
     </div>
   )

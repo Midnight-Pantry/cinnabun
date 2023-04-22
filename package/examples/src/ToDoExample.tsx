@@ -22,8 +22,8 @@ export const ToDoExample = () => {
   }
 
   return (
-    <article>
-      <div watch={todos} bind:render={() => true}>
+    <>
+      <div class="todo-list" watch={todos} bind:render={() => true}>
         {() => (
           <ul>
             {...todos.value.map((item, i) => (
@@ -58,6 +58,6 @@ export const ToDoExample = () => {
           `${todos.value.length} item${todos.value.length == 1 ? "" : "s"}`
         }
       />
-    </article>
+    </>
   )
 }

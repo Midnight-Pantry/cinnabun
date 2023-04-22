@@ -410,7 +410,11 @@ export class Component<T extends HTMLElement> {
       const c = this.parent.children[i]
       if (c instanceof Component && !c._props.render) continue
       if (c === this) break
-      start++
+      if (c instanceof Component) {
+        for (const child of c.children) {
+          if (child instanceof Component && child.element) start++
+        }
+      }
     }
     if (this.parent.element) return { element: this.parent.element, idx: start }
     return this.parent.getMountLocation(start)
