@@ -19,9 +19,9 @@ async function getProductCategories(): Promise<ProductCategoriesResponse> {
   }
 }
 
-export const SuspenseExample = () => {
+export const SuspenseExample = ({ cache }: { cache?: boolean }) => {
   return (
-    <Suspense promise={getProductCategories}>
+    <Suspense cache={cache} promise={getProductCategories}>
       {(loading: boolean, res?: ProductCategoriesResponse) => {
         if (res?.error) return <p>{res.error}</p>
         if (loading) return <p>loading...</p>

@@ -361,7 +361,7 @@ export class Component<T extends HTMLElement> {
   reRender() {
     if (!this.shouldRender()) return
 
-    const el = this.element ?? this.render()
+    const el = this.element ?? this.render(true)
     if (this.element) this.renderChildren()
     if (el.isConnected) return
 
