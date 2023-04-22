@@ -8,11 +8,11 @@ export const NestedRoutingExample = ({
   pathStore: Signal<string>
 }) => {
   return (
-    <div>
+    <>
       <Link to="/nested-routing/abc" store={pathStore} innerText="abc" />
       <Router store={pathStore}>
         <Route path="/abc" component={<h1>test</h1>} />
       </Router>
-    </div>
+    </>
   )
 }

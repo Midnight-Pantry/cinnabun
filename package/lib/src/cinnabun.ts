@@ -62,6 +62,7 @@ export class Cinnabun {
     parentElement: Element | ChildNode
   ) {
     const childOffset: number = Cinnabun.fragMap.get(parentElement) ?? 0
+
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
       Cinnabun.fragMap.set(parentElement, childOffset + 1)
       return
@@ -95,8 +96,7 @@ export class Cinnabun {
       if (child instanceof Signal) {
         c.renderChild(child)
       }
-      const el = c.element ?? parentElement
-      Cinnabun.hydrateComponent(c, child, sChild, el)
+      Cinnabun.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
     c.parent = parent
   }

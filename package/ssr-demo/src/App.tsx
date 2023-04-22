@@ -34,6 +34,7 @@ export const App = () => {
     <>
       <h1>Cinnabun JS - SSR</h1>
       <SignalsExample />
+      <hr style={{ width: "300px", margin: "1rem" }} />
       <>
         <ToDoExample />
       </>

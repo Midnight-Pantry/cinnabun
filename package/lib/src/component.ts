@@ -118,7 +118,8 @@ export class Component<T extends HTMLElement> {
       const el = this.element ?? this.render()
       if (this.element) this.renderChildren()
 
-      const prevChild = element.children[idx]
+      //element.children[idx] is our actual previous child but be need to insert before the next.
+      const prevChild = element.children[idx + 1]
       if (prevChild) {
         element.insertBefore(el, prevChild)
       } else {
@@ -165,6 +166,14 @@ export class Component<T extends HTMLElement> {
     return prop
   }
 
+  serializeProps(): Partial<ComponentProps<T>> {
+    const res: Partial<ComponentProps<T>> = {}
+    for (const k of Object.keys(this._props)) {
+      if (k !== "children") res[k] = this._props[k]
+    }
+    return res
+  }
+
   serialize(data: { html: string }): SerializedComponent {
     const {
       children,
@@ -180,7 +189,7 @@ export class Component<T extends HTMLElement> {
     const shouldRender = this.shouldRender()
     if (!shouldRender || !this.tag) {
       return {
-        props: this._props,
+        props: this.serializeProps(),
         children: this.serializeChildren(data, shouldRender),
       }
     }
@@ -188,7 +197,7 @@ export class Component<T extends HTMLElement> {
     if (this.tag === "svg") return Cinnabun.serializeSvg(this)
 
     const res: SerializedComponent = {
-      props: this._props,
+      props: this.serializeProps(),
       children: [],
     }
 
@@ -399,6 +408,7 @@ export class Component<T extends HTMLElement> {
 
   getMountLocation(start = 0): { element: HTMLElement | null; idx: number } {
     if (!this.parent) return { element: null, idx: -1 }
+    if (this.element) start++
     for (let i = 0; i < this.parent.children.length; i++) {
       const c = this.parent.children[i]
       if (c instanceof Component && !c._props.render) continue

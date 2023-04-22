@@ -1,5 +1,6 @@
 import * as Cinnabun from "cinnabun"
 import { createSignal } from "cinnabun"
+import { Greeter } from "./Greeter"
 
 export const SignalsExample = () => {
   const count = createSignal(0)
@@ -17,6 +18,7 @@ export const SignalsExample = () => {
           count.value = parseInt((e.target as HTMLInputElement).value)
         }}
       />
+      <Greeter count={count} />
     </>
   )
 }
