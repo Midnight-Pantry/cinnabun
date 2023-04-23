@@ -1,5 +1,5 @@
 import { Component, Signal } from "."
-import { setComponentReferences } from "./cinnabun"
+import { Cinnabun } from "./cinnabun"
 import { GenericComponent } from "./types"
 
 export class DomInterop {
@@ -141,7 +141,7 @@ export class DomInterop {
       promise,
     } = component.props
 
-    setComponentReferences((arr) =>
+    Cinnabun.setComponentReferences((arr) =>
       arr.filter((c) => c.component !== component)
     )
 

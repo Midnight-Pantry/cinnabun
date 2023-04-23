@@ -184,10 +184,10 @@ export class SSR {
     parentElement: Element | ChildNode
   ) {
     if (!sc) return
-    const childOffset: number = Cinnabun.fragMap.get(parentElement) ?? 0
+    const childOffset: number = Cinnabun.rootMap.get(parentElement) ?? 0
 
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
-      Cinnabun.fragMap.set(parentElement, childOffset + 1)
+      Cinnabun.rootMap.set(parentElement, childOffset + 1)
       return
     }
     if (typeof c === "function") {
@@ -201,14 +201,23 @@ export class SSR {
     c.parent = parent
 
     if (sc.props && Object.keys(sc.props).length) {
-      Object.assign(c.props, sc.props)
+      for (const [k, v] of Object.entries(sc.props)) {
+        const curProp = c.props[k]
+        if (curProp && curProp instanceof Signal) {
+          curProp.value = v
+        } else {
+          c.props[k] = v
+        }
+      }
+
+      //Object.assign(c.props, sc.props)
     }
 
     if (!c.shouldRender()) return
 
     if (c.tag) {
       c.element = parentElement.childNodes[childOffset]
-      Cinnabun.fragMap.set(parentElement, childOffset + 1)
+      Cinnabun.rootMap.set(parentElement, childOffset + 1)
       DomInterop.updateElement(c)
     }
 

@@ -1,9 +1,4 @@
-import {
-  Cinnabun,
-  addComponentReference,
-  componentReferences,
-  setComponentReferences,
-} from "./cinnabun"
+import { Cinnabun } from "./cinnabun"
 import { DomInterop } from "./domInterop"
 
 import { Signal } from "./signal"
@@ -42,7 +37,7 @@ export class Component<T extends HTMLElement> {
 
     if (watch && watch instanceof Signal) {
       const unsub = watch.subscribe(this.applyBindProps.bind(this))
-      addComponentReference({
+      Cinnabun.addComponentReference({
         component: this,
         onDestroyed: () => unsub(),
       })
@@ -110,7 +105,7 @@ export class Component<T extends HTMLElement> {
       this.props = Object.assign(this.props, props)
     }
     const unsubscriber = this.subscription(setProps, this as Component<any>)
-    addComponentReference({
+    Cinnabun.addComponentReference({
       component: this,
       onDestroyed: () => unsubscriber(),
     })
@@ -120,7 +115,7 @@ export class Component<T extends HTMLElement> {
     if (this.element) {
       if (onChange) {
         this.element.addEventListener("change", onChange)
-        addComponentReference({
+        Cinnabun.addComponentReference({
           component: this,
           onDestroyed: () =>
             this.element!.removeEventListener("change", onChange),
@@ -129,14 +124,14 @@ export class Component<T extends HTMLElement> {
       if (onClick) {
         const fn = (e: Event) => onClick(e, this)
         this.element.addEventListener("click", fn)
-        addComponentReference({
+        Cinnabun.addComponentReference({
           component: this,
           onDestroyed: () => this.element!.removeEventListener("click", fn),
         })
       }
     }
     if (onDestroyed) {
-      addComponentReference({
+      Cinnabun.addComponentReference({
         component: this,
         onDestroyed: () => onDestroyed(this),
       })
@@ -169,11 +164,13 @@ export class Component<T extends HTMLElement> {
   destroyComponentRefs(el: Component<any>) {
     this.destroyChildComponentRefs(el)
     el.parent = null
-    const subs = componentReferences.filter((s) => s.component === el)
+    const subs = Cinnabun.componentReferences.filter((s) => s.component === el)
     while (subs.length) {
       subs.pop()!.onDestroyed()
     }
-    setComponentReferences((arr) => arr.filter((s) => s.component !== el))
+    Cinnabun.setComponentReferences((arr) =>
+      arr.filter((s) => s.component !== el)
+    )
   }
 
   onDestroy() {
