@@ -2,7 +2,7 @@ import express from "express"
 import fs from "fs"
 import path from "path"
 import compression from "compression"
-import { Cinnabun } from "cinnabun"
+import { SSR } from "cinnabun/ssr"
 import { App } from "../App"
 
 const rootId = "app"
@@ -19,8 +19,8 @@ app.get("/favicon.ico", (_, res) => {
 
 app.get(/.*/, (req, res) => {
   console.time("render time")
-  Cinnabun.setServerRequestPath(req.path)
-  const { html, componentTree } = Cinnabun.serverBake(App())
+  SSR.setRequestPath(req.path)
+  const { html, componentTree } = SSR.serverBake(App())
   console.timeEnd("render time")
 
   fs.readFile(

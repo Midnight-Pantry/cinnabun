@@ -11,10 +11,6 @@ export const setHash = (store: Signal<string>, newHash: string) => {
 
 export const setPath = (store: Signal<string>, newPath: string) => {
   if (window.location.pathname === newPath) return
-  // if (!Cinnabun.isClient) {
-  //   Cinnabun.setServerRequestPath(newPath)
-  // } else {
-  // }
   window.history.pushState({}, "", newPath)
   store.value = newPath
 }

@@ -12,7 +12,6 @@ import {
   ComponentChild,
   ComponentEventProps,
   ClassConstructor,
-  SerializedComponent,
 } from "./types"
 
 export class Component<T extends HTMLElement> {
@@ -98,111 +97,6 @@ export class Component<T extends HTMLElement> {
     if (typeof prop === "function")
       return this.getPrimitive(prop(), signalCallback)
     return prop
-  }
-
-  serializeProps(): Partial<ComponentProps<T>> {
-    const res: Partial<ComponentProps<T>> = {}
-    for (const k of Object.keys(this._props)) {
-      const p = this._props[k]
-      if (p instanceof Signal) {
-        res[k] = p.value
-        console.log("signal prop", res[k])
-      } else {
-        if (k !== "children") res[k] = this._props[k]
-      }
-    }
-    return res
-  }
-
-  serializePropName(val: string): string {
-    switch (val) {
-      case "className":
-        return "class"
-      default:
-        return val
-    }
-  }
-
-  serialize(data: { html: string }): SerializedComponent {
-    const {
-      children,
-      onMounted,
-      onChange,
-      onClick,
-      onDestroyed,
-      subscription,
-      promise,
-      render,
-      ...rest
-    } = this._props
-    const shouldRender = this.shouldRender()
-    //if (this.tag === "article") console.log("article", shouldRender)
-    if (shouldRender && subscription) this.subscribeTo(subscription)
-    if (!shouldRender || !this.tag) {
-      return {
-        props: this.serializeProps(),
-        children: shouldRender
-          ? this.serializeChildren(data, shouldRender)
-          : [],
-      }
-    }
-
-    if (this.tag === "svg") return Cinnabun.serializeSvg(this)
-
-    const res: SerializedComponent = {
-      props: this.serializeProps(),
-      children: [],
-    }
-
-    data.html += `<${this.tag}${Object.entries(rest)
-      .filter(([k]) => k !== "style" && !k.startsWith("bind:"))
-      .map(
-        ([k, v]) => ` ${this.serializePropName(k)}="${this.getPrimitive(v)}"`
-      )
-      .join("")}>`
-
-    for (let i = 0; i < this.children.length; i++) {
-      const c = this.children[i]
-      if (typeof c === "string" || typeof c === "number") {
-        if (shouldRender) data.html += c
-        res.children.push({ props: {}, children: [] })
-        continue
-      }
-      if (c instanceof Signal) {
-        if (shouldRender) data.html += c.value
-        continue
-      }
-      if (typeof c === "function") {
-        const val = c(...this.childArgs)
-        val.parent = this
-        res.children!.push(val.serialize(data))
-        continue
-      }
-
-      res.children!.push(c.serialize(data))
-    }
-
-    if (["br", "hr", "img", "input"].indexOf(this.tag.toLowerCase()) === -1)
-      data.html += `</${this.tag}>`
-    return res
-  }
-
-  serializeChildren(
-    data: { html: string },
-    shouldRender: boolean
-  ): SerializedComponent[] {
-    return this.children.map((c: ComponentChild) => {
-      if (typeof c === "string" || typeof c === "number") {
-        if (shouldRender) data.html += c
-        return { children: [], props: {} }
-      }
-      if (typeof c === "function") {
-        const val = c(...this.childArgs)
-        val.parent = this
-        return val.serialize(data)
-      }
-      return c.serialize(data)
-    })
   }
 
   subscribeTo(subscription: ComponentSubscription) {

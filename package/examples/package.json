@@ -11,6 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cinnabun": "workspace:^0.1.2"
+    "cinnabun": "workspace:^0.1.3"
   }
 }

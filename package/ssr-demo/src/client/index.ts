@@ -1,10 +1,8 @@
-import { Cinnabun } from "cinnabun"
+import { SSR } from "cinnabun/ssr"
 import { App } from "../App"
 import { SSRProps } from "cinnabun/src/types"
 import "./index.css"
 
 if ("__cbData" in window) {
-  Cinnabun.hydrate(App(), window.__cbData as SSRProps)
-  //const { html, componentTree } = Cinnabun.serverBake(App())
-  //console.log(html, componentTree)
+  SSR.hydrate(App(), window.__cbData as SSRProps)
 }
