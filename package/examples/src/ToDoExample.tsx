@@ -3,17 +3,16 @@ import { createSignal } from "cinnabun"
 
 interface ToDoItem {
   text: string
-  done: boolean
 }
 const todos = createSignal<ToDoItem[]>([
-  { text: "Make a coffee", done: false },
-  { text: "Write a cool new app", done: false },
+  { text: "Make a coffee" },
+  { text: "Write a cool new app" },
 ])
 
 export const ToDoExample = () => {
   const inputVal = createSignal<string>("")
   const addToDo = () => {
-    todos.value = [...todos.value, { text: inputVal.value, done: false }]
+    todos.value = [...todos.value, { text: inputVal.value }]
     inputVal.value = ""
   }
   const removeToDo = (idx: number) => {
