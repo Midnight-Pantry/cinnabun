@@ -12,8 +12,7 @@ export const SignalsExample = () => {
       <br />
       <br />
       <input
-        watch={count}
-        bind:value={() => count.value}
+        value={count}
         onChange={(e) => {
           count.value = parseInt((e.target as HTMLInputElement).value)
         }}
