@@ -20,8 +20,7 @@ export class Component<T extends HTMLElement> {
   children: ComponentChild[] = []
   funcElements: HTMLElement[] = []
   element: T | undefined
-  promise: { (): Promise<any> } | undefined
-  promiseCache: any
+
   mounted: boolean = false
 
   private subscription: ComponentSubscription | undefined
@@ -60,33 +59,6 @@ export class Component<T extends HTMLElement> {
       return false
     }
     return true
-  }
-
-  handlePromise(
-    onfulfilled?: ((value: any) => void | PromiseLike<void>) | null | undefined,
-    onrejected?: ((reason: any) => PromiseLike<never>) | null | undefined
-  ) {
-    if (onfulfilled) {
-      this.promiseCache = onfulfilled
-      this.unRender()
-      this.reRender()
-      if (!this._props.cache) this.promiseCache = undefined
-    } else if (onrejected) {
-      console.error("handlePromise() - unhandle case 'onrejected'")
-      debugger //todo
-    } else {
-      console.error("handlePromise() - unhandle case 'unknown'")
-      debugger //todo
-    }
-  }
-
-  setPromise(promise: { (): Promise<any> }) {
-    if (!this.promise && promise) {
-      this.promise = promise
-      this.promise().then(this.handlePromise.bind(this))
-    } else if (this.promise && !this._props.cache) {
-      this.promise().then(this.handlePromise.bind(this))
-    }
   }
 
   applyBindProps() {
@@ -413,7 +385,11 @@ export class Component<T extends HTMLElement> {
       f.append(...this.getRenderedChildren())
       this.mounted = true
 
-      if (!isRerender && this instanceof SuspenseComponent) {
+      if (
+        !isRerender &&
+        "setPromise" in this &&
+        typeof this.setPromise === "function"
+      ) {
         this.setPromise(promise)
       }
 
@@ -507,12 +483,41 @@ export class Component<T extends HTMLElement> {
 }
 
 export class SuspenseComponent extends Component<any> {
+  promise: { (): Promise<any> } | undefined
+  promiseCache: any
+
   get childArgs(): any[] {
     return [!this.promiseCache, this.promiseCache]
   }
   resetPromise() {
     this.promise = undefined
     this.promiseCache = undefined
+  }
+  handlePromise(
+    onfulfilled?: ((value: any) => void | PromiseLike<void>) | null | undefined,
+    onrejected?: ((reason: any) => PromiseLike<never>) | null | undefined
+  ) {
+    if (onfulfilled) {
+      this.promiseCache = onfulfilled
+      this.unRender()
+      this.reRender()
+      if (!this.props.cache) this.promiseCache = undefined
+    } else if (onrejected) {
+      console.error("handlePromise() - unhandle case 'onrejected'")
+      debugger //todo
+    } else {
+      console.error("handlePromise() - unhandle case 'unknown'")
+      debugger //todo
+    }
+  }
+
+  setPromise(promise: { (): Promise<any> }) {
+    if (!this.promise && promise) {
+      this.promise = promise
+      this.promise().then(this.handlePromise.bind(this))
+    } else if (this.promise && !this.props.cache) {
+      this.promise().then(this.handlePromise.bind(this))
+    }
   }
 }
 

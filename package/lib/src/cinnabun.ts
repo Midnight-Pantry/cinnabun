@@ -88,7 +88,13 @@ export class Cinnabun {
     }
 
     if (c.props.subscription) c.subscribeTo(c.props.subscription)
-    if (c.props.promise) c.setPromise(c.props.promise)
+    if (
+      c.props.promise &&
+      "setPromise" in c &&
+      typeof c.setPromise === "function"
+    )
+      c.setPromise(c.props.promise)
+
     c.bindEvents(c.props)
 
     c.mounted = true
