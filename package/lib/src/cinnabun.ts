@@ -58,6 +58,7 @@ export class Cinnabun {
     sc: SerializedComponent,
     parentElement: Element | ChildNode
   ) {
+    if (!sc) return
     //if (c instanceof SuspenseComponent) debugger
     const childOffset: number = Cinnabun.fragMap.get(parentElement) ?? 0
 
@@ -67,6 +68,7 @@ export class Cinnabun {
     }
     if (typeof c === "function") {
       const val = c(...parent.childArgs)
+      if (!val.shouldRender()) return
       Cinnabun.hydrateComponent(parent, val, sc, parentElement)
       parent.funcElements.push(val.element)
       return
@@ -74,7 +76,7 @@ export class Cinnabun {
 
     c.parent = parent
 
-    if (sc && sc.props && Object.keys(sc.props).length) {
+    if (sc.props && Object.keys(sc.props).length) {
       Object.assign(c.props, sc.props)
     }
 
@@ -93,13 +95,17 @@ export class Cinnabun {
     c.mounted = true
 
     for (let i = 0; i < c.children.length; i++) {
-      const child = c.children[i]
-      const sChild = sc.children[i]
+      try {
+        const child = c.children[i]
+        const sChild = sc.children[i]
 
-      if (child instanceof Signal) {
-        c.renderChild(child)
+        if (child instanceof Signal) {
+          c.renderChild(child)
+        }
+        Cinnabun.hydrateComponent(c, child, sChild, c.element ?? parentElement)
+      } catch (error) {
+        debugger
       }
-      Cinnabun.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
   }
 

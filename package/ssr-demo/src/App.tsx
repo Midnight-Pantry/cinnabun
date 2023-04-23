@@ -62,7 +62,7 @@ export const App = () => {
               component={<NestedRoutingExample pathStore={pathStore} />}
             />
             <Route path="/todo" component={<ToDoExample />} />
-            <Route path="/perf" component={<PerfTest n={1_000} />} />
+            <Route path="/perf" component={<PerfTest n={40_000} />} />
           </Router>
         </main>
       </div>

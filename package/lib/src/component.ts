@@ -161,7 +161,9 @@ export class Component<T extends HTMLElement> {
     if (!shouldRender || !this.tag) {
       return {
         props: this.serializeProps(),
-        children: this.serializeChildren(data, shouldRender),
+        children: shouldRender
+          ? this.serializeChildren(data, shouldRender)
+          : [],
       }
     }
 
