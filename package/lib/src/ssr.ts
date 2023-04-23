@@ -1,5 +1,6 @@
 import { Cinnabun } from "./cinnabun"
 import { Component } from "./component"
+import { DomInterop } from "./domInterop"
 import { Signal } from "./signal"
 import {
   ComponentChild,
@@ -83,7 +84,7 @@ export class SSR {
       .filter(([k]) => k !== "style" && !k.startsWith("bind:"))
       .map(
         ([k, v]) =>
-          ` ${this.serializePropName(k)}="${component.getPrimitive(v)}"`
+          ` ${SSR.serializePropName(k)}="${component.getPrimitive(v)}"`
       )
       .join("")}>`
 
@@ -208,7 +209,7 @@ export class SSR {
     if (c.tag) {
       c.element = parentElement.childNodes[childOffset]
       Cinnabun.fragMap.set(parentElement, childOffset + 1)
-      c.updateElement()
+      DomInterop.updateElement(c)
     }
 
     if (c.props.subscription) c.subscribeTo(c.props.subscription)
@@ -228,7 +229,7 @@ export class SSR {
       const sChild = sc.children[i]
 
       if (child instanceof Signal) {
-        c.renderChild(child)
+        DomInterop.renderChild(c, child)
       }
       SSR.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }

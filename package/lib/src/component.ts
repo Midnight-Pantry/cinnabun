@@ -4,6 +4,7 @@ import {
   componentReferences,
   setComponentReferences,
 } from "./cinnabun"
+import { DomInterop } from "./domInterop"
 
 import { Signal } from "./signal"
 import {
@@ -69,18 +70,20 @@ export class Component<T extends HTMLElement> {
         const propName = k.substring(k.indexOf(":") + 1)
 
         // possibly shouldn't be using this.renderChildren?
-        this._props[propName] = this.getPrimitive(v, this.renderChildren)
+        this._props[propName] = this.getPrimitive(v, () =>
+          DomInterop.renderChildren(this)
+        )
 
         if (propName === "render" && Cinnabun.isClient) {
           //debugger
           if (!this._props.render || !this.parent?._props.render) {
-            this.unRender()
+            DomInterop.unRender(this)
           } else if (this._props.render) {
-            this.reRender()
+            DomInterop.reRender(this)
           }
         } else if (propName === "children") {
           if (this._props.children) this.replaceChildren(this._props.children)
-          if (Cinnabun.isClient) this.renderChildren()
+          if (Cinnabun.isClient) DomInterop.renderChildren(this)
         } else if (this.element) {
           Object.assign(this.element, { [propName]: this._props[propName] })
         }
@@ -140,201 +143,6 @@ export class Component<T extends HTMLElement> {
     }
   }
 
-  updateElement() {
-    if (!this.element) return
-    const {
-      htmlFor,
-      children,
-      onMounted,
-      onChange,
-      onClick,
-      onDestroyed,
-      subscription,
-      render,
-      style,
-      promise,
-      ...rest
-    } = this.props
-
-    if (style) Object.assign(this.element.style, style)
-    if (htmlFor && "htmlFor" in this.element) this.element.htmlFor = htmlFor
-
-    if (Object.keys(rest).length) {
-      for (const [k, v] of Object.entries(rest)) {
-        if (k.includes("bind:")) continue
-        Object.assign(this.element, {
-          [k]: this.getPrimitive(v, this.updateElement),
-        })
-      }
-    }
-  }
-
-  getRenderedChildren() {
-    return this.getRenderableChildren().map(this.renderChild.bind(this))
-  }
-
-  getRenderableChildren() {
-    return this.children.filter(
-      (c) =>
-        typeof c === "function" ||
-        typeof c === "string" ||
-        typeof c === "number" ||
-        (c instanceof Component && c._props.render) ||
-        c instanceof Signal
-    )
-  }
-
-  renderChildren() {
-    if (!this.props.render) return
-    if (!this.element) return
-    this.element.replaceChildren(...this.getRenderedChildren())
-  }
-
-  renderChild(child: any): string | Node {
-    if (child instanceof Signal) {
-      this.subscribeTo((_, __) =>
-        child.subscribe(this.renderChildren.bind(this))
-      )
-      return child.value.toString()
-    }
-    if (child instanceof Component) return child.render()
-    if (typeof child === "function") {
-      const res = this.renderChild(child(...this.childArgs))
-      //@ts-ignore
-      this.funcElements = Array.isArray(res) ? res : [res]
-      return res
-    }
-    return child
-  }
-
-  shouldRender(): boolean {
-    if (!this._props.render) return false
-    if (this.parent) return this.parent?.shouldRender()
-    return true
-  }
-
-  unRender() {
-    try {
-      if (this.funcElements.length > 0) {
-        for (const fc of this.funcElements) {
-          if ("remove" in fc) fc.remove()
-        }
-        this.funcElements = []
-      }
-      if (this.element) {
-        //Array.from(this.element.children).forEach((c) => c.remove())
-        return this.element.remove()
-      }
-      for (const c of this.children) {
-        if (c instanceof Component<any>) {
-          c.unRender()
-        } else if (c instanceof Node) {
-          c.parentNode?.removeChild(c)
-        }
-      }
-    } catch (error) {
-      console.error("failed to unrender", this)
-      debugger
-    }
-  }
-
-  reRender() {
-    if (!this.shouldRender()) return
-
-    const el = this.element ?? this.render(true)
-    if (this.element) this.renderChildren()
-    if (el.isConnected) return
-
-    const { element, idx } = this.getMountLocation()
-    if (!element) {
-      console.error("Failed to get component mount element", this, el)
-      return
-    }
-
-    //element.children[idx] is our actual previous child but be need to insert before the next.
-    const prevChild = element.children[idx + 1]
-    if (prevChild) {
-      element.insertBefore(el, prevChild)
-    } else {
-      element.appendChild(el)
-    }
-  }
-
-  render(isRerender: boolean = false): T | Node {
-    const {
-      children,
-      onMounted,
-      onChange,
-      onClick,
-      onDestroyed,
-      subscription,
-      promise,
-    } = this.props
-
-    setComponentReferences((arr) => arr.filter((c) => c.component !== this))
-
-    if (!this.tag) {
-      const f = document.createDocumentFragment()
-      if (subscription) this.subscribeTo(subscription)
-      f.append(...this.getRenderedChildren())
-      this.mounted = true
-
-      if (
-        !isRerender &&
-        "setPromise" in this &&
-        typeof this.setPromise === "function"
-      ) {
-        this.setPromise(promise)
-      }
-
-      return f
-    }
-
-    if (this.tag === "svg") return Cinnabun.svg(this)
-    if (!this.element) {
-      this.element = document.createElement(this.tag) as T
-      this.bindEvents({
-        onChange,
-        onClick,
-      })
-    }
-
-    if (children) this.replaceChildren(children)
-
-    this.renderChildren()
-
-    this.updateElement()
-
-    this.bindEvents({ onDestroyed })
-
-    if (subscription) this.subscribeTo(subscription)
-
-    this.mounted = true
-    if (onMounted) onMounted(this)
-    return this.element
-  }
-
-  getMountLocation(start = 0): { element: HTMLElement | null; idx: number } {
-    if (!this.parent) return { element: null, idx: -1 }
-    if (this.element) start++
-    for (let i = 0; i < this.parent.children.length; i++) {
-      const c = this.parent.children[i]
-      if (c instanceof Component && !c._props.render) continue
-      if (c === this) break
-      if (c instanceof Component) {
-        for (const child of c.children) {
-          if (child instanceof Component && child.element) {
-            start++
-          } else if (typeof child === "string" || typeof child === "number") {
-            start++
-          }
-        }
-      }
-    }
-    if (this.parent.element) return { element: this.parent.element, idx: start }
-    return this.parent.getMountLocation(start)
-  }
-
   replaceChildren(newChildren: ComponentChild[]) {
     this.destroyChildComponentRefs(this)
     this.children = newChildren
@@ -350,6 +158,12 @@ export class Component<T extends HTMLElement> {
       const val = typeof c === "function" ? c(...this.childArgs) : c
       if (typeof val !== "string") this.destroyComponentRefs(val)
     }
+  }
+
+  shouldRender(): boolean {
+    if (!this._props.render) return false
+    if (this.parent) return this.parent?.shouldRender()
+    return true
   }
 
   destroyComponentRefs(el: Component<any>) {
@@ -393,8 +207,8 @@ export class SuspenseComponent extends Component<any> {
   ) {
     if (onfulfilled) {
       this.promiseCache = onfulfilled
-      this.unRender()
-      this.reRender()
+      DomInterop.unRender(this)
+      DomInterop.reRender(this)
       if (!this.props.cache) this.promiseCache = undefined
     } else if (onrejected) {
       console.error("handlePromise() - unhandle case 'onrejected'")

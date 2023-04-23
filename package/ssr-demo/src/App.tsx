@@ -11,13 +11,11 @@ import { pathStore } from "./state"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
-    <article>
-      <ul>
-        {...Array(n)
-          .fill(0)
-          .map((_, i) => <li>{i}</li>)}
-      </ul>
-    </article>
+    <ul>
+      {...Array(n)
+        .fill(0)
+        .map((_, i) => <li>{i}</li>)}
+    </ul>
   )
 }
 

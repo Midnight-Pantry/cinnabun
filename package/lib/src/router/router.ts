@@ -1,6 +1,7 @@
 import { Signal, Component } from ".."
 import { Cinnabun } from "../cinnabun"
 import { RouteComponent, RouterComponent } from "../component"
+import { DomInterop } from "../domInterop"
 import { PropsSetter } from "../types"
 
 interface RouterProps {
@@ -14,7 +15,7 @@ export const Router = ({ store }: RouterProps, children: RouteComponent[]) => {
       while (len--) {
         ;(self.children[len] as RouteComponent).props.render = false
       }
-      if (Cinnabun.isClient) self.unRender()
+      if (Cinnabun.isClient) DomInterop.unRender(self)
 
       for (let i = 0; i < self.children.length; i++) {
         const c = self.children[i] as RouteComponent
@@ -28,7 +29,7 @@ export const Router = ({ store }: RouterProps, children: RouteComponent[]) => {
           break
         }
       }
-      if (Cinnabun.isClient && self.mounted) self.reRender()
+      if (Cinnabun.isClient && self.mounted) DomInterop.reRender(self)
     })
   }
   return new RouterComponent(subscription, children)

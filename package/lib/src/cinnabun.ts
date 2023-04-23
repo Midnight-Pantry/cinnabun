@@ -1,4 +1,5 @@
 import { Component } from "."
+import { DomInterop } from "./domInterop"
 import { ComponentProps, WatchedElementRef } from "./types"
 export { h, fragment } from "."
 
@@ -13,7 +14,7 @@ export class Cinnabun {
       children: [app],
     })
     tray.element = root
-    tray.render()
+    DomInterop.render(tray)
   }
 
   static element<T extends HTMLElement>(
@@ -21,30 +22,6 @@ export class Cinnabun {
     props: ComponentProps<T> = {}
   ): Component<T> {
     return new Component<T>(tag, props)
-  }
-
-  static svg(component: Component<any>): SVGSVGElement {
-    const el = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      component.tag
-    )
-
-    const { render, ...props } = component.props
-
-    for (const [k, v] of Object.entries(props)) {
-      el.setAttribute(k, v)
-    }
-
-    for (const c of component.children) {
-      el.append(
-        typeof c === "string" || typeof c === "number"
-          ? c
-          : Cinnabun.svg(typeof c === "function" ? c() : c)
-      )
-    }
-
-    //@ts-ignore
-    return el as SVGElement
   }
 }
 
