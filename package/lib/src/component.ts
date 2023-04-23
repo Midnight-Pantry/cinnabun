@@ -235,6 +235,8 @@ export class FragmentComponent extends Component<any> {
 export class RouterComponent extends Component<any> {
   constructor(subscription: ComponentSubscription, children: RouteComponent[]) {
     super("", { subscription, children })
+    if (children.some((c) => !(c instanceof RouteComponent)))
+      throw new Error("Must provide Route as child of Router")
     // sort to make sure we match on more complex routes first
     this.children.sort((a, b) => {
       return (
