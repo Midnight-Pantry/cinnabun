@@ -300,6 +300,7 @@ export class Component<T extends HTMLElement> {
       (c) =>
         typeof c === "function" ||
         typeof c === "string" ||
+        typeof c === "number" ||
         (c instanceof Component && c._props.render) ||
         c instanceof Signal
     )
@@ -462,7 +463,7 @@ export class Component<T extends HTMLElement> {
 
   destroyChildComponentRefs(el: Component<any>) {
     for (const c of el.children) {
-      if (typeof c === "string") continue
+      if (typeof c === "string" || typeof c === "number") continue
       const val = typeof c === "function" ? c(...this.childArgs) : c
       if (typeof val !== "string") this.destroyComponentRefs(val)
     }

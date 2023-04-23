@@ -155,7 +155,7 @@ export class Cinnabun {
 
     for (const c of component.children) {
       el.append(
-        typeof c === "string"
+        typeof c === "string" || typeof c === "number"
           ? c
           : Cinnabun.svg(typeof c === "function" ? c() : c)
       )
