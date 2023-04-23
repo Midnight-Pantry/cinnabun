@@ -44,7 +44,7 @@ export const App = () => {
           <Route path="/suspense" component={<SuspenseExample />} />
           <Route
             path="/nested-routing"
-            component={<NestedRoutingExample pathStore={pathStore} />}
+            component={<NestedRoutingExample {...{ pathStore }} />}
           />
           <Route path="/todo" component={<ToDoExample />} />
         </Router>

@@ -1,7 +1,7 @@
 {
   "name": "cinnabun",
-  "version": "0.0.3",
-  "description": "A reactive, component-based js rendering library",
+  "version": "0.1.2",
+  "description": "A reactive, component-based js framework built with great features from the start",
   "main": "index.js",
   "repository": {
     "type": "github",
