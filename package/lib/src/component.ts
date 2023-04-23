@@ -117,9 +117,10 @@ export class Component<T extends HTMLElement> {
     }
   }
 
-  getPrimitive(prop: any, signalCallback: { (): void }): any {
+  getPrimitive(prop: any, signalCallback?: { (): void }): any {
     if (prop instanceof Signal) {
-      this.subscribeTo((_, __) => prop.subscribe(signalCallback.bind(this)))
+      if (signalCallback)
+        this.subscribeTo((_, __) => prop.subscribe(signalCallback.bind(this)))
       return prop.value
     }
     if (typeof prop === "function")
@@ -130,7 +131,13 @@ export class Component<T extends HTMLElement> {
   serializeProps(): Partial<ComponentProps<T>> {
     const res: Partial<ComponentProps<T>> = {}
     for (const k of Object.keys(this._props)) {
-      if (k !== "children") res[k] = this._props[k]
+      const p = this._props[k]
+      if (p instanceof Signal) {
+        res[k] = p.value
+        console.log("signal prop", res[k])
+      } else {
+        if (k !== "children") res[k] = this._props[k]
+      }
     }
     return res
   }
@@ -177,7 +184,9 @@ export class Component<T extends HTMLElement> {
 
     data.html += `<${this.tag}${Object.entries(rest)
       .filter(([k]) => k !== "style" && !k.startsWith("bind:"))
-      .map(([k, v]) => ` ${this.serializePropName(k)}="${v}"`)
+      .map(
+        ([k, v]) => ` ${this.serializePropName(k)}="${this.getPrimitive(v)}"`
+      )
       .join("")}>`
 
     for (let i = 0; i < this.children.length; i++) {

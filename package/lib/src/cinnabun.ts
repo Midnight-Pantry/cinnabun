@@ -124,17 +124,6 @@ export class Cinnabun {
     }
   }
 
-  static renderDynamic(
-    cmpntOrCmpntFunc: Component<any> | { (): Component<any> }
-  ): Node {
-    if (typeof cmpntOrCmpntFunc === "function") {
-      const val = cmpntOrCmpntFunc()
-      if (typeof val === "string" || typeof val === "number") return val
-      return Cinnabun.renderDynamic(val)
-    }
-    return cmpntOrCmpntFunc.render()
-  }
-
   static element<T extends HTMLElement>(
     tag: string,
     props: ComponentProps<T> = {}
