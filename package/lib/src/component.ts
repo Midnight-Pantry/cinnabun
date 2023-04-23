@@ -157,6 +157,7 @@ export class Component<T extends HTMLElement> {
       ...rest
     } = this._props
     const shouldRender = this.shouldRender()
+    //if (this.tag === "article") console.log("article", shouldRender)
     if (shouldRender && subscription) this.subscribeTo(subscription)
     if (!shouldRender || !this.tag) {
       return {
@@ -357,6 +358,7 @@ export class Component<T extends HTMLElement> {
         }
       }
     } catch (error) {
+      console.error("failed to unrender", this)
       debugger
     }
   }

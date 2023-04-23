@@ -59,7 +59,6 @@ export class Cinnabun {
     parentElement: Element | ChildNode
   ) {
     if (!sc) return
-    //if (c instanceof SuspenseComponent) debugger
     const childOffset: number = Cinnabun.fragMap.get(parentElement) ?? 0
 
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
@@ -95,17 +94,13 @@ export class Cinnabun {
     c.mounted = true
 
     for (let i = 0; i < c.children.length; i++) {
-      try {
-        const child = c.children[i]
-        const sChild = sc.children[i]
+      const child = c.children[i]
+      const sChild = sc.children[i]
 
-        if (child instanceof Signal) {
-          c.renderChild(child)
-        }
-        Cinnabun.hydrateComponent(c, child, sChild, c.element ?? parentElement)
-      } catch (error) {
-        debugger
+      if (child instanceof Signal) {
+        c.renderChild(child)
       }
+      Cinnabun.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
   }
 
