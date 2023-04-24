@@ -70,8 +70,11 @@ export class SSR {
     accumulator: Accumulator,
     component: GenericComponent
   ): Promise<SerializedComponent> {
-    const renderClosingTag =
-      ["br", "hr", "img", "input"].indexOf(component.tag.toLowerCase()) === -1
+    const res: SerializedComponent = {
+      props: SSR.serializeProps(component),
+      children: [],
+    }
+
     const {
       children,
       onMounted,
@@ -84,31 +87,30 @@ export class SSR {
       render,
       ...rest
     } = component.props
-    const shouldRender = component.shouldRender()
-    if (shouldRender && subscription) component.subscribeTo(subscription)
-    if (!shouldRender || !component.tag) {
-      let children: SerializedComponent[] = []
 
+    const shouldRender = component.shouldRender()
+
+    if (shouldRender && subscription) component.subscribeTo(subscription)
+
+    if (!shouldRender || !component.tag) {
       if (shouldRender) {
-        children = await SSR.serializeChildren(
+        const children = await SSR.serializeChildren(
           accumulator,
           component,
           shouldRender
         )
+        return {
+          props: SSR.serializeProps(component),
+          children,
+        }
       }
-
-      return {
-        props: SSR.serializeProps(component),
-        children,
-      }
+      return res
     }
 
     if (component.tag === "svg") return SSR.serializeSvg(component)
 
-    const res: SerializedComponent = {
-      props: SSR.serializeProps(component),
-      children: [],
-    }
+    const renderClosingTag =
+      ["br", "hr", "img", "input"].indexOf(component.tag.toLowerCase()) === -1
 
     accumulator.html.push(
       `<${component.tag}${Object.entries(rest ?? {})
@@ -120,32 +122,11 @@ export class SSR {
         .join("")}${renderClosingTag ? "" : "/"}>`
     )
 
-    for (let i = 0; i < component.children.length; i++) {
-      const c = component.children[i]
-      if (typeof c === "string" || typeof c === "number") {
-        if (shouldRender) accumulator.html.push(c)
-        res.children.push({ props: {}, children: [] })
-        continue
-      }
-      if (c instanceof Signal) {
-        if (shouldRender) accumulator.html.push(c.value)
-        res.children.push({ props: {}, children: [] })
-        continue
-      }
-      if (typeof c === "function") {
-        if ("promiseCache" in component && component.props.prefetch) {
-          component.promiseCache = await component.props.promise()
-          component.props.promiseCache = component.promiseCache
-        }
-        const val = c(...component.childArgs)
-        val.parent = component
-        const serialized = await SSR.serialize(accumulator, val)
-        res.children.push(serialized)
-        continue
-      }
-      const sc = await SSR.serialize(accumulator, c)
-      res.children.push(sc)
-    }
+    res.children = await SSR.serializeChildren(
+      accumulator,
+      component,
+      shouldRender
+    )
 
     if (renderClosingTag) accumulator.html.push(`</${component.tag}>`)
     return res
