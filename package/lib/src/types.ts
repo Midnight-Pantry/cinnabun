@@ -63,7 +63,7 @@ export type ComponentProps<T extends HTMLElement> = ReactivityProps &
 
 export type RouteProps = {
   path: string
-  component: Component<any>
+  component: ComponentChild
 }
 
 export type LinkProps = ComponentProps<HTMLAnchorElement> & {
