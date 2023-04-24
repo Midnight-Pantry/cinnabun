@@ -130,11 +130,7 @@ export class SSR {
   ): Promise<SerializedComponent[]> {
     const res: SerializedComponent[] = []
     for await (const c of component.children) {
-      if (
-        typeof c === "string" ||
-        typeof c === "number" ||
-        (typeof c === "object" && !(c instanceof Component))
-      ) {
+      if (typeof c === "string" || typeof c === "number") {
         if (shouldRender) accumulator.html.push(c.toString())
         res.push({ children: [], props: {} })
         continue
@@ -142,6 +138,15 @@ export class SSR {
 
       if (c instanceof Signal) {
         if (shouldRender) accumulator.html.push(c.value)
+        res.push({ children: [], props: {} })
+        continue
+      }
+      if (typeof c === "object" && !(c instanceof Component)) {
+        //just a safety thing, so we see '[Object object]' in the frontend
+        //instead of crashing from trying to serialize the object as a component
+
+        //@ts-ignore
+        if (shouldRender) accumulator.html.push(c.toString())
         res.push({ children: [], props: {} })
         continue
       }
