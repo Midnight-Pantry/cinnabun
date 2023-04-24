@@ -1,7 +1,7 @@
 import { LinkProps } from "../types"
 import { Component, Signal } from ".."
 import { Cinnabun } from "../cinnabun"
-//import { Cinnabun } from "../cinnabun"
+import { matchPath } from "../router"
 
 export const setHash = (store: Signal<string>, newHash: string) => {
   if (store.value === newHash) return
@@ -16,7 +16,7 @@ export const setPath = (store: Signal<string>, newPath: string) => {
 }
 
 export const Link = (props: LinkProps, children: Component<any>[]) => {
-  const { to, store, activeClass, useHash, ...rest } = props
+  const { to, store, className, activeClass, useHash, ...rest } = props
 
   const handleClick = (e: Event) => {
     e.preventDefault()
@@ -27,10 +27,15 @@ export const Link = (props: LinkProps, children: Component<any>[]) => {
   return new Component("a", {
     watch: store,
     ["bind:className"]: () => {
-      const pathMatch =
-        (Cinnabun.isClient ? store.value : Cinnabun.serverRequestPath) === to
+      const curPath = Cinnabun.isClient
+        ? store.value
+        : Cinnabun.serverRequestPath
 
-      return pathMatch ? activeClass ?? "active" : ""
+      const pathMatches = !!matchPath(curPath, to).routeMatch
+
+      return (
+        className ?? "" + " " + (pathMatches ? activeClass ?? "active" : "")
+      )
     },
     href: to,
     onClick: handleClick,

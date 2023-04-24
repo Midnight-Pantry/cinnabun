@@ -1,3 +1,4 @@
+import { matchPath } from "."
 import { Signal, Component } from ".."
 import { Cinnabun } from "../cinnabun"
 import { DomInterop } from "../domInterop"
@@ -40,24 +41,9 @@ export class RouterComponent extends Component<any> {
     params: any
     routeMatch: RegExpMatchArray | null
   } {
-    let paramNames: any[] = []
     const cPath: string = this.getParentPath() + c.props.path
-    let regexPath =
-      cPath.replace(/([:*])(\w+)/g, (_full, _colon, name) => {
-        paramNames.push(name)
-        return "([^/]+)"
-      }) + "(?:/|$)"
 
-    let params: any = {}
-    let routeMatch = path.match(new RegExp(regexPath))
-    if (routeMatch !== null) {
-      params = routeMatch.slice(1).reduce((str, value, index) => {
-        if (str === null) params = {}
-        params[paramNames[index]] = value
-        return params
-      }, null)
-    }
-    return { params, routeMatch }
+    return matchPath(path, cPath)
   }
 }
 
