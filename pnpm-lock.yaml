@@ -8,7 +8,7 @@ importers:
   package/csr-demo:
     specifiers:
       '@cinnabun/examples': workspace:^1.0.0
-      cinnabun: workspace:^0.1.6
+      cinnabun: workspace:^0.1.7
       typescript: ^4.9.5
       vite: ^4.3.1
     dependencies:
@@ -20,7 +20,7 @@ importers:
 
   package/examples:
     specifiers:
-      cinnabun: workspace:^0.1.6
+      cinnabun: workspace:^0.1.7
     dependencies:
       cinnabun: link:../lib
 
@@ -40,7 +40,7 @@ importers:
       '@types/compression': ^1.7.2
       '@types/express': ^4.17.17
       '@types/node': ^18.16.0
-      cinnabun: workspace:^0.1.6
+      cinnabun: workspace:^0.1.7
       compression: ^1.7.4
       esbuild: ^0.17.18
       express: ^4.18.2
