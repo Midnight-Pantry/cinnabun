@@ -87,10 +87,11 @@ export class SSR {
     if (!shouldRender || !component.tag) {
       let children: SerializedComponent[] = []
 
-      if (shouldRender)
+      if (shouldRender) {
         children = await Promise.all(
           SSR.serializeChildren(accumulator, component, shouldRender)
         )
+      }
 
       return {
         props: SSR.serializeProps(component),
@@ -124,6 +125,7 @@ export class SSR {
       }
       if (c instanceof Signal) {
         if (shouldRender) accumulator.html.push(c.value)
+        res.children.push({ props: {}, children: [] })
         continue
       }
       if (typeof c === "function") {
@@ -133,12 +135,12 @@ export class SSR {
         }
         const val = c(...component.childArgs)
         val.parent = component
-        const res = await SSR.serialize(accumulator, val)
-        res.children!.push(res)
+        const serialized = await SSR.serialize(accumulator, val)
+        res.children.push(serialized)
         continue
       }
       const sc = await SSR.serialize(accumulator, c)
-      res.children!.push(sc)
+      res.children.push(sc)
     }
 
     if (
@@ -152,7 +154,7 @@ export class SSR {
     accumulator: Accumulator,
     component: GenericComponent,
     shouldRender: boolean
-  ) {
+  ): Promise<SerializedComponent>[] {
     return component.children.map(async (c: ComponentChild) => {
       if (typeof c === "string" || typeof c === "number") {
         if (shouldRender) accumulator.html.push(c)
@@ -168,12 +170,10 @@ export class SSR {
           component.props.promiseCache = component.promiseCache
         }
         const val = c(...component.childArgs)
-        if (!(val instanceof Component))
-          throw new Error("serializeChildren return non-component child")
         val.parent = component
-        return await SSR.serialize(accumulator, val)
+        return SSR.serialize(accumulator, val)
       }
-      return await SSR.serialize(accumulator, c)
+      return SSR.serialize(accumulator, c)
     })
   }
 
