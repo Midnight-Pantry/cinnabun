@@ -3,6 +3,8 @@ import { Component } from "./component"
 import { Signal } from "./signal"
 import { ComponentProps, GenericComponent, SerializedComponent } from "./types"
 
+export type ServerPromise<T> = Promise<T>
+
 type ServerBakeResult = {
   componentTree: SerializedComponent
   html: string

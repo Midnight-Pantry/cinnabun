@@ -1,6 +1,6 @@
 const esbuild = require("esbuild")
 
-const { replaceDollarFunctions } = require("./transform.plugin")
+const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
 
 const sharedSettings = {
   bundle: true,
@@ -27,7 +27,10 @@ Promise.all([
     entryPoints: ["./src/client/index.ts"],
     outdir: "dist/static",
     ...sharedSettings,
-    plugins: [replaceDollarFunctions()],
+    plugins: [
+      replaceServerFunctions(regexPatterns.ServerPromise),
+      replaceServerFunctions(regexPatterns.$fn),
+    ],
   }),
 ])
   .then(() => {
