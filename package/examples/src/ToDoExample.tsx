@@ -7,6 +7,7 @@ interface ToDoItem {
 const todos = createSignal<ToDoItem[]>([
   { text: "Make a coffee" },
   { text: "Write a cool new app" },
+  { text: "asdfg" },
 ])
 
 export const ToDoExample = () => {
@@ -22,7 +23,7 @@ export const ToDoExample = () => {
 
   return (
     <>
-      <div className="todo-list" watch={todos} bind:render={() => true}>
+      <article className="todo-list" watch={todos} bind:render={() => true}>
         {() => (
           <ul>
             {...todos.value.map((item, i) => (
@@ -33,7 +34,7 @@ export const ToDoExample = () => {
             ))}
           </ul>
         )}
-      </div>
+      </article>
       <br />
       <input
         placeholder="Add a new item"

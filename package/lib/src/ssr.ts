@@ -1,5 +1,5 @@
 import { Cinnabun } from "./cinnabun"
-import { Component, SuspenseComponent } from "./component"
+import { Component } from "./component"
 import { DomInterop } from "./domInterop"
 import { Signal } from "./signal"
 import {
@@ -70,6 +70,8 @@ export class SSR {
     accumulator: Accumulator,
     component: GenericComponent
   ): Promise<SerializedComponent> {
+    const renderClosingTag =
+      ["br", "hr", "img", "input"].indexOf(component.tag.toLowerCase()) === -1
     const {
       children,
       onMounted,
@@ -88,8 +90,10 @@ export class SSR {
       let children: SerializedComponent[] = []
 
       if (shouldRender) {
-        children = await Promise.all(
-          SSR.serializeChildren(accumulator, component, shouldRender)
+        children = await SSR.serializeChildren(
+          accumulator,
+          component,
+          shouldRender
         )
       }
 
@@ -113,7 +117,7 @@ export class SSR {
           ([k, v]) =>
             ` ${SSR.serializePropName(k)}="${component.getPrimitive(v)}"`
         )
-        .join("")}>`
+        .join("")}${renderClosingTag ? "" : "/"}>`
     )
 
     for (let i = 0; i < component.children.length; i++) {
@@ -143,26 +147,26 @@ export class SSR {
       res.children.push(sc)
     }
 
-    if (
-      ["br", "hr", "img", "input"].indexOf(component.tag.toLowerCase()) === -1
-    )
-      accumulator.html.push(`</${component.tag}>`)
+    if (renderClosingTag) accumulator.html.push(`</${component.tag}>`)
     return res
   }
 
-  public static serializeChildren(
+  public static async serializeChildren(
     accumulator: Accumulator,
     component: GenericComponent,
     shouldRender: boolean
-  ): Promise<SerializedComponent>[] {
-    return component.children.map(async (c: ComponentChild) => {
+  ): Promise<SerializedComponent[]> {
+    const res: SerializedComponent[] = []
+    for await (const c of component.children) {
       if (typeof c === "string" || typeof c === "number") {
         if (shouldRender) accumulator.html.push(c)
-        return { children: [], props: {} }
+        res.push({ children: [], props: {} })
+        continue
       }
       if (c instanceof Signal) {
         if (shouldRender) accumulator.html.push(c.value)
-        return { children: [], props: {} }
+        res.push({ children: [], props: {} })
+        continue
       }
       if (typeof c === "function") {
         if ("promiseCache" in component && component.props.prefetch) {
@@ -171,10 +175,15 @@ export class SSR {
         }
         const val = c(...component.childArgs)
         val.parent = component
-        return SSR.serialize(accumulator, val)
+        const sc = await SSR.serialize(accumulator, val)
+        res.push(sc)
+        continue
       }
-      return SSR.serialize(accumulator, c)
-    })
+
+      const sc = await SSR.serialize(accumulator, c)
+      res.push(sc)
+    }
+    return res
   }
 
   public static serializeSvg(_: Component<any>): SerializedComponent {
