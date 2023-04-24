@@ -188,14 +188,16 @@ export class Component<T extends HTMLElement> {
 }
 
 export class SuspenseComponent extends Component<any> {
-  promise: { (): Promise<any> } | undefined
+  promiseFunc: { (): Promise<any> } | undefined
+  promiseInstance: Promise<any> | undefined
   promiseCache: any
 
   get childArgs(): any[] {
-    return [!this.promiseCache, this.promiseCache]
+    if (!this.props.prefetch) return [!this.promiseCache, this.promiseCache]
+    return [this.promiseCache]
   }
   resetPromise() {
-    this.promise = undefined
+    this.promiseFunc = undefined
     this.promiseCache = undefined
   }
   handlePromise(
@@ -204,8 +206,10 @@ export class SuspenseComponent extends Component<any> {
   ) {
     if (onfulfilled) {
       this.promiseCache = onfulfilled
-      DomInterop.unRender(this)
-      DomInterop.reRender(this)
+      if (Cinnabun.isClient) {
+        DomInterop.unRender(this)
+        DomInterop.reRender(this)
+      }
       if (!this.props.cache) this.promiseCache = undefined
     } else if (onrejected) {
       console.error("handlePromise() - unhandle case 'onrejected'")
@@ -217,11 +221,13 @@ export class SuspenseComponent extends Component<any> {
   }
 
   setPromise(promise: { (): Promise<any> }) {
-    if (!this.promise && promise) {
-      this.promise = promise
-      this.promise().then(this.handlePromise.bind(this))
-    } else if (this.promise && !this.props.cache) {
-      this.promise().then(this.handlePromise.bind(this))
+    if (!this.promiseFunc && promise) {
+      this.promiseFunc = promise
+      this.promiseInstance = this.promiseFunc()
+      this.promiseInstance.then(this.handlePromise.bind(this))
+    } else if (this.promiseFunc && !this.props.cache) {
+      this.promiseInstance = this.promiseFunc()
+      this.promiseInstance.then(this.handlePromise.bind(this))
     }
   }
 }

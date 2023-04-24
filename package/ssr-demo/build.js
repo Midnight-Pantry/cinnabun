@@ -1,5 +1,7 @@
 const esbuild = require("esbuild")
 
+const useServerPlugin = require("./transform.plugin")
+
 const sharedSettings = {
   bundle: true,
   minify: true,
@@ -25,6 +27,7 @@ Promise.all([
     entryPoints: ["./src/client/index.ts"],
     outdir: "dist/static",
     ...sharedSettings,
+    plugins: [useServerPlugin.default()],
   }),
 ])
   .then(() => {

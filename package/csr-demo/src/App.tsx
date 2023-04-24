@@ -41,7 +41,7 @@ export const App = () => {
         <Router store={pathStore}>
           <Route path="/" component={<SignalsExample />} />
           <Route path="/context" component={<ContextExample />} />
-          <Route path="/suspense" component={<SuspenseExample />} />
+          <Route path="/suspense" component={<SuspenseExample cache />} />
           <Route
             path="/nested-routing"
             component={<NestedRoutingExample {...{ pathStore }} />}

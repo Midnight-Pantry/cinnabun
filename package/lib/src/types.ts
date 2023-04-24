@@ -28,6 +28,7 @@ export type ComponentSubscription = {
 export type SuspenseProps = {
   promise: { (): Promise<any> }
   cache?: boolean
+  prefetch?: boolean
 }
 export type SuspenseChild =
   | ComponentChild

@@ -8,7 +8,7 @@ import {
 } from "@cinnabun/examples"
 import { Link, Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
-
+import { ProductList } from "./ProductList"
 const PerfTest = ({ n }: { n: number }) => {
   return (
     <ul>
@@ -24,6 +24,7 @@ export const App = () => {
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <h1>Cinnabun JS - SSR</h1>
       <br />
+      <ProductList />
       <nav>
         <ul>
           <li>

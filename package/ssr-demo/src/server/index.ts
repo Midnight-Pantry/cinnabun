@@ -17,10 +17,10 @@ app.get("/favicon.ico", (_, res) => {
   res.status(404).send()
 })
 
-app.get(/.*/, (req, res) => {
+app.get(/.*/, async (req, res) => {
   console.time("render time")
   SSR.setRequestPath(req.path)
-  const { html, componentTree } = SSR.serverBake(App())
+  const { html, componentTree } = await SSR.serverBake(App())
   console.timeEnd("render time")
 
   fs.readFile(
