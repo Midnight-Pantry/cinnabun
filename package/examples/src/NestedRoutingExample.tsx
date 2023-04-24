@@ -3,9 +3,7 @@ import { Signal } from "cinnabun"
 import { Link, Router, Route } from "cinnabun/router"
 
 const ChildComponent = ({ params }: any) => {
-  console.log("params", params)
-  //const {params} =
-  return <h1>test</h1>
+  return <h1>{params.test}</h1>
 }
 
 export const NestedRoutingExample = ({
@@ -18,8 +16,8 @@ export const NestedRoutingExample = ({
       <Link to="/nested-routing/abc" store={pathStore} innerText="abc" />
       <Router store={pathStore}>
         <Route
-          path="/:123"
-          component={({ params }: any) => <ChildComponent params={params} />}
+          path="/:test"
+          component={(props) => <ChildComponent {...props} />}
         />
       </Router>
     </>

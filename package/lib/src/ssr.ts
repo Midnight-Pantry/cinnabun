@@ -43,13 +43,15 @@ export class SSR {
   ): Partial<ComponentProps<T>> {
     const res: Partial<ComponentProps<T>> = {}
     for (const k of Object.keys(component.props)) {
-      const p = component.props[k]
+      const p =
+        typeof component.props[k] === "undefined" ? true : component.props[k]
+
       if (p instanceof Signal) {
         res[k] = p.value
       } else {
         if (k === "children") continue
         if (k === "promise" && "prefetch" in component.props) continue
-        res[k] = component.props[k]
+        res[k] = p
       }
     }
     return res
@@ -128,11 +130,16 @@ export class SSR {
   ): Promise<SerializedComponent[]> {
     const res: SerializedComponent[] = []
     for await (const c of component.children) {
-      if (typeof c === "string" || typeof c === "number") {
-        if (shouldRender) accumulator.html.push(c)
+      if (
+        typeof c === "string" ||
+        typeof c === "number" ||
+        (typeof c === "object" && !(c instanceof Component))
+      ) {
+        if (shouldRender) accumulator.html.push(c.toString())
         res.push({ children: [], props: {} })
         continue
       }
+
       if (c instanceof Signal) {
         if (shouldRender) accumulator.html.push(c.value)
         res.push({ children: [], props: {} })
@@ -143,6 +150,7 @@ export class SSR {
           component.promiseCache = await component.props.promise()
           component.props.promiseCache = component.promiseCache
         }
+
         const val = c(...component.childArgs)
         val.parent = component
         const sc = await SSR.serialize(accumulator, val)

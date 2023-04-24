@@ -181,127 +181,17 @@ export class Component<T extends HTMLElement> {
     classRef: Class
   ): InstanceType<Class> | undefined {
     if (!this.parent) return undefined
+
     if (this.parent instanceof classRef)
       return this.parent as InstanceType<Class>
-    return undefined
-  }
-}
 
-export class SuspenseComponent extends Component<any> {
-  promiseFunc: { (): Promise<any> } | undefined
-  promiseInstance: Promise<any> | undefined
-  promiseCache: any
-
-  get childArgs(): any[] {
-    if (!this.props.prefetch) return [!this.promiseCache, this.promiseCache]
-    return [this.promiseCache]
-  }
-  resetPromise() {
-    this.promiseFunc = undefined
-    this.promiseCache = undefined
-  }
-  handlePromise(
-    onfulfilled?: ((value: any) => void | PromiseLike<void>) | null | undefined,
-    onrejected?: ((reason: any) => PromiseLike<never>) | null | undefined
-  ) {
-    if (onfulfilled) {
-      this.promiseCache = onfulfilled
-      if (Cinnabun.isClient) {
-        DomInterop.unRender(this)
-        DomInterop.reRender(this)
-      }
-      if (!this.props.cache) this.promiseCache = undefined
-    } else if (onrejected) {
-      console.error("handlePromise() - unhandle case 'onrejected'")
-      debugger //todo
-    } else {
-      console.error("handlePromise() - unhandle case 'unknown'")
-      debugger //todo
-    }
-  }
-
-  setPromise(promise: { (): Promise<any> }) {
-    if (!this.promiseFunc && promise) {
-      this.promiseFunc = promise
-      this.promiseInstance = this.promiseFunc()
-      this.promiseInstance.then(this.handlePromise.bind(this))
-    } else if (this.promiseFunc && !this.props.cache) {
-      this.promiseInstance = this.promiseFunc()
-      this.promiseInstance.then(this.handlePromise.bind(this))
-    }
+    //@ts-ignore (screw typescript, this is correct)
+    return this.parent.getParentOfType(classRef)
   }
 }
 
 export class FragmentComponent extends Component<any> {
   constructor(children: ComponentChild[]) {
     super("", { children })
-  }
-}
-
-export class RouterComponent extends Component<any> {
-  constructor(subscription: ComponentSubscription, children: RouteComponent[]) {
-    super("", { subscription, children })
-    if (children.some((c) => !(c instanceof RouteComponent)))
-      throw new Error("Must provide Route as child of Router")
-    // sort to make sure we match on more complex routes first
-    this.children.sort((a, b) => {
-      return (
-        (b as RouteComponent).props.pathDepth -
-        (a as RouteComponent).props.pathDepth
-      )
-    })
-  }
-
-  getParentPath() {
-    let parentPath = ""
-    let parentRoute = this.getParentOfType(RouteComponent)
-
-    while (parentRoute) {
-      parentPath = parentRoute.props.path + parentPath
-      parentRoute = parentRoute.getParentOfType(RouteComponent)
-    }
-    return parentPath
-  }
-
-  matchRoute(
-    c: RouteComponent,
-    path: string
-  ): {
-    params: any
-    routeMatch: RegExpMatchArray | null
-  } {
-    let paramNames: any[] = []
-    const cPath: string = this.getParentPath() + c.props.path
-    let regexPath =
-      cPath.replace(/([:*])(\w+)/g, (_full, _colon, name) => {
-        paramNames.push(name)
-        return "([^/]+)"
-      }) + "(?:/|$)"
-
-    let params: any = {}
-    let routeMatch = path.match(new RegExp(regexPath))
-    if (routeMatch !== null) {
-      params = routeMatch.slice(1).reduce((str, value, index) => {
-        if (str === null) params = {}
-        params[paramNames[index]] = value
-        return params
-      }, null)
-    }
-    return { params, routeMatch }
-  }
-}
-
-export class RouteComponent extends Component<any> {
-  constructor(path: string, component: ComponentChild) {
-    super("", {
-      path,
-      pathDepth: path.split("").filter((chr) => chr === "/").length,
-      children: [component],
-      render: false,
-    })
-  }
-
-  get childArgs() {
-    return [{ params: "test" }]
   }
 }

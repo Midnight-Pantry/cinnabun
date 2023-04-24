@@ -1,11 +1,64 @@
 import { Signal, Component } from ".."
 import { Cinnabun } from "../cinnabun"
-import { RouteComponent, RouterComponent } from "../component"
 import { DomInterop } from "../domInterop"
-import { PropsSetter } from "../types"
+import { ComponentSubscription, PropsSetter } from "../types"
+import { RouteComponent } from "./route"
 
 interface RouterProps {
   store: Signal<string>
+}
+
+export class RouterComponent extends Component<any> {
+  constructor(subscription: ComponentSubscription, children: RouteComponent[]) {
+    if (children.some((c) => !(c instanceof RouteComponent)))
+      throw new Error("Must provide Route as child of Router")
+
+    children.sort((a, b) => {
+      return (
+        (b as RouteComponent).props.pathDepth -
+        (a as RouteComponent).props.pathDepth
+      )
+    })
+    super("", { subscription, children })
+  }
+
+  getParentPath() {
+    let parentPath = ""
+    let parentRoute = this.getParentOfType(RouteComponent)
+
+    while (parentRoute) {
+      parentPath = parentRoute.props.path + parentPath
+      parentRoute = parentRoute.getParentOfType(RouteComponent)
+    }
+    return parentPath
+  }
+
+  matchRoute(
+    c: RouteComponent,
+    path: string
+  ): {
+    params: any
+    routeMatch: RegExpMatchArray | null
+  } {
+    let paramNames: any[] = []
+    const cPath: string = this.getParentPath() + c.props.path
+    let regexPath =
+      cPath.replace(/([:*])(\w+)/g, (_full, _colon, name) => {
+        paramNames.push(name)
+        return "([^/]+)"
+      }) + "(?:/|$)"
+
+    let params: any = {}
+    let routeMatch = path.match(new RegExp(regexPath))
+    if (routeMatch !== null) {
+      params = routeMatch.slice(1).reduce((str, value, index) => {
+        if (str === null) params = {}
+        params[paramNames[index]] = value
+        return params
+      }, null)
+    }
+    return { params, routeMatch }
+  }
 }
 
 export const Router = ({ store }: RouterProps, children: RouteComponent[]) => {
@@ -13,7 +66,9 @@ export const Router = ({ store }: RouterProps, children: RouteComponent[]) => {
     return store.subscribe((val) => {
       let len = self.children.length
       while (len--) {
-        ;(self.children[len] as RouteComponent).props.render = false
+        const rc = self.children[len] as RouteComponent
+        rc.props.render = false
+        rc.props.params = {}
       }
       if (Cinnabun.isClient) DomInterop.unRender(self)
 
@@ -25,7 +80,7 @@ export const Router = ({ store }: RouterProps, children: RouteComponent[]) => {
         )
         if (matchRes.routeMatch) {
           c.props.render = !!matchRes.routeMatch
-          c.props.params = matchRes.params
+          c.props.params = matchRes.params ?? {}
           break
         }
       }
