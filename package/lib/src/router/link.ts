@@ -26,12 +26,12 @@ export const Link = (props: LinkProps, children: Component<any>[]) => {
 
   return new Component("a", {
     watch: store,
-    ["bind:className"]: () => {
+    ["bind:className"]: (self: Component<HTMLAnchorElement>) => {
       const curPath = Cinnabun.isClient
         ? store.value
-        : Cinnabun.serverRequest.path
+        : self.cbInstance?.serverRequest.path
 
-      const pathMatches = !!matchPath(curPath, to).routeMatch
+      const pathMatches = !!matchPath(curPath ?? "/", to).routeMatch
 
       return (
         className ?? "" + " " + (pathMatches ? activeClass ?? "active" : "")

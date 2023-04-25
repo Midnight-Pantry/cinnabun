@@ -1,2 +1,2 @@
 export * from "./src"
-export { Cinnabun } from "./src/cinnabun"
+export { Cinnabun, h } from "./src/cinnabun"

@@ -16,12 +16,16 @@ type Accumulator = {
 }
 
 export class SSR {
-  static async serverBake(app: Component<any>): Promise<ServerBakeResult> {
+  static async serverBake(
+    app: Component<any>,
+    cbInstance: Cinnabun
+  ): Promise<ServerBakeResult> {
     const accumulator: Accumulator = {
       html: [],
       promiseQueue: [],
     }
-    const serialized = await SSR.serialize(accumulator, app)
+
+    const serialized = await SSR.serialize(accumulator, app, cbInstance)
     // resolve promises, components should replace their corresponding item in the html arr
     return {
       componentTree: { children: [serialized], props: {} },
@@ -59,7 +63,8 @@ export class SSR {
 
   public static async serialize(
     accumulator: Accumulator,
-    component: GenericComponent
+    component: GenericComponent,
+    cbInstance: Cinnabun
   ): Promise<SerializedComponent> {
     const res: SerializedComponent = {
       props: SSR.serializeProps(component),
@@ -76,8 +81,12 @@ export class SSR {
       promise,
       prefetch,
       render,
+      watch,
       ...rest
     } = component.props
+
+    component.cbInstance = cbInstance
+    component.applyBindProps()
 
     const shouldRender = component.shouldRender()
 
@@ -88,7 +97,8 @@ export class SSR {
         const children = await SSR.serializeChildren(
           accumulator,
           component,
-          shouldRender
+          shouldRender,
+          cbInstance
         )
         return {
           props: SSR.serializeProps(component),
@@ -116,7 +126,8 @@ export class SSR {
     res.children = await SSR.serializeChildren(
       accumulator,
       component,
-      shouldRender
+      shouldRender,
+      cbInstance
     )
 
     if (renderClosingTag) accumulator.html.push(`</${component.tag}>`)
@@ -126,7 +137,8 @@ export class SSR {
   public static async serializeChildren(
     accumulator: Accumulator,
     component: GenericComponent,
-    shouldRender: boolean
+    shouldRender: boolean,
+    cbInstance: Cinnabun
   ): Promise<SerializedComponent[]> {
     const res: SerializedComponent[] = []
     for await (const c of component.children) {
@@ -153,18 +165,17 @@ export class SSR {
       if (typeof c === "function") {
         if ("promiseCache" in component && component.props.prefetch) {
           component.promiseCache = await component.props.promise()
-          console.log("loaded prefetch data", component.promiseCache)
           component.props.promiseCache = component.promiseCache
         }
 
         const val = c(...component.childArgs)
         val.parent = component
-        const sc = await SSR.serialize(accumulator, val)
+        const sc = await SSR.serialize(accumulator, val, cbInstance)
         res.push(sc)
         continue
       }
 
-      const sc = await SSR.serialize(accumulator, c)
+      const sc = await SSR.serialize(accumulator, c, cbInstance)
       res.push(sc)
     }
     return res
@@ -175,6 +186,6 @@ export class SSR {
   }
 
   static setRequestPath(newPath: string) {
-    Cinnabun.serverRequest.path = newPath
+    console.log(Cinnabun.DEBUG_COMPONENT_REFCOUNT)
   }
 }

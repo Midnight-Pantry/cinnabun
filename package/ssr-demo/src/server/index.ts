@@ -112,12 +112,13 @@ const app = express()
 app.get(/.*/, async (req, res) => {
   console.time("render time")
 
-  Cinnabun.serverRequest = {
+  const instance = new Cinnabun()
+  instance.serverRequest = {
     path: req.path,
     data: { user: req.user },
   }
 
-  const { html, componentTree } = await SSR.serverBake(App())
+  const { html, componentTree } = await SSR.serverBake(App(), instance)
   console.timeEnd("render time")
 
   return res.send(

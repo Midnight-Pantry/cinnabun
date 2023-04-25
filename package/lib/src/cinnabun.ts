@@ -16,7 +16,7 @@ export class Cinnabun {
   static rootMap: Map<Element | ChildNode, number> = new Map()
   static componentReferences: WatchedElementRef[] = []
 
-  static serverRequest: ServerRequestData = {
+  serverRequest: ServerRequestData = {
     path: "/",
     data: {},
   }

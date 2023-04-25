@@ -15,6 +15,7 @@ export class Component<T extends HTMLElement> {
   children: ComponentChild[] = []
   funcElements: HTMLElement[] = []
   element: T | undefined
+  cbInstance: Cinnabun | undefined
 
   mounted: boolean = false
 
@@ -35,7 +36,7 @@ export class Component<T extends HTMLElement> {
       if (this.validateChildren(children)) this.replaceChildren(children)
     }
 
-    if (watch && watch instanceof Signal) {
+    if (Cinnabun.isClient && watch instanceof Signal) {
       const unsub = watch.subscribe(this.applyBindProps.bind(this))
       Cinnabun.addComponentReference({
         component: this,
@@ -93,7 +94,7 @@ export class Component<T extends HTMLElement> {
       return prop.value
     }
     if (typeof prop === "function")
-      return this.getPrimitive(prop(), signalCallback)
+      return this.getPrimitive(prop(this), signalCallback)
     return prop
   }
 
