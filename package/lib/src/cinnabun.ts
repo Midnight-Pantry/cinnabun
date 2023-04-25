@@ -21,6 +21,18 @@ export class Cinnabun {
     data: {},
   }
 
+  getServerRequestData<T>(keysPath: string): T | undefined {
+    const props = keysPath.split(".")
+    let value: any = { ...this.serverRequest }
+    for (let i = 0; i < props.length; i++) {
+      value = value[props[i]] as T | undefined
+      if (value === undefined) {
+        return undefined
+      }
+    }
+    return value as T | undefined
+  }
+
   static bake(app: Component<any>, root: HTMLElement): void {
     const tray = new Component<any>(root.tagName, {
       children: [app],

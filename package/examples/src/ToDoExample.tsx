@@ -23,7 +23,7 @@ export const ToDoExample = () => {
 
   return (
     <>
-      <article className="todo-list" watch={todos} bind:render={() => true}>
+      <div className="todo-list" watch={todos} bind:render={() => true}>
         {() => (
           <ul>
             {...todos.value.map((item, i) => (
@@ -38,7 +38,7 @@ export const ToDoExample = () => {
             ))}
           </ul>
         )}
-      </article>
+      </div>
       <br />
       <input
         placeholder="Add a new item"

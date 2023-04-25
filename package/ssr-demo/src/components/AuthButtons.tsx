@@ -1,36 +1,26 @@
 import * as Cinnabun from "cinnabun"
-import { Cinnabun as cb } from "cinnabun"
 import { handleLogout } from "../actions/auth"
-import { userStore } from "../state"
+import { isAuthenticated, isNotAuthenticated, userStore } from "../state"
 import { loginVisible, LoginForm } from "./LoginModal"
-import { GenericComponent } from "cinnabun/types"
 
 export const AuthButtons = () => {
   return (
-    <section>
+    <div>
       <button
         onClick={() => (loginVisible.value = !loginVisible.value)}
         watch={userStore}
-        bind:render={(self: GenericComponent) =>
-          cb.isClient
-            ? !userStore.value
-            : !self.cbInstance?.serverRequest.data.user
-        }
+        bind:render={isNotAuthenticated}
       >
         Log in
       </button>
       <button
         onClick={() => handleLogout()}
         watch={userStore}
-        bind:render={(self: GenericComponent) =>
-          cb.isClient
-            ? !!userStore.value
-            : !!self.cbInstance?.serverRequest.data.user
-        }
+        bind:render={isAuthenticated}
       >
         Log out
       </button>
       <LoginForm />
-    </section>
+    </div>
   )
 }

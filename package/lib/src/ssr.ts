@@ -185,8 +185,14 @@ export class SSR {
   public static serializeSvg(_: Component<any>): SerializedComponent {
     throw new Error("not implemented yet")
   }
+}
 
-  static setRequestPath(newPath: string) {
-    console.log(Cinnabun.DEBUG_COMPONENT_REFCOUNT)
-  }
+export function useRequestData<T>(
+  self: GenericComponent,
+  requestDataPath: string,
+  fallback: T
+) {
+  return Cinnabun.isClient
+    ? fallback
+    : self.cbInstance?.getServerRequestData<T>(requestDataPath)
 }

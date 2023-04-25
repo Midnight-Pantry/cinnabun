@@ -4,6 +4,8 @@ import { handleLogin } from "../actions/auth"
 
 export const loginVisible = Cinnabun.createSignal(false)
 
+export const toggleLoginForm = () => (loginVisible.value = !loginVisible.value)
+
 export const LoginForm = () => {
   const formState = Cinnabun.createSignal({
     username: "",
@@ -33,12 +35,13 @@ export const LoginForm = () => {
   return (
     <>
       <div
+        className="modal-outer"
+        tabIndex={-1}
         watch={loginVisible}
         bind:render={() => {
           if (!loginVisible.value) resetForm()
           return loginVisible.value
         }}
-        className="modal-outer"
         onClick={(e) => {
           if ((e.target as HTMLElement).className === "modal-outer") {
             loginVisible.value = !loginVisible.value
