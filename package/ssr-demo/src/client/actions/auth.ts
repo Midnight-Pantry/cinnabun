@@ -1,4 +1,4 @@
-import { userStore } from "../state"
+import { userStore } from "../../state"
 
 export interface LoginDTO {
   username: string

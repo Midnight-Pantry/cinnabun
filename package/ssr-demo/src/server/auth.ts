@@ -6,7 +6,7 @@ interface IUser {
 }
 
 export class User implements IUser, Express.User {
-  static users: User[] = [new User("moose", "password")]
+  static users: User[] = [new User("moose", "123")]
   constructor(public username: string, public password: string) {}
 
   verifyPassword(password: string) {

@@ -1,6 +1,6 @@
 import * as Cinnabun from "cinnabun"
 import "./modal.css"
-import { handleLogin } from "../actions/auth"
+import { handleLogin } from "../client/actions/auth"
 
 export const loginVisible = Cinnabun.createSignal(false)
 
