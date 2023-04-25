@@ -6,7 +6,7 @@ const isClient = Cinnabun.isClient
 export const pathStore = createSignal(isClient ? window.location.pathname : "/")
 
 export const userStore = createSignal<{ username: string } | null>(
-  isClient ? getCookie("user") : ""
+  isClient ? getCookie("user") : null
 )
 if (isClient) {
   console.log("user", userStore.value)

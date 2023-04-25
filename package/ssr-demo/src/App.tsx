@@ -7,9 +7,10 @@ import {
   ToDoExample,
 } from "@cinnabun/examples"
 import { Link, Route, Router } from "cinnabun/router"
-import { pathStore } from "./state"
-import { ProductList } from "./ProductList"
-import { LoginForm } from "./LoginForm"
+import { pathStore, userStore } from "./state"
+import { ProductList } from "./components/ProductList"
+import { LoginForm, loginVisible } from "./components/LoginModal"
+import { handleLogout } from "./actions/auth"
 const PerfTest = ({ n }: { n: number }) => {
   return (
     <ul>
@@ -68,6 +69,20 @@ export const App = () => {
       </main>
       <br />
       <section>
+        <button
+          onClick={() => (loginVisible.value = !loginVisible.value)}
+          watch={userStore}
+          bind:render={() => !userStore.value}
+        >
+          Log in
+        </button>
+        <button
+          onClick={() => handleLogout()}
+          watch={userStore}
+          bind:render={() => userStore.value}
+        >
+          Log out
+        </button>
         <LoginForm />
       </section>
     </div>

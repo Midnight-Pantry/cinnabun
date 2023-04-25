@@ -22,6 +22,7 @@ app.use(
   session({
     secret: "super-secret-secret",
     saveUninitialized: true,
+    resave: true,
     cookie: {
       httpOnly: false,
     },
@@ -70,6 +71,17 @@ app.post(
     res.status(200).send(req.user)
   }
 )
+app.post("/logout", (req, res) => {
+  try {
+    res.clearCookie("user")
+    req.session.destroy((err) => {
+      if (err) throw new Error(err)
+    })
+  } catch (error) {
+    return res.status(500).send()
+  }
+  return res.status(200).send()
+})
 
 app.get("/protected", useAuth, (req, res) => {
   console.log("/protected", req.isAuthenticated())

@@ -16,6 +16,11 @@
 input {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-size: inherit;
+  background-color: rgba(0,0,0,.15);
+  border:0;
+  border-bottom: 1px solid rgba(255,255,255,.3);
+  border-radius: 0;
+  padding: .5rem 1rem;
 }
 
 a {
