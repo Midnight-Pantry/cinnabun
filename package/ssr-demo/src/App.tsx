@@ -9,6 +9,7 @@ import {
 import { Link, Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
 import { ProductList } from "./ProductList"
+import { LoginForm } from "./LoginForm"
 const PerfTest = ({ n }: { n: number }) => {
   return (
     <ul>
@@ -65,6 +66,10 @@ export const App = () => {
           <Route path="/perf" component={<PerfTest n={1_000} />} />
         </Router>
       </main>
+      <br />
+      <section>
+        <LoginForm />
+      </section>
     </div>
   )
 }
