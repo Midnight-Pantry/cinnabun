@@ -43,9 +43,9 @@ export class SSR {
   ): Partial<ComponentProps<T>> {
     const res: Partial<ComponentProps<T>> = {}
     for (const k of Object.keys(component.props)) {
-      const p =
-        typeof component.props[k] === "undefined" ? true : component.props[k]
-
+      // const p =
+      //   typeof component.props[k] === "undefined" ? true : component.props[k]
+      const p = component.props[k]
       if (p instanceof Signal) {
         res[k] = p.value
       } else {
@@ -153,6 +153,7 @@ export class SSR {
       if (typeof c === "function") {
         if ("promiseCache" in component && component.props.prefetch) {
           component.promiseCache = await component.props.promise()
+          console.log("loaded prefetch data", component.promiseCache)
           component.props.promiseCache = component.promiseCache
         }
 
