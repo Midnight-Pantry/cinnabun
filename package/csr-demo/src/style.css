@@ -49,6 +49,17 @@ nav ul {
   gap:.5rem;
 }
 
+article ul li {
+  display: flex;
+  margin: 0 2rem;
+}
+
+ul li input[type="checkbox"] {
+  margin: 0;
+  margin-right: .5rem;
+  vertical-align: middle;
+}
+
 svg {
   height: 33vw;
   width: 33vw;

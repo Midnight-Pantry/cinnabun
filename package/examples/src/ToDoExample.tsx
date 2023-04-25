@@ -28,8 +28,8 @@ export const ToDoExample = () => {
           <ul>
             {...todos.value.map((item, i) => (
               <li>
-                {item.text}
                 <input type="checkbox" onChange={() => removeToDo(i)} />
+                {item.text}
               </li>
             ))}
           </ul>
