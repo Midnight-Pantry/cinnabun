@@ -18,6 +18,17 @@ const rootId = "app"
 
 const PORT = process.env.PORT || 3000
 const publicDir = path.resolve(__dirname, ".", "../../dist/static")
+let baseHtml = ""
+fs.readFile(
+  path.resolve(path.resolve(__dirname, ".", "../../dist/public/index.html")),
+  "utf8",
+  (err: any, indexHtml) => {
+    if (err) {
+      throw new Error(err)
+    }
+    baseHtml = indexHtml
+  }
+)
 
 const app = express()
 
@@ -109,32 +120,19 @@ app.get(/.*/, async (req, res) => {
   const { html, componentTree } = await SSR.serverBake(App())
   console.timeEnd("render time")
 
-  fs.readFile(
-    path.resolve(path.resolve(__dirname, ".", "../../dist/public/index.html")),
-    "utf8",
-    (err, indexHtml) => {
-      if (err) {
-        console.error(err)
-        return res.status(500).send("An error occurred")
-      }
-
-      return res.send(
-        indexHtml
-          .replace(
-            `<div id="${rootId}"></div>`,
-            `<div id="${rootId}">${html}</div>`
-          )
-          .replace(
-            '<script id="server-props"></script>',
-            `<script id="server-props">
-              const root = document.getElementById('${rootId}');
-              window.__cbData = {root, component: ${JSON.stringify(
-                componentTree
-              )}}
-            </script>`
-          )
+  return res.send(
+    baseHtml
+      .replace(
+        `<div id="${rootId}"></div>`,
+        `<div id="${rootId}">${html}</div>`
       )
-    }
+      .replace(
+        '<script id="server-props"></script>',
+        `<script id="server-props">
+          const root = document.getElementById('${rootId}');
+          window.__cbData = {root, component: ${JSON.stringify(componentTree)}}
+        </script>`
+      )
   )
 })
 
