@@ -46,6 +46,7 @@ export class SSR {
     component: GenericComponent
   ): Partial<ComponentProps<T>> {
     const res: Partial<ComponentProps<T>> = {}
+
     for (const k of Object.keys(component.props)) {
       // const p =
       //   typeof component.props[k] === "undefined" ? true : component.props[k]
@@ -66,6 +67,9 @@ export class SSR {
     component: GenericComponent,
     cbInstance: Cinnabun
   ): Promise<SerializedComponent> {
+    component.cbInstance = cbInstance
+    component.applyBindProps()
+
     const res: SerializedComponent = {
       props: SSR.serializeProps(component),
       children: [],
@@ -84,9 +88,6 @@ export class SSR {
       watch,
       ...rest
     } = component.props
-
-    component.cbInstance = cbInstance
-    component.applyBindProps()
 
     const shouldRender = component.shouldRender()
 

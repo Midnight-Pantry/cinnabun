@@ -28,8 +28,12 @@ export const ToDoExample = () => {
           <ul>
             {...todos.value.map((item, i) => (
               <li>
-                <input type="checkbox" onChange={() => removeToDo(i)} />
-                {item.text}
+                <input
+                  type="checkbox"
+                  id={`todo-item-${i}`}
+                  onChange={() => removeToDo(i)}
+                />
+                <label htmlFor={`todo-item-${i}`}>{item.text}</label>
               </li>
             ))}
           </ul>

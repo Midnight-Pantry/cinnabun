@@ -22,11 +22,11 @@ export const AuthButtons = () => {
       <button
         onClick={() => handleLogout()}
         watch={userStore}
-        bind:render={(self: GenericComponent) => {
-          return cb.isClient
+        bind:render={(self: GenericComponent) =>
+          cb.isClient
             ? !!userStore.value
             : !!self.cbInstance?.serverRequest.data.user
-        }}
+        }
       >
         Log out
       </button>
