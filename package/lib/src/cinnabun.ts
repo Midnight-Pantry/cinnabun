@@ -3,12 +3,23 @@ import { DomInterop } from "./domInterop"
 import { WatchedElementRef } from "./types"
 export { h, fragment } from "."
 
+type ServerRequestData = {
+  path: string
+  data: {
+    [key: string]: any
+  }
+}
+
 export class Cinnabun {
   static readonly DEBUG_COMPONENT_REFCOUNT = false
   static readonly isClient: boolean = "window" in globalThis
-  static serverRequestPath = "/"
   static rootMap: Map<Element | ChildNode, number> = new Map()
   static componentReferences: WatchedElementRef[] = []
+
+  static serverRequest: ServerRequestData = {
+    path: "/",
+    data: {},
+  }
 
   static bake(app: Component<any>, root: HTMLElement): void {
     const tray = new Component<any>(root.tagName, {

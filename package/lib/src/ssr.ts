@@ -174,6 +174,6 @@ export class SSR {
   }
 
   static setRequestPath(newPath: string) {
-    Cinnabun.serverRequestPath = newPath
+    Cinnabun.serverRequest.path = newPath
   }
 }

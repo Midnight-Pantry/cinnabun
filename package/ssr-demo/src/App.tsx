@@ -6,11 +6,12 @@ import {
   SuspenseExample,
   ToDoExample,
 } from "@cinnabun/examples"
-import { Link, Route, Router } from "cinnabun/router"
-import { pathStore, userStore } from "./state"
+import { Route, Router } from "cinnabun/router"
+import { pathStore } from "./state"
 import { ProductList } from "./components/ProductList"
-import { LoginForm, loginVisible } from "./components/LoginModal"
-import { handleLogout } from "./actions/auth"
+import { AuthButtons } from "./components/AuthButtons"
+import { Nav } from "./components/Nav"
+
 const PerfTest = ({ n }: { n: number }) => {
   return (
     <ul>
@@ -27,32 +28,7 @@ export const App = () => {
       <h1>Cinnabun JS - SSR</h1>
       <br />
       <ProductList />
-      <nav>
-        <ul>
-          <li>
-            <Link to="/" innerText="Signals" store={pathStore} />
-          </li>
-          <li>
-            <Link to="/context" innerText="Context" store={pathStore} />
-          </li>
-          <li>
-            <Link to="/suspense" innerText="Suspense" store={pathStore} />
-          </li>
-          <li>
-            <Link
-              to="/nested-routing"
-              innerText="Nested Routing"
-              store={pathStore}
-            />
-          </li>
-          <li>
-            <Link to="/todo" innerText="ToDo" store={pathStore} />
-          </li>
-          <li>
-            <Link to="/perf" innerText="Performance test" store={pathStore} />
-          </li>
-        </ul>
-      </nav>
+      <Nav />
 
       <main style={{ textAlign: "center", flexGrow: "1" }}>
         <Router store={pathStore}>
@@ -68,23 +44,7 @@ export const App = () => {
         </Router>
       </main>
       <br />
-      <section>
-        <button
-          onClick={() => (loginVisible.value = !loginVisible.value)}
-          watch={userStore}
-          bind:render={() => !userStore.value}
-        >
-          Log in
-        </button>
-        <button
-          onClick={() => handleLogout()}
-          watch={userStore}
-          bind:render={() => userStore.value}
-        >
-          Log out
-        </button>
-        <LoginForm />
-      </section>
+      <AuthButtons />
     </div>
   )
 }

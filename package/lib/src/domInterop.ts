@@ -201,7 +201,7 @@ export class DomInterop {
     for (const c of component.children) {
       el.append(
         typeof c === "string" || typeof c === "number"
-          ? c
+          ? c.toString()
           : DomInterop.svg(typeof c === "function" ? c() : c)
       )
     }
