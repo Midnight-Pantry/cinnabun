@@ -2,7 +2,7 @@ import * as Cinnabun from "cinnabun"
 import { Cinnabun as cb } from "cinnabun"
 import { ServerPromise } from "cinnabun/ssr"
 import { Either } from "cinnabun/types"
-import { ChatMessages } from "../server/chat"
+import { ChatMessages } from "../../server/chat"
 
 interface IChatMessage {
   id: string

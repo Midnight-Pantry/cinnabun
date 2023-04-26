@@ -14,6 +14,7 @@ import { ChatMessages } from "./chat"
 import { SSR } from "cinnabun/ssr"
 import { App } from "../App"
 import { Cinnabun } from "cinnabun"
+import { sleep } from "cinnabun/utils"
 
 const rootId = "app"
 
@@ -108,7 +109,8 @@ const server = createServer(app)
     return res.status(200).send()
   })
 
-  app.get("/messages", (req, res) => {
+  app.get("/messages", async (_, res) => {
+    await sleep(100)
     return res.json({ messages: ChatMessages.getAll() })
   })
 

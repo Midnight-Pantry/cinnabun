@@ -119,7 +119,7 @@ export class DomInterop {
     }
 
     //element.children[idx] is our actual previous child but be need to insert before the next.
-    const prevChild = element.children[idx + 1]
+    const prevChild = element.children[idx]
     if (prevChild) {
       element.insertBefore(el, prevChild)
     } else {
@@ -215,21 +215,24 @@ export class DomInterop {
     start = 0
   ): { element: HTMLElement | null; idx: number } {
     if (!component.parent) return { element: null, idx: -1 }
-    if (component.element) {
-      start++
-    } else {
-      start += component.funcElements.length + 1
-    }
+    if (component.element) start++
+
     for (let i = 0; i < component.parent.children.length; i++) {
       const c = component.parent.children[i]
       if (c instanceof Component && !c.props.render) continue
       if (c === component) break
       if (c instanceof Component) {
-        for (const child of c.children) {
-          if (child instanceof Component && child.element) {
-            start++
-          } else if (typeof child === "string" || typeof child === "number") {
-            start++
+        if (c.element) {
+          start++
+        } else if (c.funcElements.length) {
+          start += c.funcElements.length - 1
+        } else {
+          for (const child of c.children) {
+            if (child instanceof Component && child.element) {
+              start++
+            } else if (typeof child === "string" || typeof child === "number") {
+              start++
+            }
           }
         }
       }
