@@ -67,7 +67,7 @@ export class Component<T extends HTMLElement> {
 
         // possibly shouldn't be using this.renderChildren?
         this._props[propName] = this.getPrimitive(v, () =>
-          DomInterop.renderChildren(this)
+          DomInterop.reRender(this)
         )
 
         if (propName === "render" && Cinnabun.isClient) {

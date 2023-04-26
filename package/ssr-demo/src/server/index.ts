@@ -9,7 +9,7 @@ import { createServer } from "http"
 import * as passport from "passport"
 import { Strategy as LocalStrategy } from "passport-local"
 
-import { User, clearInvalidCookie, useAuth } from "./auth"
+import { UserService, clearInvalidCookie, useAuth } from "./auth"
 import { ChatMessages } from "./chat"
 import { SSR } from "cinnabun/ssr"
 import { App } from "../App"
@@ -63,9 +63,10 @@ const server = createServer(app)
         passwordField: "password",
       },
       function (username, password, done) {
-        const user = User.get(username)
+        const user = UserService.get(username)
         if (!user) return done(null, false)
-        if (!user.verifyPassword(password)) return done(null, false)
+        if (!UserService.verifyPassword(user, password))
+          return done(null, false)
         return done(null, { username })
       }
     )
@@ -76,7 +77,7 @@ const server = createServer(app)
     done(null, res)
   })
   passport.deserializeUser(function (id, done) {
-    const user = User.get(id as string)
+    const user = UserService.get(id as string)
     done(null, user)
   })
   app.use(clearInvalidCookie)
@@ -112,6 +113,17 @@ const server = createServer(app)
   app.get("/messages", async (_, res) => {
     await sleep(100)
     return res.json({ messages: ChatMessages.getAll() })
+  })
+  app.post("/message", useAuth, (req, res) => {
+    const { user } = req
+    if (!user) return res.status(403).send()
+    const username = (("username" in user && user.username) as string) ?? ""
+    if (!username) return res.status(403).send()
+    const { message } = req.body
+
+    return res
+      .status(200)
+      .send({ result: ChatMessages.create(message, username) })
   })
 
   app.get("/protected", useAuth, (req, res) => {

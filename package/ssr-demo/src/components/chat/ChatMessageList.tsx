@@ -28,10 +28,7 @@ async function getChatMessages(): Promise<ChatMessagesResponse> {
     const data = await res.json()
 
     return {
-      data: [
-        ...data.messages,
-        { id: 123, contents: "teehee", username: "bob" },
-      ],
+      data: data.messages,
     }
   } catch (error) {
     return { error: error as Error }

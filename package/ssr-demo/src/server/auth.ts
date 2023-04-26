@@ -5,16 +5,16 @@ interface IUser {
   password: string
 }
 
-export class User implements IUser, Express.User {
-  static users: User[] = [new User("moose", "123")]
+export class UserService {
+  static users: IUser[] = [{ username: "moose", password: "123" }]
   constructor(public username: string, public password: string) {}
 
-  verifyPassword(password: string) {
-    return password === this.password
+  static verifyPassword(user: IUser, password: string) {
+    return password === user.password
   }
 
-  static get(username: string): User | undefined {
-    return User.users.find((u) => u.username === username)
+  static get(username: string): IUser | undefined {
+    return UserService.users.find((u) => u.username === username)
   }
 }
 
@@ -44,16 +44,16 @@ export const clearInvalidCookie = (
 
 export const useAuth = (req: Request, res: Response, next: NextFunction) => {
   req.session.reload(function (err) {
-    if (err) return res.status(500).redirect("/")
+    if (err) return res.status(500).send()
 
     if (
       !("isAuthenticated" in req) ||
       typeof req.isAuthenticated !== "function"
     )
-      return res.status(401).redirect("/")
+      return res.status(401).send()
 
-    if (!req.isAuthenticated()) return res.status(403).redirect("/")
+    if (!req.isAuthenticated()) return res.status(403).send()
 
-    next()
+    return next()
   })
 }
