@@ -10,10 +10,10 @@
   },
   "devDependencies": {
     "typescript": "^4.9.5",
-    "vite": "^4.3.1"
+    "vite": "^4.3.2"
   },
   "dependencies": {
     "@cinnabun/examples": "workspace:^1.0.0",
-    "cinnabun": "workspace:^0.1.8"
+    "cinnabun": "workspace:^0.1.9"
   }
 }
