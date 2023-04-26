@@ -214,7 +214,6 @@ export class DomInterop {
     component: GenericComponent,
     start = 0
   ): { element: HTMLElement | null; idx: number } {
-    // for future me: idk why i'm adding +1 to funcElCount but it works... good luck.
     if (!component.parent) return { element: null, idx: -1 }
     if (component.element) {
       start++
@@ -226,7 +225,6 @@ export class DomInterop {
       if (c instanceof Component && !c.props.render) continue
       if (c === component) break
       if (c instanceof Component) {
-        start += c.funcElements.length + 1
         for (const child of c.children) {
           if (child instanceof Component && child.element) {
             start++

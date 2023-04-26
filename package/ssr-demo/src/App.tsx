@@ -43,8 +43,8 @@ export const App = () => {
           <Route path="/perf" component={<PerfTest n={1_000} />} />
         </Router>
       </main>
-      <br />
       <AuthButtons />
+      <br />
     </div>
   )
 }

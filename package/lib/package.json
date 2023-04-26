@@ -1,6 +1,6 @@
 {
   "name": "cinnabun",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A reactive, component-based js framework built with great features from the start",
   "repository": {
     "type": "git",
