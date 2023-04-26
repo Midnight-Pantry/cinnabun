@@ -10,7 +10,6 @@ async function getProductCategories(): Promise<ProductCategoriesResponse> {
     const res = await fetch("https://dummyjson.com/products/categories")
     if (!res.ok)
       throw new Error(res.statusText ?? "Failed to load product categories")
-    await sleep(500)
 
     const data = await res.json()
     return { data }
