@@ -28,6 +28,9 @@ export const Nav = () => {
         <li>
           <Link to="/perf" innerText="Performance test" store={pathStore} />
         </li>
+        <li>
+          <Link to="/chat" innerText="Chat" store={pathStore} />
+        </li>
       </ul>
     </nav>
   )

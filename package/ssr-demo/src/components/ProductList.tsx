@@ -21,9 +21,10 @@ async function loadProductList(): ServerPromise<ProductListResponse> {
 export const ProductList = () => {
   return (
     <Suspense prefetch promise={loadProductList}>
-      {(res: ProductListResponse) => {
-        if ("message" in res) return <p>{res.message}</p>
-        return <ul>{...res.items.map((c) => <li>{c}</li>)}</ul>
+      {(loading: boolean, res?: ProductListResponse) => {
+        if (res?.message) return <p>{res.message}</p>
+        if (loading) return <p>loading...</p>
+        return res?.items && <ul>{...res.items.map((c) => <li>{c}</li>)}</ul>
       }}
     </Suspense>
   )

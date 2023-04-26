@@ -57,7 +57,7 @@ export class Hydration {
         "promiseCache" in parent.props && parent.props.prefetch
 
       const val = usePromiseCache
-        ? c(parent.props.promiseCache)
+        ? c(...[false, parent.props.promiseCache])
         : c(...parent.childArgs)
 
       if (!val.shouldRender()) return

@@ -11,6 +11,7 @@ import { pathStore } from "./state"
 import { ProductList } from "./components/ProductList"
 import { AuthButtons } from "./components/AuthButtons"
 import { Nav } from "./components/Nav"
+import { ChatMessageList } from "./components/Chat"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
@@ -41,6 +42,7 @@ export const App = () => {
           />
           <Route path="/todo" component={<ToDoExample />} />
           <Route path="/perf" component={<PerfTest n={1_000} />} />
+          <Route path="/chat" component={<ChatMessageList />} />
         </Router>
       </main>
       <AuthButtons />

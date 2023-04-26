@@ -4,33 +4,38 @@ import path from "path"
 import compression from "compression"
 import session from "express-session"
 import bodyParser from "body-parser"
+import { createServer } from "http"
 
 import * as passport from "passport"
 import { Strategy as LocalStrategy } from "passport-local"
 
 import { User, clearInvalidCookie, useAuth } from "./auth"
+import { ChatMessages } from "./chat"
 import { SSR } from "cinnabun/ssr"
 import { App } from "../App"
 import { Cinnabun } from "cinnabun"
-//import { Cinnabun } from "cinnabun"
 
 const rootId = "app"
 
 const PORT = process.env.PORT || 3000
 const publicDir = path.resolve(__dirname, ".", "../../dist/static")
 let baseHtml = ""
-fs.readFile(
-  path.resolve(path.resolve(__dirname, ".", "../../dist/public/index.html")),
-  "utf8",
-  (err: any, indexHtml) => {
-    if (err) {
-      throw new Error(err)
+// load base html template
+{
+  fs.readFile(
+    path.resolve(path.resolve(__dirname, ".", "../../dist/public/index.html")),
+    "utf8",
+    (err: any, indexHtml) => {
+      if (err) {
+        throw new Error(err)
+      }
+      baseHtml = indexHtml
     }
-    baseHtml = indexHtml
-  }
-)
+  )
+}
 
 const app = express()
+const server = createServer(app)
 
 // express app config
 {
@@ -103,6 +108,10 @@ const app = express()
     return res.status(200).send()
   })
 
+  app.get("/messages", (req, res) => {
+    return res.json({ messages: ChatMessages.getAll() })
+  })
+
   app.get("/protected", useAuth, (req, res) => {
     console.log("/protected", req.isAuthenticated())
     res.send("shamow")
@@ -143,7 +152,7 @@ app.get(/.*/, async (req, res) => {
 //   })
 // )
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`)
   console.log("http://localhost:3000")
 })

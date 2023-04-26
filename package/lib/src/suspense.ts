@@ -9,8 +9,7 @@ export class SuspenseComponent extends Component<any> {
   promiseCache: any
 
   get childArgs(): any[] {
-    if (!this.props.prefetch) return [!this.promiseCache, this.promiseCache]
-    return [this.promiseCache]
+    return [!this.promiseCache, this.promiseCache]
   }
   resetPromise() {
     this.promiseFunc = undefined
