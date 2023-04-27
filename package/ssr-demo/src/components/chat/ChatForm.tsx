@@ -1,7 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import { createChatMessage } from "../../client/actions/chat"
 import { userStore } from "../../state"
-import { toggleLoginForm } from "../LoginModal"
+import { toggleAuthModal } from "../AuthModal"
 import { isAuthenticated } from "../../state"
 import { isNotAuthenticated } from "../../state"
 
@@ -27,7 +27,7 @@ export const ChatForm = () => {
         bind:render={isAuthenticated}
         bind:disabled={() => !inputState.value}
         type="button"
-        onClick={() => handleSubmit()}
+        onClick={handleSubmit}
       >
         Submit
       </button>
@@ -36,7 +36,7 @@ export const ChatForm = () => {
         watch={[userStore]}
         bind:render={isNotAuthenticated}
         type="button"
-        onClick={() => toggleLoginForm()}
+        onClick={toggleAuthModal}
       >
         Log in to chat
       </button>

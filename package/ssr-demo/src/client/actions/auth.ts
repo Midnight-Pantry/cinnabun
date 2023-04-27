@@ -30,6 +30,30 @@ export const handleLogin = async (dto: LoginDTO): Promise<boolean> => {
     return false
   }
 }
+export const handleCreateAccount = async (dto: LoginDTO): Promise<boolean> => {
+  if (userStore.value) return true
+  try {
+    const res = await fetch("/create-account", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dto),
+    })
+    if (!res.ok) throw new Error("failed to create account")
+
+    const data = await res.json()
+    const { username } = parseJwt(data.token)
+    userStore.value = { username }
+    localStorage.setItem("token", JSON.stringify(data.token))
+
+    console.log("logged in", userStore.value)
+    return true
+  } catch (error) {
+    userStore.value = null
+    console.error(error)
+    return false
+  }
+}
 
 export const handleLogout = async () => {
   if (!userStore.value) return

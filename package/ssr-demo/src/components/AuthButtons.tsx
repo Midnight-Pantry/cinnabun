@@ -1,13 +1,13 @@
 import * as Cinnabun from "cinnabun"
 import { handleLogout } from "../client/actions/auth"
 import { isAuthenticated, isNotAuthenticated, userStore } from "../state"
-import { toggleLoginForm, LoginForm } from "./LoginModal"
+import { toggleAuthModal, AuthModal } from "./AuthModal"
 
 export const AuthButtons = () => {
   return (
     <>
       <button
-        onClick={toggleLoginForm}
+        onClick={toggleAuthModal}
         watch={userStore}
         bind:render={isNotAuthenticated}
       >
@@ -20,7 +20,7 @@ export const AuthButtons = () => {
       >
         Log out
       </button>
-      <LoginForm />
+      <AuthModal />
     </>
   )
 }

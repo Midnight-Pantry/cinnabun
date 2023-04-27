@@ -1,16 +1,24 @@
 import * as Cinnabun from "cinnabun"
+import { handleCreateAccount, handleLogin } from "../client/actions/auth"
 import "./modal.css"
-import { handleLogin } from "../client/actions/auth"
+import "./tabs.css"
 
-export const loginVisible = Cinnabun.createSignal(false)
+export const authModalVisible = Cinnabun.createSignal(false)
 
-export const toggleLoginForm = () => (loginVisible.value = !loginVisible.value)
+enum FormMode {
+  LOGIN,
+  CREATE,
+}
 
-export const LoginForm = () => {
+export const toggleAuthModal = () =>
+  (authModalVisible.value = !authModalVisible.value)
+
+export const AuthModal = () => {
   const formState = Cinnabun.createSignal({
     username: "",
     password: "",
   })
+  const formMode = Cinnabun.createSignal(FormMode.LOGIN)
 
   const isFormInvalid = () => {
     return !formState.value.username || !formState.value.password
@@ -28,22 +36,26 @@ export const LoginForm = () => {
     }
   }
   const handleSubmit = async () => {
-    const res = await handleLogin(formState.value)
-    if (res) loginVisible.value = false
+    const res =
+      formMode.value === FormMode.LOGIN
+        ? await handleLogin(formState.value)
+        : await handleCreateAccount(formState.value)
+
+    if (res) authModalVisible.value = false
   }
 
   return (
     <div
       className="modal-outer"
       tabIndex={-1}
-      watch={loginVisible}
+      watch={authModalVisible}
       bind:render={() => {
-        if (!loginVisible.value) resetForm()
-        return loginVisible.value
+        if (!authModalVisible.value) resetForm()
+        return authModalVisible.value
       }}
       onClick={(e) => {
         if ((e.target as HTMLElement).className === "modal-outer") {
-          loginVisible.value = !loginVisible.value
+          toggleAuthModal()
         }
       }}
     >
@@ -52,9 +64,35 @@ export const LoginForm = () => {
           <h2>Log in</h2>
         </div>
         <div className="modal-body">
-          <form
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-          >
+          <div className="tab-list">
+            <div
+              watch={formMode}
+              bind:className={() =>
+                `tab${formMode.value === FormMode.LOGIN ? " active" : ""}`
+              }
+            >
+              <button
+                type="button"
+                onClick={() => (formMode.value = FormMode.LOGIN)}
+              >
+                Log in
+              </button>
+            </div>
+            <div
+              watch={formMode}
+              bind:className={() =>
+                `tab${formMode.value === FormMode.CREATE ? " active" : ""}`
+              }
+            >
+              <button
+                type="button"
+                onClick={() => (formMode.value = FormMode.CREATE)}
+              >
+                Create account
+              </button>
+            </div>
+          </div>
+          <form>
             <input
               watch={formState}
               bind:value={() => formState.value.username}

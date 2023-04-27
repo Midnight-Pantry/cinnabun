@@ -7,12 +7,13 @@ import websocket from "@fastify/websocket"
 import fs from "fs"
 import path from "path"
 
-import { ChatMessages } from "./chat"
+import { ChatMessages, configureChatRoutes } from "./chat"
 import { SSR } from "cinnabun/ssr"
 import { App } from "../App"
 import { Cinnabun } from "cinnabun"
 import { sleep } from "cinnabun/utils"
 import { socketHandler } from "./socket"
+import { configureAuthRoutes } from "./auth"
 
 declare module "fastify" {
   export interface FastifyInstance {
@@ -97,50 +98,8 @@ const app = fastify()
   })
 }
 
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body as {
-    username?: string
-    password?: string
-  }
-  if (!username || !password) {
-    res.status(400).send()
-    return
-  }
-  const token = app.jwt.sign({ username })
-  const refreshToken = await res.jwtSign({ username }, { expiresIn: "1d" })
-  res
-    .setCookie("refreshToken", refreshToken, {
-      domain: "localhost",
-      path: "/",
-      httpOnly: false,
-      sameSite: true, // alternative CSRF protection
-    })
-    .code(200)
-    .send({ token })
-})
-
-app.post("/logout", async (req, res) => {
-  res.clearCookie("refreshToken")
-  res.code(200).send()
-})
-
-app.get("/messages", async () => {
-  await sleep(100)
-  return { messages: ChatMessages.getAll() }
-})
-
-app.post("/message", { onRequest: [app.authenticate] }, async (req, res) => {
-  const { message } = req.body as { message?: string }
-  const { username } = req.user as { username: string }
-  if (typeof message !== "string") {
-    res.status(400).send()
-    return
-  }
-  const msg = ChatMessages.create(message, username)
-  app.websocketServer?.clients.forEach(function each(client: any) {
-    client.send(JSON.stringify({ type: "+chat", data: msg }))
-  })
-})
+configureAuthRoutes(app)
+configureChatRoutes(app)
 
 app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
   console.time("render time")

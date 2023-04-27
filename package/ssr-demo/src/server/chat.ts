@@ -1,3 +1,4 @@
+import { FastifyInstance } from "fastify"
 import { IChatMessage } from "../types/chat"
 import { generateUUID } from "../utils"
 
@@ -52,4 +53,23 @@ export abstract class ChatMessages {
     }
     return false
   }
+}
+
+export function configureChatRoutes(app: FastifyInstance) {
+  app.get("/messages", async () => {
+    return { messages: ChatMessages.getAll() }
+  })
+
+  app.post("/message", { onRequest: [app.authenticate] }, async (req, res) => {
+    const { message } = req.body as { message?: string }
+    const { username } = req.user as { username: string }
+    if (typeof message !== "string") {
+      res.status(400).send()
+      return
+    }
+    const msg = ChatMessages.create(message, username)
+    app.websocketServer?.clients.forEach(function each(client: any) {
+      client.send(JSON.stringify({ type: "+chat", data: msg }))
+    })
+  })
 }
