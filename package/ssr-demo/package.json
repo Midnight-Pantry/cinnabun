@@ -14,18 +14,17 @@
   "dependencies": {
     "@cinnabun/examples": "workspace:^1.0.0",
     "@fastify/compress": "^6.2.1",
+    "@fastify/cookie": "^8.3.0",
+    "@fastify/jwt": "^6.7.1",
     "@fastify/static": "^6.10.1",
     "@fastify/websocket": "^8.0.0",
-    "@types/passport": "^1.0.12",
     "cinnabun": "workspace:^0.1.11",
     "esbuild": "^0.17.18",
     "fastify": "^4.16.3",
-    "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "fastify-plugin": "^4.5.0"
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
-    "@types/passport-local": "^1.0.35",
     "@types/websocket": "^1.0.5"
   }
 }

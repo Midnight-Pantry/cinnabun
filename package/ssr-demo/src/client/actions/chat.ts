@@ -1,13 +1,19 @@
 import { ChatMessagesResponse } from "../../types/chat"
 
 export const createChatMessage = async (message: string): Promise<boolean> => {
-  await fetch("/message", {
+  const tkn = localStorage.getItem("token")
+  if (!tkn) return false
+
+  const res = await fetch("/message", {
     method: "POST",
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      token: JSON.parse(tkn) ?? "",
+    },
     body: JSON.stringify({ message }),
   })
-  return true
+  return res.ok
 }
 
 export const getChatMessages = async (): Promise<ChatMessagesResponse> => {

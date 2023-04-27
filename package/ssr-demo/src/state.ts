@@ -1,14 +1,20 @@
 import { Cinnabun, createSignal } from "cinnabun"
 import { useRequestData } from "cinnabun/ssr"
 import { GenericComponent } from "cinnabun/types"
-import { getCookie } from "cinnabun/utils"
+import { parseJwt } from "./client/jwt"
 
 const isClient = Cinnabun.isClient
+
+const getUserData = () => {
+  const tkn = localStorage.getItem("token")
+  if (!tkn) return null
+  return parseJwt(tkn)
+}
 
 export const pathStore = createSignal(isClient ? window.location.pathname : "/")
 
 export const userStore = createSignal<{ username: string } | null>(
-  isClient ? getCookie("user") : null
+  isClient ? getUserData() : null
 )
 
 export const isAuthenticated = (self: GenericComponent) =>

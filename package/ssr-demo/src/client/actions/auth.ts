@@ -1,4 +1,5 @@
 import { userStore } from "../../state"
+import { parseJwt } from "../jwt"
 
 export interface LoginDTO {
   username: string
@@ -14,12 +15,14 @@ export const handleLogin = async (dto: LoginDTO): Promise<boolean> => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dto),
     })
-
     if (!res.ok) throw new Error("failed to log in")
 
     const data = await res.json()
-    userStore.value = data
-    console.log("logged in", data)
+    const { username } = parseJwt(data.token)
+    userStore.value = { username }
+    localStorage.setItem("token", JSON.stringify(data.token))
+
+    console.log("logged in", userStore.value)
     return true
   } catch (error) {
     userStore.value = null
@@ -40,6 +43,7 @@ export const handleLogout = async () => {
     if (!res.ok) throw new Error("failed to log out")
 
     userStore.value = null
+    localStorage.removeItem("token")
     console.log("logged out")
     //TODO - implement programatic navigation
   } catch (error) {

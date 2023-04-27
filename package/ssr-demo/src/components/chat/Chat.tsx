@@ -1,6 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import { ChatMessageList } from "./ChatMessageList"
 import { ChatForm } from "./ChatForm"
+import "./chat.css"
 //import { ChatMessageList_REST } from "./ChatMessageList_REST"
 
 export const Chat = () => {
