@@ -112,14 +112,16 @@ app.post("/login", async (req, res) => {
     .setCookie("refreshToken", refreshToken, {
       domain: "localhost",
       path: "/",
-      //secure: true, // send cookie over HTTPS only
       httpOnly: false,
       sameSite: true, // alternative CSRF protection
     })
     .code(200)
     .send({ token })
+})
 
-  //res.status(200).send({ token })
+app.post("/logout", async (req, res) => {
+  res.clearCookie("refreshToken")
+  res.code(200).send()
 })
 
 app.get("/messages", async () => {
