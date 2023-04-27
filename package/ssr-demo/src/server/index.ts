@@ -4,12 +4,12 @@ import fStatic from "@fastify/static"
 import websocket from "@fastify/websocket"
 import fs from "fs"
 import path from "path"
-
 import { ChatMessages } from "./chat"
 import { SSR } from "cinnabun/ssr"
 import { App } from "../App"
 import { Cinnabun } from "cinnabun"
 import { sleep } from "cinnabun/utils"
+import { socketHandler } from "./socket"
 
 const rootId = "app"
 
@@ -31,6 +31,7 @@ let baseHtml = ""
 }
 
 const app = fastify()
+
 app.register(websocket, {
   options: { maxPayload: 1048576 },
 })
@@ -43,24 +44,31 @@ app.get("/favicon.ico", (_, res) => {
   res.status(404).send()
 })
 
-// app.register(async function (app) {
-//   app.get("/*", { websocket: true }, (connection) => {
-//     connection.socket.on("message", (message: string) => {
-//       console.log("got message - /*", message)
-//       connection.socket.send("hi from server")
-//     })
-//   })
-//   app.get("/", { websocket: true }, (connection) => {
-//     connection.socket.on("message", (message: string) => {
-//       console.log("got message - /", message)
-//       connection.socket.send("hi from server")
-//     })
-//   })
-// })
+app.register(async function () {
+  app.route({
+    method: "GET",
+    url: "/ws",
+    handler: (_, res) => res.status(400).send(),
+    wsHandler: socketHandler,
+  })
+})
 
-app.get("/messages", async (_, res) => {
+app.get("/messages", async () => {
   await sleep(100)
   return { messages: ChatMessages.getAll() }
+})
+
+app.post("/message", async (req, res) => {
+  //@ts-ignore
+  const { message } = req.body
+  if (typeof message !== "string") {
+    res.status(400).send()
+    return
+  }
+  const msg = ChatMessages.create(message, "")
+  app.websocketServer?.clients.forEach(function each(client: any) {
+    client.send(JSON.stringify({ type: "+chat", data: msg }))
+  })
 })
 
 app.get("/*", async (req, res) => {
@@ -91,10 +99,9 @@ app.get("/*", async (req, res) => {
         </script>`
         )
     )
-  console.timeEnd("render time")
 })
 
-app.listen({ port }, function (err, address) {
+app.listen({ port }, function (err) {
   if (err) {
     app.log.error(err)
     process.exit(1)

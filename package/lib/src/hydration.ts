@@ -5,7 +5,7 @@ import { Signal } from "./signal"
 import { SSRProps, ComponentChild, SerializedComponent } from "./types"
 
 export class Hydration {
-  static async validate(component: Component<any>) {
+  static validate(component: Component<any>) {
     if (component.tag && component.shouldRender()) {
       const hasElement = component.element
       const elementMatchesTag =

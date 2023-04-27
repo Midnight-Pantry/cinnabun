@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
-    "@types/passport-local": "^1.0.35"
+    "@types/passport-local": "^1.0.35",
+    "@types/websocket": "^1.0.5"
   }
 }

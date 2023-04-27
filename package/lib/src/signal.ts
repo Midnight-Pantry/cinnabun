@@ -27,8 +27,12 @@ export class Signal<T> {
 
   set value(newVal: T) {
     this._val = newVal
+    this.notify()
+  }
+
+  notify() {
     for (const subscribeFunc of this._subscribers) {
-      subscribeFunc(newVal)
+      subscribeFunc(this._val)
     }
   }
 

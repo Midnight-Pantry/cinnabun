@@ -1,7 +1,9 @@
 import { Component } from "."
 import { DomInterop } from "./domInterop"
-import { WatchedElementRef } from "./types"
+import { ClassConstructor, WatchedElementRef } from "./types"
 export { h, fragment } from "."
+
+export type RuntimeService<Class> = InstanceType<ClassConstructor<Class>>
 
 type ServerRequestData = {
   path: string
@@ -15,6 +17,7 @@ export class Cinnabun {
   static readonly isClient: boolean = "window" in globalThis
   static rootMap: Map<Element | ChildNode, number> = new Map()
   static componentReferences: WatchedElementRef[] = []
+  static runtimeServices: RuntimeService<any>[] = []
 
   serverRequest: ServerRequestData = {
     path: "/",
@@ -61,5 +64,17 @@ export class Cinnabun {
         Cinnabun.componentReferences.length,
         performance.now()
       )
+  }
+
+  static registerRuntimeServices<Class>(...services: RuntimeService<Class>[]) {
+    Cinnabun.runtimeServices.push(...services)
+  }
+
+  static getRuntimeService<Class extends ClassConstructor<any>>(
+    classRef: Class
+  ): InstanceType<Class> {
+    return Cinnabun.runtimeServices.find((s) => {
+      return s instanceof classRef
+    })
   }
 }
