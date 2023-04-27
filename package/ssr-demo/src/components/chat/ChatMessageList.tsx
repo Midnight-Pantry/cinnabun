@@ -20,7 +20,11 @@ export const ChatMessageList = () => {
     : Cinnabun.createSignal(serverData)
 
   return (
-    <div className="chat-message-list" watch={chatMessages} bind:render>
+    <div
+      className="chat-message-list"
+      watch={[chatMessages, userStore]}
+      bind:render
+    >
       {() => (
         <>
           {...chatMessages.value.map((message) => (

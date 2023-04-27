@@ -47,7 +47,7 @@ export type ComponentEventProps<T extends HTMLElement> = {
 }
 export type ReactivityProps = {
   subscription?: ComponentSubscription
-  watch?: Signal<any>
+  watch?: Signal<any> | Signal<any>[]
 }
 
 export type ComponentProps<T extends HTMLElement> = ReactivityProps &

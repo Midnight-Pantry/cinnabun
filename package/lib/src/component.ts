@@ -36,12 +36,15 @@ export class Component<T extends HTMLElement> {
       if (this.validateChildren(children)) this.replaceChildren(children)
     }
 
-    if (Cinnabun.isClient && watch instanceof Signal) {
-      const unsub = watch.subscribe(this.applyBindProps.bind(this))
-      Cinnabun.addComponentReference({
-        component: this,
-        onDestroyed: () => unsub(),
-      })
+    if (Cinnabun.isClient && watch) {
+      const signals = "length" in watch ? watch : [watch]
+      for (const s of signals) {
+        const unsub = s.subscribe(this.applyBindProps.bind(this))
+        Cinnabun.addComponentReference({
+          component: this,
+          onDestroyed: () => unsub(),
+        })
+      }
     }
   }
 

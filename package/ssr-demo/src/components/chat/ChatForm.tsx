@@ -1,5 +1,9 @@
 import * as Cinnabun from "cinnabun"
 import { createChatMessage } from "../../client/actions/chat"
+import { userStore } from "../../state"
+import { toggleLoginForm } from "../LoginModal"
+import { isAuthenticated } from "../../state"
+import { isNotAuthenticated } from "../../state"
 
 export const ChatForm = () => {
   const inputState = Cinnabun.createSignal("")
@@ -17,13 +21,24 @@ export const ChatForm = () => {
           inputState.value = (e.target as HTMLInputElement).value
         }}
       />
+
       <button
-        watch={inputState}
+        watch={[inputState, userStore]}
+        bind:render={isAuthenticated}
         bind:disabled={() => !inputState.value}
         type="button"
         onClick={() => handleSubmit()}
       >
         Submit
+      </button>
+
+      <button
+        watch={[userStore]}
+        bind:render={isNotAuthenticated}
+        type="button"
+        onClick={() => toggleLoginForm()}
+      >
+        Log in to chat
       </button>
     </form>
   )

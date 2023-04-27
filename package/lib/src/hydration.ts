@@ -65,20 +65,16 @@ export class Hydration {
       parent.funcElements.push(val.element)
       return
     }
+    //if (c.tag.toLowerCase() === "input") debugger
 
     c.parent = parent
 
     if (sc.props && Object.keys(sc.props).length) {
       for (const [k, v] of Object.entries(sc.props)) {
         const curProp = c.props[k]
-        if (curProp && curProp instanceof Signal) {
-          curProp.value = v
-        } else {
-          c.props[k] = v
-        }
+        if (curProp instanceof Signal) continue
+        c.props[k] = v
       }
-
-      //Object.assign(c.props, sc.props)
     }
 
     if (!c.shouldRender()) return
