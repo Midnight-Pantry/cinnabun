@@ -50,7 +50,7 @@ export class Cinnabun {
     Cinnabun.componentReferences = func(Cinnabun.componentReferences)
     if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
       console.debug(
-        "onDestroyCallbacks",
+        "~~ CB REF COUNT",
         Cinnabun.componentReferences.length,
         performance.now()
       )
@@ -60,7 +60,7 @@ export class Cinnabun {
     Cinnabun.componentReferences.push(ref)
     if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
       console.debug(
-        "onDestroyCallbacks",
+        "~~ CB REF COUNT",
         Cinnabun.componentReferences.length,
         performance.now()
       )
