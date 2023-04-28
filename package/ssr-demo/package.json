@@ -18,13 +18,13 @@
     "@fastify/jwt": "^6.7.1",
     "@fastify/static": "^6.10.1",
     "@fastify/websocket": "^8.0.0",
-    "cinnabun": "workspace:^0.1.11",
+    "cinnabun": "workspace:^0.1.12",
     "esbuild": "^0.17.18",
-    "fastify": "^4.16.3",
+    "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0"
   },
   "devDependencies": {
-    "@types/node": "^18.16.1",
+    "@types/node": "^18.16.2",
     "@types/websocket": "^1.0.5"
   }
 }
