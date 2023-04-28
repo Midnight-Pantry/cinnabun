@@ -37,6 +37,7 @@ export class Component<T extends HTMLElement> {
     }
 
     if (Cinnabun.isClient && watch) {
+      this._props.watch = watch
       const signals = "length" in watch ? watch : [watch]
       for (const s of signals) {
         const unsub = s.subscribe(this.applyBindProps.bind(this))
@@ -140,6 +141,18 @@ export class Component<T extends HTMLElement> {
         onDestroyed: () => onDestroyed(this),
       })
     }
+  }
+
+  addChild(child: Component<any>) {
+    this.children.push(child)
+    child.parent = this
+    DomInterop.reRender(child)
+  }
+
+  prependChild(child: Component<any>) {
+    this.children.unshift(child)
+    child.parent = this
+    DomInterop.reRender(child)
   }
 
   replaceChildren(newChildren: ComponentChild[]) {

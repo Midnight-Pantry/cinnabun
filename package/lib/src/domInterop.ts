@@ -1,6 +1,6 @@
 import { Component, Signal } from "."
 import { Cinnabun } from "./cinnabun"
-import { GenericComponent } from "./types"
+import { ComponentChild, GenericComponent } from "./types"
 
 export class DomInterop {
   static updateElement(component: GenericComponent) {
@@ -60,7 +60,10 @@ export class DomInterop {
     )
   }
 
-  static renderChild(component: GenericComponent, child: any): string | Node {
+  static renderChild(
+    component: GenericComponent,
+    child: ComponentChild
+  ): string | Node {
     if (child instanceof Signal) {
       component.subscribeTo((_, __) =>
         child.subscribe(() => DomInterop.renderChildren(component))
@@ -77,7 +80,7 @@ export class DomInterop {
       component.funcElements = Array.isArray(res) ? res : [res]
       return res
     }
-    return child
+    return child.toString()
   }
 
   static unRender(component: GenericComponent) {
@@ -117,9 +120,9 @@ export class DomInterop {
       console.error("Failed to get component mount element", component, el)
       return
     }
-
     //element.children[idx] is our actual previous child but be need to insert before the next.
-    const prevChild = element.children[idx]
+    const prevChild = element.children[idx - 1]
+
     if (prevChild) {
       element.insertBefore(el, prevChild)
     } else {
@@ -215,25 +218,28 @@ export class DomInterop {
     start = 0
   ): { element: HTMLElement | null; idx: number } {
     if (!component.parent) return { element: null, idx: -1 }
-    if (component.element) start++
+    //if (component.element) start++
 
     for (let i = 0; i < component.parent.children.length; i++) {
       const c = component.parent.children[i]
       if (c instanceof Component && !c.props.render) continue
-      if (c === component) break
+      if (c === component) {
+        start++
+        break
+      }
       if (c instanceof Component) {
         if (c.element) {
           start++
         } else if (c.funcElements.length) {
           start += c.funcElements.length - 1
         } else {
-          for (const child of c.children) {
-            if (child instanceof Component && child.element) {
-              start++
-            } else if (typeof child === "string" || typeof child === "number") {
-              start++
-            }
-          }
+          // for (const child of c.children) {
+          //   if (child instanceof Component && child.element) {
+          //     start++
+          //   } else if (typeof child === "string" || typeof child === "number") {
+          //     start++
+          //   }
+          // }
         }
       }
     }
