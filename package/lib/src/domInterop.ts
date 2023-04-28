@@ -136,15 +136,8 @@ export class DomInterop {
     component: Component<T>,
     isRerender: boolean = false
   ): T | Node {
-    const {
-      children,
-      onMounted,
-      onchange,
-      onclick,
-      onDestroyed,
-      subscription,
-      promise,
-    } = component.props
+    const { children, onMounted, onDestroyed, subscription, promise } =
+      component.props
 
     Cinnabun.setComponentReferences((arr) =>
       arr.filter((c) => c.component !== component)

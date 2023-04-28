@@ -17,7 +17,7 @@ export const ChatForm = () => {
     <form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <input
         value={inputState}
-        onchange={(e: Event) => {
+        onkeyup={(e: Event) => {
           inputState.value = (e.target as HTMLInputElement).value
         }}
       />

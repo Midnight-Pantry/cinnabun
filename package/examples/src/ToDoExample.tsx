@@ -44,7 +44,7 @@ export const ToDoExample = () => {
         placeholder="Add a new item"
         watch={inputVal}
         bind:value={() => inputVal.value}
-        onchange={(e: Event) => {
+        onkeyup={(e: Event) => {
           inputVal.value = (e.target as HTMLInputElement).value
         }}
       />

@@ -65,7 +65,7 @@ export const AuthModal = () => {
         if (!authModalVisible.value) resetForm()
         return authModalVisible.value
       }}
-      onclick={(e: MouseEvent) => {
+      onmouseup={(e: MouseEvent) => {
         if ((e.target as HTMLElement).className === "modal-outer") {
           toggleAuthModal()
         }
@@ -108,7 +108,7 @@ export const AuthModal = () => {
             <input
               watch={formState}
               bind:value={() => formState.value.username}
-              onchange={handleChange}
+              onkeyup={handleChange}
               type="text"
               name="username"
               placeholder="username"
@@ -116,7 +116,7 @@ export const AuthModal = () => {
             <input
               watch={formState}
               bind:value={() => formState.value.password}
-              onchange={handleChange}
+              onkeyup={handleChange}
               type="password"
               name="password"
               placeholder="password"
