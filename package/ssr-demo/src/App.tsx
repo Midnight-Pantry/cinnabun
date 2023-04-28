@@ -24,6 +24,14 @@ const PerfTest = ({ n }: { n: number }) => {
   )
 }
 
+if (Cinnabun.Cinnabun.isClient) {
+  setTimeout(() => {
+    addNotification({
+      text: "Eyyyyyy 😁",
+    })
+  }, 1000)
+}
+
 export const App = () => {
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -46,9 +54,6 @@ export const App = () => {
           <Route path="/chat" component={<Chat />} />
         </Router>
       </main>
-      <button onClick={() => addNotification({ text: "Welcome 😁" })}>
-        Add Notification
-      </button>
       <br />
       <AuthButtons />
       <br />

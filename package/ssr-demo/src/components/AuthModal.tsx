@@ -2,6 +2,7 @@ import * as Cinnabun from "cinnabun"
 import { handleCreateAccount, handleLogin } from "../client/actions/auth"
 import "./modal.css"
 import "./tabs.css"
+import { NotificationType, addNotification } from "./Notifications"
 
 export const authModalVisible = Cinnabun.createSignal(false)
 
@@ -41,7 +42,18 @@ export const AuthModal = () => {
         ? await handleLogin(formState.value)
         : await handleCreateAccount(formState.value)
 
-    if (res) authModalVisible.value = false
+    if (!res) {
+      const text =
+        formMode.value === FormMode.LOGIN
+          ? "Failed to log in 😢"
+          : "Failed to create account 😢"
+      addNotification({ text, type: NotificationType.ERROR })
+      return
+    }
+    const text =
+      formMode.value === FormMode.LOGIN ? "Welcome back! 😁" : "Welcome! 😁"
+    addNotification({ text, type: NotificationType.SUCCESS })
+    authModalVisible.value = false
   }
 
   return (

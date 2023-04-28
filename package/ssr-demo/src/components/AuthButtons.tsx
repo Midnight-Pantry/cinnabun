@@ -2,8 +2,13 @@ import * as Cinnabun from "cinnabun"
 import { handleLogout } from "../client/actions/auth"
 import { isAuthenticated, isNotAuthenticated, userStore } from "../state"
 import { toggleAuthModal, AuthModal } from "./AuthModal"
+import { addNotification } from "./Notifications"
 
 export const AuthButtons = () => {
+  const onLogout = async () => {
+    await handleLogout()
+    addNotification({ text: "See ya next time 😢" })
+  }
   return (
     <>
       <button
@@ -14,7 +19,7 @@ export const AuthButtons = () => {
         Log in
       </button>
       <button
-        onClick={handleLogout}
+        onClick={onLogout}
         watch={userStore}
         bind:render={isAuthenticated}
       >
