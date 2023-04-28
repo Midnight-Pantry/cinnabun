@@ -134,7 +134,7 @@ const TwoWayBindingExample = () => {
       <button onclick={() => count.value++}>click me</button>
       <input
         value={count}
-        onchange={(e:Event) => {
+        onkeyup={(e:Event) => {
           count.value = parseInt((e.target as HTMLInputElement).value)
         }}
       />

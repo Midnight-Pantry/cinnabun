@@ -13,7 +13,7 @@ export const SignalsExample = () => {
       <br />
       <input
         value={count}
-        onchange={(e: Event) => {
+        onkeyup={(e: Event) => {
           count.value = parseInt((e.target as HTMLInputElement).value)
         }}
       />
