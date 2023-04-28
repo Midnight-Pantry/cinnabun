@@ -8,13 +8,18 @@ import { isNotAuthenticated } from "../../state"
 export const ChatForm = () => {
   const inputState = Cinnabun.createSignal("")
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: Event) => {
+    e.preventDefault()
+    e.stopPropagation()
     const res = await createChatMessage(inputState.value)
     if (res) inputState.value = ""
   }
 
   return (
-    <form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <form
+      onsubmit={handleSubmit}
+      style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+    >
       <input
         value={inputState}
         onkeyup={(e: Event) => {
@@ -26,7 +31,6 @@ export const ChatForm = () => {
         watch={[inputState, userStore]}
         bind:render={isAuthenticated}
         bind:disabled={() => !inputState.value}
-        type="button"
         onclick={handleSubmit}
       >
         Submit
@@ -35,7 +39,6 @@ export const ChatForm = () => {
       <button
         watch={[userStore]}
         bind:render={isNotAuthenticated}
-        type="button"
         onclick={toggleAuthModal}
       >
         Log in to chat

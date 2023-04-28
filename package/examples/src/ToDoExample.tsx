@@ -21,8 +21,14 @@ export const ToDoExample = () => {
     todos.value = todos.value
   }
 
+  const handleSubmit = (e: Event) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addToDo()
+  }
+
   return (
-    <>
+    <form onsubmit={handleSubmit}>
       <div className="todo-list" watch={todos} bind:render={() => true}>
         {() => (
           <ul>
@@ -48,11 +54,7 @@ export const ToDoExample = () => {
           inputVal.value = (e.target as HTMLInputElement).value
         }}
       />
-      <button
-        watch={inputVal}
-        bind:disabled={() => !inputVal.value}
-        onclick={() => addToDo()}
-      >
+      <button watch={inputVal} bind:disabled={() => !inputVal.value}>
         Add
       </button>
       <br />
@@ -64,6 +66,6 @@ export const ToDoExample = () => {
           }
         />
       )}
-    </>
+    </form>
   )
 }

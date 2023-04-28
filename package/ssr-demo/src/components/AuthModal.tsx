@@ -36,7 +36,10 @@ export const AuthModal = () => {
       [tgt.name]: tgt.value,
     }
   }
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: Event) => {
+    e.preventDefault()
+    e.stopPropagation()
+
     const res =
       formMode.value === FormMode.LOGIN
         ? await handleLogin(formState.value)
@@ -71,7 +74,7 @@ export const AuthModal = () => {
         }
       }}
     >
-      <div className="modal">
+      <form className="modal" onsubmit={handleSubmit}>
         <div className="modal-header">
           <h2>Log in</h2>
         </div>
@@ -104,36 +107,29 @@ export const AuthModal = () => {
               </button>
             </div>
           </div>
-          <form>
-            <input
-              watch={formState}
-              bind:value={() => formState.value.username}
-              onkeyup={handleChange}
-              type="text"
-              name="username"
-              placeholder="username"
-            />
-            <input
-              watch={formState}
-              bind:value={() => formState.value.password}
-              onkeyup={handleChange}
-              type="password"
-              name="password"
-              placeholder="password"
-            />
-          </form>
+          <input
+            watch={formState}
+            bind:value={() => formState.value.username}
+            onkeyup={handleChange}
+            type="text"
+            name="username"
+            placeholder="username"
+          />
+          <input
+            watch={formState}
+            bind:value={() => formState.value.password}
+            onkeyup={handleChange}
+            type="password"
+            name="password"
+            placeholder="password"
+          />
         </div>
         <div className="modal-footer">
-          <button
-            watch={formState}
-            bind:disabled={() => isFormInvalid()}
-            type="button"
-            onclick={() => handleSubmit()}
-          >
+          <button watch={formState} bind:disabled={() => isFormInvalid()}>
             Submit
           </button>
         </div>
-      </div>
+      </form>
     </div>
   )
 }

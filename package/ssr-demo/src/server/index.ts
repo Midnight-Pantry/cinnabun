@@ -121,11 +121,13 @@ app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
           `<div id="${rootId}">${html}</div>`
         )
         .replace(
-          '<script id="server-props"></script>',
+          `<script id="server-props"></script>`,
           `<script id="server-props">
-          const root = document.getElementById('${rootId}');
-          window.__cbData = {root, component: ${JSON.stringify(componentTree)}}
-        </script>`
+            window.__cbData = {
+              root: document.getElementById('${rootId}'),
+              component: ${JSON.stringify(componentTree)}
+            }
+          </script>`
         )
     )
 })
