@@ -78,8 +78,6 @@ export class SSR {
     const {
       children,
       onMounted,
-      onChange,
-      onClick,
       onDestroyed,
       subscription,
       promise,
@@ -116,7 +114,10 @@ export class SSR {
 
     accumulator.html.push(
       `<${component.tag}${Object.entries(rest ?? {})
-        .filter(([k]) => k !== "style" && !k.startsWith("bind:"))
+        .filter(
+          ([k]) =>
+            k !== "style" && !k.startsWith("bind:") && !k.startsWith("on")
+        )
         .map(
           ([k, v]) =>
             ` ${SSR.serializePropName(k)}="${component.getPrimitive(v)}"`

@@ -8,12 +8,12 @@ export const SignalsExample = () => {
   return (
     <>
       <h1>{count}</h1>
-      <button onClick={() => count.value++}>click me</button>
+      <button onclick={() => count.value++}>click me</button>
       <br />
       <br />
       <input
         value={count}
-        onChange={(e) => {
+        onchange={(e: Event) => {
           count.value = parseInt((e.target as HTMLInputElement).value)
         }}
       />

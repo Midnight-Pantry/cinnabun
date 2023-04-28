@@ -116,25 +116,25 @@ export class Component<T extends HTMLElement> {
     })
   }
 
-  bindEvents({ onChange, onClick, onDestroyed }: ComponentEventProps<T>) {
-    if (this.element) {
-      if (onChange) {
-        this.element.addEventListener("change", onChange)
-        Cinnabun.addComponentReference({
-          component: this,
-          onDestroyed: () =>
-            this.element!.removeEventListener("change", onChange),
-        })
-      }
-      if (onClick) {
-        const fn = (e: Event) => onClick(e, this)
-        this.element.addEventListener("click", fn)
-        Cinnabun.addComponentReference({
-          component: this,
-          onDestroyed: () => this.element!.removeEventListener("click", fn),
-        })
-      }
-    }
+  bindEvents({ onDestroyed }: ComponentEventProps<T>) {
+    // if (this.element) {
+    //   if (onchange) {
+    //     this.element.addEventListener("change", onchange)
+    //     Cinnabun.addComponentReference({
+    //       component: this,
+    //       onDestroyed: () =>
+    //         this.element!.removeEventListener("change", onchange),
+    //     })
+    //   }
+    //   if (onclick) {
+    //     const fn = (e: Event) => onclick(e, this)
+    //     this.element.addEventListener("click", fn)
+    //     Cinnabun.addComponentReference({
+    //       component: this,
+    //       onDestroyed: () => this.element!.removeEventListener("click", fn),
+    //     })
+    //   }
+    // }
     if (onDestroyed) {
       Cinnabun.addComponentReference({
         component: this,

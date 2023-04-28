@@ -33,14 +33,14 @@ const Buttons = () => {
         <button
           watch={context}
           bind:disabled={() => context.value <= 0}
-          onClick={() => subtract(5)}
+          onclick={() => subtract(5)}
         >
           Subtract
         </button>
         <button
           watch={context}
           bind:disabled={() => context.value >= 15}
-          onClick={() => add(5)}
+          onclick={() => add(5)}
         >
           Add
         </button>

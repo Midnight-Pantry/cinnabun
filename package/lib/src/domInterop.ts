@@ -9,8 +9,6 @@ export class DomInterop {
       htmlFor,
       children,
       onMounted,
-      onChange,
-      onClick,
       onDestroyed,
       subscription,
       render,
@@ -26,6 +24,10 @@ export class DomInterop {
     if (Object.keys(rest).length) {
       for (const [k, v] of Object.entries(rest)) {
         if (k.includes("bind:")) continue
+        if (k.startsWith("on")) {
+          Object.assign(component.element, { [k]: v })
+          continue
+        }
         Object.assign(component.element, {
           [k]: component.getPrimitive(v, () =>
             DomInterop.updateElement(component)
@@ -137,8 +139,8 @@ export class DomInterop {
     const {
       children,
       onMounted,
-      onChange,
-      onClick,
+      onchange,
+      onclick,
       onDestroyed,
       subscription,
       promise,
@@ -168,10 +170,6 @@ export class DomInterop {
     if (component.tag === "svg") return DomInterop.svg(component)
     if (!component.element) {
       component.element = document.createElement(component.tag) as T
-      component.bindEvents({
-        onChange,
-        onClick,
-      })
     }
 
     if (children) component.replaceChildren(children)

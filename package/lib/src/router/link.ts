@@ -18,7 +18,8 @@ export const setPath = (store: Signal<string>, newPath: string) => {
 export const Link = (props: LinkProps, children: Component<any>[]) => {
   const { to, store, className, activeClass, useHash, ...rest } = props
 
-  const handleClick = (e: Event) => {
+  const handleClick = (e: MouseEvent) => {
+    console.log("asdasdasdasdsa")
     e.preventDefault()
     if (useHash) return setHash(store, to)
     setPath(store, to)
@@ -38,7 +39,7 @@ export const Link = (props: LinkProps, children: Component<any>[]) => {
       )
     },
     href: to,
-    onClick: handleClick,
+    onclick: handleClick,
     children,
     ...rest,
   })

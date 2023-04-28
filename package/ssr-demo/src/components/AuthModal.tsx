@@ -65,7 +65,7 @@ export const AuthModal = () => {
         if (!authModalVisible.value) resetForm()
         return authModalVisible.value
       }}
-      onClick={(e) => {
+      onclick={(e: MouseEvent) => {
         if ((e.target as HTMLElement).className === "modal-outer") {
           toggleAuthModal()
         }
@@ -85,7 +85,7 @@ export const AuthModal = () => {
             >
               <button
                 type="button"
-                onClick={() => (formMode.value = FormMode.LOGIN)}
+                onclick={() => (formMode.value = FormMode.LOGIN)}
               >
                 Log in
               </button>
@@ -98,7 +98,7 @@ export const AuthModal = () => {
             >
               <button
                 type="button"
-                onClick={() => (formMode.value = FormMode.CREATE)}
+                onclick={() => (formMode.value = FormMode.CREATE)}
               >
                 Create account
               </button>
@@ -108,7 +108,7 @@ export const AuthModal = () => {
             <input
               watch={formState}
               bind:value={() => formState.value.username}
-              onChange={handleChange}
+              onchange={handleChange}
               type="text"
               name="username"
               placeholder="username"
@@ -116,7 +116,7 @@ export const AuthModal = () => {
             <input
               watch={formState}
               bind:value={() => formState.value.password}
-              onChange={handleChange}
+              onchange={handleChange}
               type="password"
               name="password"
               placeholder="password"
@@ -128,7 +128,7 @@ export const AuthModal = () => {
             watch={formState}
             bind:disabled={() => isFormInvalid()}
             type="button"
-            onClick={() => handleSubmit()}
+            onclick={() => handleSubmit()}
           >
             Submit
           </button>

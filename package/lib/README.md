@@ -67,7 +67,7 @@ export const App = () => {
   return (
     <>
       <h1>{count}</h1>
-      <button onClick={() => count.value++}>Click me</button>
+      <button onclick={() => count.value++}>Click me</button>
     </>
   )
 }
@@ -131,10 +131,10 @@ const TwoWayBindingExample = () => {
   return (
     <>
       <h1>{count}</h1>
-      <button onClick={() => count.value++}>click me</button>
+      <button onclick={() => count.value++}>click me</button>
       <input
         value={count}
-        onChange={(e) => {
+        onchange={(e:Event) => {
           count.value = parseInt((e.target as HTMLInputElement).value)
         }}
       />

@@ -12,14 +12,14 @@ export const AuthButtons = () => {
   return (
     <>
       <button
-        onClick={toggleAuthModal}
+        onclick={toggleAuthModal}
         watch={userStore}
         bind:render={isNotAuthenticated}
       >
         Log in
       </button>
       <button
-        onClick={onLogout}
+        onclick={onLogout}
         watch={userStore}
         bind:render={isAuthenticated}
       >

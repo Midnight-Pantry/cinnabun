@@ -17,7 +17,7 @@ export const ChatForm = () => {
     <form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <input
         value={inputState}
-        onChange={(e) => {
+        onchange={(e: Event) => {
           inputState.value = (e.target as HTMLInputElement).value
         }}
       />
@@ -27,7 +27,7 @@ export const ChatForm = () => {
         bind:render={isAuthenticated}
         bind:disabled={() => !inputState.value}
         type="button"
-        onClick={handleSubmit}
+        onclick={handleSubmit}
       >
         Submit
       </button>
@@ -36,7 +36,7 @@ export const ChatForm = () => {
         watch={[userStore]}
         bind:render={isNotAuthenticated}
         type="button"
-        onClick={toggleAuthModal}
+        onclick={toggleAuthModal}
       >
         Log in to chat
       </button>

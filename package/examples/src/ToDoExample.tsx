@@ -31,7 +31,7 @@ export const ToDoExample = () => {
                 <input
                   type="checkbox"
                   id={`todo-item-${i}`}
-                  onChange={() => removeToDo(i)}
+                  onchange={() => removeToDo(i)}
                 />
                 <label htmlFor={`todo-item-${i}`}>{item.text}</label>
               </li>
@@ -44,14 +44,14 @@ export const ToDoExample = () => {
         placeholder="Add a new item"
         watch={inputVal}
         bind:value={() => inputVal.value}
-        onChange={(e) => {
+        onchange={(e: Event) => {
           inputVal.value = (e.target as HTMLInputElement).value
         }}
       />
       <button
         watch={inputVal}
         bind:disabled={() => !inputVal.value}
-        onClick={() => addToDo()}
+        onclick={() => addToDo()}
       >
         Add
       </button>
