@@ -1,0 +1,16 @@
+.notification-tray {
+  position: fixed;
+  top: 0;
+  right: .5rem;
+}
+.notification {
+  padding: 1rem;
+  background-color: #444;
+  margin-top: .5rem;
+  right: .5rem;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.notification.hide {
+  opacity: 0;
+  transform: translateX(100%)
+}

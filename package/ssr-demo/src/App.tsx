@@ -12,6 +12,7 @@ import { ProductList } from "./components/ProductList"
 import { AuthButtons } from "./components/AuthButtons"
 import { Nav } from "./components/Nav"
 import { Chat } from "./components/chat/Chat"
+import { NotificationTray, addNotification } from "./components/Notifications"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
@@ -45,8 +46,13 @@ export const App = () => {
           <Route path="/chat" component={<Chat />} />
         </Router>
       </main>
+      <button onClick={() => addNotification({ text: "Welcome 😁" })}>
+        Add Notification
+      </button>
+      <br />
       <AuthButtons />
       <br />
+      <NotificationTray />
     </div>
   )
 }

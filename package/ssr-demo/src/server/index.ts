@@ -7,13 +7,12 @@ import websocket from "@fastify/websocket"
 import fs from "fs"
 import path from "path"
 
-import { ChatMessages, configureChatRoutes } from "./chat"
 import { SSR } from "cinnabun/ssr"
 import { App } from "../App"
 import { Cinnabun } from "cinnabun"
-import { sleep } from "cinnabun/utils"
 import { socketHandler } from "./socket"
 import { configureAuthRoutes } from "./auth"
+import { configureChatRoutes } from "./chat"
 
 declare module "fastify" {
   export interface FastifyInstance {

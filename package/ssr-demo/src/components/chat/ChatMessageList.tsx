@@ -37,8 +37,7 @@ export const ChatMessageList = () => {
 }
 
 const ChatMessageItem = ({ message }: { message: IChatMessage }) => {
-  const isOwnMessage =
-    userStore.value && userStore.value.username === message.username
+  const isOwnMessage = message.username === userStore?.value?.username
   return (
     <div className={`chat-message ${isOwnMessage ? "is-owner" : ""}`}>
       <div className="chat-message-inner">
