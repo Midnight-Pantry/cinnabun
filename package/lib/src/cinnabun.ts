@@ -1,6 +1,6 @@
 import { Component } from "."
 import { DomInterop } from "./domInterop"
-import { ClassConstructor, WatchedElementRef } from "./types"
+import { ClassConstructor, GenericComponent, WatchedElementRef } from "./types"
 export { h, fragment } from "."
 
 export type RuntimeService<Class> = InstanceType<ClassConstructor<Class>>
@@ -13,15 +13,23 @@ type ServerRequestData = {
 }
 
 export class Cinnabun {
-  static readonly DEBUG_COMPONENT_REFCOUNT = false
+  static readonly DEBUG_COMPONENT_REFCOUNT = true
   static readonly isClient: boolean = "window" in globalThis
+
+  //client singleton
   static rootMap: Map<Element | ChildNode, number> = new Map()
   static componentReferences: WatchedElementRef[] = []
   static runtimeServices: RuntimeService<any>[] = []
 
-  serverRequest: ServerRequestData = {
+  //ssr instance
+  private serverComponentReferences: WatchedElementRef[] = []
+  private serverRequest: ServerRequestData = {
     path: "/",
     data: {},
+  }
+
+  setServerRequestData(data: ServerRequestData) {
+    this.serverRequest = data
   }
 
   getServerRequestData<T>(keysPath: string): T | undefined {
@@ -44,26 +52,46 @@ export class Cinnabun {
     DomInterop.render(tray)
   }
 
-  static setComponentReferences = (func: {
-    (arr: WatchedElementRef[]): WatchedElementRef[]
-  }) => {
-    Cinnabun.componentReferences = func(Cinnabun.componentReferences)
-    if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
-      console.debug(
-        "~~ CB REF COUNT",
-        Cinnabun.componentReferences.length,
-        performance.now()
+  static removeComponentReferences(component: GenericComponent) {
+    Cinnabun.removeComponentChildReferences(component)
+
+    if (Cinnabun.isClient) {
+      Cinnabun.componentReferences = Cinnabun.componentReferences.filter(
+        (c) => c.component !== component
       )
+    } else {
+      component.cbInstance!.serverComponentReferences =
+        component.cbInstance!.serverComponentReferences.filter(
+          (c) => c.component !== component
+        )
+    }
+  }
+
+  static removeComponentChildReferences(component: GenericComponent) {
+    for (const c of component.children) {
+      if (c instanceof Component) Cinnabun.removeComponentReferences(c)
+    }
   }
 
   static addComponentReference = (ref: WatchedElementRef) => {
-    Cinnabun.componentReferences.push(ref)
+    if (Cinnabun.isClient) {
+      Cinnabun.componentReferences.push(ref)
+    } else {
+      ref.component.cbInstance!.serverComponentReferences.push(ref)
+    }
+
     if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
-      console.debug(
-        "~~ CB REF COUNT",
-        Cinnabun.componentReferences.length,
-        performance.now()
-      )
+      Cinnabun.logComponentRefCount(ref.component)
+  }
+
+  static logComponentRefCount(component: GenericComponent) {
+    console.debug(
+      "~~ CB REF COUNT",
+      Cinnabun.isClient
+        ? Cinnabun.componentReferences.length
+        : component.cbInstance!.serverComponentReferences.length,
+      performance.now()
+    )
   }
 
   static registerRuntimeServices<Class>(...services: RuntimeService<Class>[]) {

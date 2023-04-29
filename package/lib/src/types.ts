@@ -35,7 +35,7 @@ export type SuspenseChild =
   | { (loading: boolean, data: any): ComponentChild }
 
 export type WatchedElementRef = {
-  component: GenericComponent | ComponentFunc
+  component: GenericComponent
   onDestroyed: { (): void }
 }
 

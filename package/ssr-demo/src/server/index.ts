@@ -103,10 +103,10 @@ configureChatRoutes(app)
 app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
   console.time("render time")
   const instance = new Cinnabun()
-  instance.serverRequest = {
+  instance.setServerRequestData({
     path: req.url,
     data: { user: req.user },
-  }
+  })
 
   const { html, componentTree } = await SSR.serverBake(App(), instance)
   console.timeEnd("render time")

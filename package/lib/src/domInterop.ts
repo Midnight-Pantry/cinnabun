@@ -139,9 +139,7 @@ export class DomInterop {
     const { children, onMounted, onDestroyed, subscription, promise } =
       component.props
 
-    Cinnabun.setComponentReferences((arr) =>
-      arr.filter((c) => c.component !== component)
-    )
+    Cinnabun.removeComponentReferences(component)
 
     if (!component.tag) {
       const f = document.createDocumentFragment()

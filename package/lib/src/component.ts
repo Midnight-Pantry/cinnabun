@@ -185,9 +185,7 @@ export class Component<T extends HTMLElement> {
     while (subs.length) {
       subs.pop()!.onDestroyed()
     }
-    Cinnabun.setComponentReferences((arr) =>
-      arr.filter((s) => s.component !== el)
-    )
+    Cinnabun.removeComponentReferences(el)
   }
 
   onDestroy() {
