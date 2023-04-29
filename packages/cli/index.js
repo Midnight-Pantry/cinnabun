@@ -17,39 +17,50 @@ const templates = [
 
 const defaultDir = "my-new-app"
 
-program.action(async ({ template, dest }) => {
-  if (!template) {
-    const { selectedTemplate } = await inquirer.prompt([
-      {
-        type: "list",
-        name: "selectedTemplate",
-        message: "Choose a template:",
-        choices: templates,
-      },
-    ])
-    template = selectedTemplate
-  }
-  const { selectedDest } = await inquirer.prompt([
-    {
-      type: "input",
-      name: "dest",
-      message: "Destination directory:",
-      default: defaultDir,
-    },
-  ])
-  dest = selectedDest ?? defaultDir
+program
+  .option("-csr, --csr", "Use CSR template")
+  .option("-ssr, --ssr", "Use SSR template")
+  .option("-d, --dest <dest>", "Destination directory")
+  .action(async ({ dest, csr, ssr }) => {
+    let template = ""
+    if ((csr && ssr) || (!csr && !ssr)) {
+      const { selectedTemplate } = await inquirer.prompt([
+        {
+          type: "list",
+          name: "selectedTemplate",
+          message: "Choose a template:",
+          choices: templates,
+        },
+      ])
+      template = selectedTemplate
+    } else {
+      if (csr) template = templates[0].value
+      if (ssr) template = templates[1].value
+    }
 
-  console.log(`Downloading project template '${template}'...`)
-  await new Promise((resolve, reject) => {
-    download(template, dest, (err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve()
-      }
+    if (!dest) {
+      const { selectedDest } = await inquirer.prompt([
+        {
+          type: "input",
+          name: "selectedDest",
+          message: "Destination directory:",
+          default: defaultDir,
+        },
+      ])
+      dest = selectedDest
+    }
+
+    console.log(`Downloading project template '${template}'...`)
+    await new Promise((resolve, reject) => {
+      download(template, dest, (err) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve()
+        }
+      })
     })
+    console.log("Project template downloaded.")
   })
-  console.log("Project template downloaded.")
-})
 
 program.parse(process.argv)
