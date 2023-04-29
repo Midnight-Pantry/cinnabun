@@ -1,6 +1,6 @@
 {
-  "name": "cinnabun-cli",
-  "private": true,
+  "name": "@cinnabun/create-cinnabun-app",
+  "private": false,
   "version": "0.0.1",
   "type": "module",
   "main": ".",
