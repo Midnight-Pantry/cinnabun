@@ -38,7 +38,6 @@ export const ToDoExample = () => {
                   type="checkbox"
                   id={`todo-item-${i}`}
                   onchange={() => removeToDo(i)}
-                  watch={todos}
                 />
                 <label htmlFor={`todo-item-${i}`}>{item.text}</label>
               </li>
