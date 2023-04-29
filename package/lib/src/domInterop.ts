@@ -78,10 +78,11 @@ export class DomInterop {
     if (typeof child === "function") {
       const c = child(...component.childArgs)
       const res = DomInterop.renderChild(component, c)
-      component.funcComponents.push(c)
-
-      let els = Array.isArray(res) ? res : [res]
-      component.funcElements.push(...els)
+      if (c instanceof Component) {
+        component.funcComponents.push(c)
+      } else {
+        component.funcElements.push(c)
+      }
       return res
     }
     return child.toString()
@@ -90,7 +91,7 @@ export class DomInterop {
   static removeFuncElements(component: GenericComponent) {
     if (component.funcElements.length > 0) {
       for (const fe of component.funcElements) {
-        if ("remove" in fe) fe.remove()
+        if (fe instanceof HTMLElement) fe.remove()
       }
       component.funcElements = []
     }
@@ -206,11 +207,20 @@ export class DomInterop {
     }
 
     for (const c of component.children) {
-      el.append(
-        typeof c === "string" || typeof c === "number"
-          ? c.toString()
-          : DomInterop.svg(typeof c === "function" ? c() : c)
-      )
+      if (typeof c === "string" || typeof c === "number") {
+        el.append(c.toString())
+      } else {
+        if (typeof c === "function") {
+          const val = c()
+          if (typeof val === "string" || typeof val === "number") {
+            el.append(val.toString())
+          } else {
+            el.append(DomInterop.svg(val))
+          }
+        } else {
+          el.append(DomInterop.svg(c))
+        }
+      }
     }
 
     //@ts-ignore

@@ -171,9 +171,15 @@ export class SSR {
         }
 
         const val = c(...component.childArgs)
-        val.parent = component
-        const sc = await SSR.serialize(accumulator, val, cbInstance)
-        res.push(sc)
+        if (val instanceof Component) {
+          val.parent = component
+          const sc = await SSR.serialize(accumulator, val, cbInstance)
+          res.push(sc)
+        } else if (typeof val === "string" || typeof val === "number") {
+          if (shouldRender) accumulator.html.push(val.toString())
+          res.push({ children: [], props: {} })
+          continue
+        }
         continue
       }
 

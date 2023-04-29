@@ -18,7 +18,12 @@ export type NodeChildren = (Node | string)[]
 
 export type GenericComponent = Component<any>
 export type ComponentFunc = { (args?: any[]): GenericComponent }
-export type ComponentChild = GenericComponent | ComponentFunc | string | number
+export type ComponentChild =
+  | GenericComponent
+  | ComponentFunc
+  | string
+  | number
+  | { (): string | number }
 
 export type PropsSetter = { (props: ComponentProps<any>): void }
 export type ComponentSubscription = {

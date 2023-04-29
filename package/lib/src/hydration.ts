@@ -60,10 +60,14 @@ export class Hydration {
         ? c(...[false, parent.props.promiseCache])
         : c(...parent.childArgs)
 
-      if (!val.shouldRender()) return
-      Hydration.hydrateComponent(parent, val, sc, parentElement)
-      parent.funcComponents.push(val)
-      parent.funcElements.push(val.element)
+      if (val instanceof Component) {
+        if (!val.shouldRender()) return
+        Hydration.hydrateComponent(parent, val, sc, parentElement)
+        parent.funcComponents.push(val)
+      } else {
+        parent.funcElements.push(val.toString())
+      }
+
       return
     }
     //if (c.tag.toLowerCase() === "input") debugger

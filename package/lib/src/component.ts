@@ -14,7 +14,7 @@ import {
 export class Component<T extends HTMLElement> {
   parent: Component<any> | null = null
   children: ComponentChild[] = []
-  funcElements: HTMLElement[] = []
+  funcElements: (HTMLElement | string | number | Node)[] = []
   funcComponents: GenericComponent[] = []
   element: T | undefined
   cbInstance: Cinnabun | undefined
@@ -170,7 +170,7 @@ export class Component<T extends HTMLElement> {
     for (const c of el.children) {
       if (typeof c === "string" || typeof c === "number") continue
       const val = typeof c === "function" ? c(...this.childArgs) : c
-      if (typeof val !== "string") this.destroyComponentRefs(val)
+      if (val instanceof Component) this.destroyComponentRefs(val)
     }
   }
 
