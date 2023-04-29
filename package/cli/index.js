@@ -4,12 +4,12 @@ import inquirer from "inquirer"
 
 const templates = [
   {
-    name: "Template A",
+    name: "CSR (Client-side rendering)",
     value: "Robby6Strings/cinnabun-csr-template",
   },
   {
-    name: "Template B",
-    value: "your-username/your-repo#template-b",
+    name: "Hybrid (SSR + CSR)",
+    value: "Robby6Strings/cinnabun-ssr-template",
   },
 ]
 
