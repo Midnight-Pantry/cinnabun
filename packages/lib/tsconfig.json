@@ -9,13 +9,19 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
+    "noEmit": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "sourceMap": true,
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   },
-  "include": ["./src/*"],
+  "include": ["./src/*", "./src/tests/*"],
   "exclude": ["node_modules", "dist"]
 }

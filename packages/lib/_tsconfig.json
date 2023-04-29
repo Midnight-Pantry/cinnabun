@@ -1,0 +1,11 @@
+{
+  "target": "ESNext",
+  "jsx": "transform",
+  "jsxFactory": "Cinnabun.h",
+  "jsxFragment": "Cinnabun.fragment",
+  "module": "ESNext",
+  "lib": ["ESNext", "DOM"],
+  "moduleResolution": "Node",
+  "esModuleInterop": true,
+  "isolatedModules": true
+}

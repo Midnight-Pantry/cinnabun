@@ -9,15 +9,20 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "tsc && ts-mocha ./dist/*.spec.js"
   },
   "keywords": [],
   "author": "Robby6Strings",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.11",
+    "chai": "^4.3.7",
     "esbuild": "^0.17.18",
-    "esbuild-jest": "^0.5.0",
+    "mocha": "^10.2.0",
+    "ts-mocha": "^10.0.0",
     "typescript": "^5.0.4"
   }
 }
