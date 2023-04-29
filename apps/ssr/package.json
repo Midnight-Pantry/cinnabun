@@ -18,7 +18,7 @@
     "@fastify/jwt": "^6.7.1",
     "@fastify/static": "^6.10.1",
     "@fastify/websocket": "^8.0.0",
-    "cinnabun": "workspace:^0.1.13",
+    "cinnabun": "workspace:^0.1.15",
     "esbuild": "^0.17.18",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0"

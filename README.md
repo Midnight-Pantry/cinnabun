@@ -1,24 +1,29 @@
-# **Cinnabun JS**🥧
+# **Cinnabun**🥧
 
-#### _Your next app will rise_
+#### _An open-source, free, lightweight and (nearly) zero-dependancy web framework._
+
+<br />
+
+#### **Cinnabun comes with CSR and SSR out-of-the-box, and aims to provide powerful features by default.**
 
 ---
 
-##### \*_As of current, the project's build settings only work with Vite._
+<br />
 
-<br >
+### **The following guide is optional - check out the new CLI tool at https://www.npmjs.com/package/create-cinnabun-app to get started quicker!**
 
-**The following is optional - check out the new CLI tool at https://www.npmjs.com/package/create-cinnabun-app to get started quicker!**
+<br />
+<br />
 
-<br >
+# Getting Started - **CSR**
 
-# Getting Started
+###### **_A guide to getting started with Cinnabun & Vite._**
 
-Run the following to add Cinnabun:
+<br />
 
-`npm i cinnabun`
-
-Add the following entry to your typescript config (tsconfig.json):
+- Run **`npm create vite`** to create a new Vite application
+- Navigate to the new directory and run **`npm i cinnabun`** to add Cinnabun
+- Add the following entry to your typescript config (tsconfig.json):
 
 ```json
 {
@@ -28,7 +33,7 @@ Add the following entry to your typescript config (tsconfig.json):
 }
 ```
 
-Your Vite config (vite.config.ts) should use Cinnabun's BuildSettings as per the following:
+- Create a Vite config (vite.config.ts) like so:
 
 ```js
 import { defineConfig } from "vite"
@@ -46,8 +51,18 @@ export default defineConfig({
 })
 ```
 
-With your compilation settings configured, you can create a simple Cinnabun application as per the following:
 <br />
+
+## **Configuration is done!** 👌
+
+<br />
+
+---
+
+<br />
+
+## **A simple application:**
+
 <br />
 
 _index.ts_
@@ -77,72 +92,6 @@ export const App = () => {
 }
 ```
 
-<br>
+<br />
 
-# But what if I want to create a _real_ application?
-
-Cinnabun comes out of the box with support for two-way-binding, suspenseful components and more.
-
-<br>
-
-### **Suspense:**
-
-```ts
-import { Suspense } from "cinnabun"
-import { Either } from "cinnabun/types"
-import { sleep } from "cinnabun/utils"
-
-type ProductCategoriesResponse = Either<{ error: Error }, { data: string[] }>
-
-async function getProductCategories(): Promise<ProductCategoriesResponse> {
-  try {
-    const res = await fetch("https://dummyjson.com/products/categories")
-    if (!res.ok)
-      throw new Error(res.statusText ?? "Failed to load product categories")
-    await sleep(500)
-
-    const data = await res.json()
-    return { data }
-  } catch (error) {
-    return { error: error as Error }
-  }
-}
-
-export const SuspenseExample = () => {
-  return (
-    <Suspense promise={getProductCategories}>
-      {(loading: boolean, res?: ProductCategoriesResponse) => {
-        if (res?.error) return <p>{res.error}</p>
-        if (loading) return <p>loading...</p>
-
-        return res && <ul>{...res.data.map((c) => <li>{c}</li>)}</ul>
-      }}
-    </Suspense>
-  )
-}
-```
-
-<br>
-
-### **Two-way binding:**
-
-```js
-import { createSignal } from "cinnabun"
-
-const TwoWayBindingExample = () => {
-  const count = createSignal(0)
-
-  return (
-    <>
-      <h1>{count}</h1>
-      <button onclick={() => count.value++}>click me</button>
-      <input
-        value={count}
-        onkeyup={(e:Event) => {
-          count.value = parseInt((e.target as HTMLInputElement).value)
-        }}
-      />
-    </>
-  )
-}
-```
+## View more examples and comprehensive usage at https://github.com/Robby6Strings/cinnabun/tree/main/apps

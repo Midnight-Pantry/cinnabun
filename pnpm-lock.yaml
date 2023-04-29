@@ -5,7 +5,7 @@ importers:
   apps/components:
     dependencies:
       cinnabun:
-        specifier: workspace:^0.1.13
+        specifier: workspace:^0.1.15
         version: link:../../packages/lib
 
   apps/csr:
@@ -14,7 +14,7 @@ importers:
         specifier: workspace:^1.0.0
         version: link:../components
       cinnabun:
-        specifier: workspace:^0.1.13
+        specifier: workspace:^0.1.15
         version: link:../../packages/lib
     devDependencies:
       typescript:
@@ -51,7 +51,7 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       cinnabun:
-        specifier: workspace:^0.1.13
+        specifier: workspace:^0.1.15
         version: link:../../packages/lib
       esbuild:
         specifier: ^0.17.18
