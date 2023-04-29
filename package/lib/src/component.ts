@@ -8,12 +8,14 @@ import {
   ComponentChild,
   ComponentEventProps,
   ClassConstructor,
+  GenericComponent,
 } from "./types"
 
 export class Component<T extends HTMLElement> {
   parent: Component<any> | null = null
   children: ComponentChild[] = []
   funcElements: HTMLElement[] = []
+  funcComponents: GenericComponent[] = []
   element: T | undefined
   cbInstance: Cinnabun | undefined
 

@@ -18,11 +18,7 @@ export const useGlobalContext = () => {
 const Heading = () => {
   const { context } = useGlobalContext()
 
-  return (
-    <>
-      <h1 className="xl">{context}</h1>
-    </>
-  )
+  return <h1 className="xl">{context}</h1>
 }
 
 const Buttons = () => {

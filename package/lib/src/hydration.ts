@@ -62,6 +62,7 @@ export class Hydration {
 
       if (!val.shouldRender()) return
       Hydration.hydrateComponent(parent, val, sc, parentElement)
+      parent.funcComponents.push(val)
       parent.funcElements.push(val.element)
       return
     }

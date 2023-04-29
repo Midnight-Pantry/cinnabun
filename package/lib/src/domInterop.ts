@@ -57,6 +57,8 @@ export class DomInterop {
   static renderChildren(component: GenericComponent) {
     if (!component.props.render) return
     if (!component.element) return
+    DomInterop.removeFuncComponents(component)
+
     component.element.replaceChildren(
       ...DomInterop.getRenderedChildren(component)
     )
@@ -74,25 +76,38 @@ export class DomInterop {
     }
     if (child instanceof Component) return DomInterop.render(child)
     if (typeof child === "function") {
-      const res = DomInterop.renderChild(
-        component,
-        child(...component.childArgs)
-      )
-      //@ts-ignore
-      component.funcElements = Array.isArray(res) ? res : [res]
+      const c = child(...component.childArgs)
+      const res = DomInterop.renderChild(component, c)
+      component.funcComponents.push(c)
+
+      let els = Array.isArray(res) ? res : [res]
+      component.funcElements.push(...els)
       return res
     }
     return child.toString()
   }
 
+  static removeFuncElements(component: GenericComponent) {
+    if (component.funcElements.length > 0) {
+      for (const fe of component.funcElements) {
+        if ("remove" in fe) fe.remove()
+      }
+      component.funcElements = []
+    }
+  }
+  static removeFuncComponents(component: GenericComponent) {
+    if (component.funcComponents.length > 0) {
+      for (const fc of component.funcComponents) {
+        DomInterop.unRender(fc)
+        Cinnabun.removeComponentReferences(fc)
+      }
+      component.funcComponents = []
+    }
+  }
+
   static unRender(component: GenericComponent) {
     try {
-      if (component.funcElements.length > 0) {
-        for (const fc of component.funcElements) {
-          if ("remove" in fc) fc.remove()
-        }
-        component.funcElements = []
-      }
+      DomInterop.removeFuncElements(component)
       if (component.element) {
         //Array.from(component.element.children).forEach((c) => c.remove())
         return component.element.remove()
@@ -112,7 +127,7 @@ export class DomInterop {
 
   static reRender(component: GenericComponent) {
     if (!component.shouldRender()) return
-
+    //if (component.tag.toLowerCase() === "ul") debugger
     const el = component.element ?? DomInterop.render(component, true)
     if (component.element) DomInterop.renderChildren(component)
     if (el.isConnected) return
