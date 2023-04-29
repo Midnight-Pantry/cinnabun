@@ -5,7 +5,7 @@ import {
   SignalsExample,
   SuspenseExample,
   ToDoExample,
-} from "@cinnabun/examples"
+} from "@cinnabun/example-components"
 import { Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
 import { ProductList } from "./components/ProductList"

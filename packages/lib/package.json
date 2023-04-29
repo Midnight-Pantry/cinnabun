@@ -1,7 +1,7 @@
 {
   "name": "cinnabun",
-  "version": "0.1.13",
-  "description": "A reactive, component-based js framework built with great features from the start",
+  "version": "0.1.14",
+  "description": "A reactive, component-based web framework built with Typescript & esbuild",
   "repository": {
     "type": "git",
     "url": "https://github.com/Robby6Strings/cinnabun"
@@ -12,7 +12,7 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "Robby6Strings",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^18.15.11",

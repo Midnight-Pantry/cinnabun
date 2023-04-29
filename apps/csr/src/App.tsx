@@ -6,7 +6,7 @@ import {
   SuspenseExample,
   NestedRoutingExample,
   ToDoExample,
-} from "@cinnabun/examples"
+} from "@cinnabun/example-components"
 
 export const App = () => {
   return (

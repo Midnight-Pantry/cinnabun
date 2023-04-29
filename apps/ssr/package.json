@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cinnabun/examples": "workspace:^1.0.0",
+    "@cinnabun/example-components": "workspace:^1.0.0",
     "@fastify/compress": "^6.2.1",
     "@fastify/cookie": "^8.3.0",
     "@fastify/jwt": "^6.7.1",
