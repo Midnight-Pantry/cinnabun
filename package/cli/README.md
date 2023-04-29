@@ -7,3 +7,6 @@
 <br >
 
 # Getting Started
+
+- `npm install create-cinnabun-app -global`
+- `npx create-cinnabun-app`

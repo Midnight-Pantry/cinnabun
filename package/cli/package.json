@@ -3,7 +3,9 @@
   "private": false,
   "version": "0.0.1",
   "type": "module",
-  "main": ".",
+  "bin": {
+    "template-creator": "./index.js"
+  },
   "dependencies": {
     "commander": "^10.0.1",
     "download-git-repo": "^3.0.2",
