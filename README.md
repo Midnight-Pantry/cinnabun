@@ -8,6 +8,10 @@
 
 <br >
 
+**The following is optional - check out the new CLI tool at https://www.npmjs.com/package/create-cinnabun-app to get started quicker!**
+
+<br >
+
 # Getting Started
 
 Run the following to add Cinnabun:
