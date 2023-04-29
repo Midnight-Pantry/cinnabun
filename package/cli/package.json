@@ -1,14 +1,15 @@
 {
   "name": "create-cinnabun-app",
-  "private": false,
-  "version": "0.0.4",
+  "version": "0.0.11",
   "type": "module",
+  "description": "A command-line tool for creating Cinnabun applications.",
   "bin": {
-    "create-cinnabun-app": "node ./index.js"
+    "create-cinnabun-app": "./index.js"
   },
   "dependencies": {
-    "commander": "^10.0.1",
+    "commander": "^7.2.0",
     "download-git-repo": "^3.0.2",
     "inquirer": "^9.2.0"
-  }
+  },
+  "license": "MIT"
 }

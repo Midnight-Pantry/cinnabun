@@ -8,5 +8,5 @@
 
 # Getting Started
 
-- `npm install create-cinnabun-app -global`
+- `npm i -g create-cinnabun-app`
 - `npx create-cinnabun-app`

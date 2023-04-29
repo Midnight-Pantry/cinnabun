@@ -7,8 +7,8 @@ importers:
   package/cli:
     dependencies:
       commander:
-        specifier: ^10.0.1
-        version: 10.0.1
+        specifier: ^7.2.0
+        version: 7.2.0
       download-git-repo:
         specifier: ^3.0.2
         version: 3.0.2
@@ -809,13 +809,13 @@ packages:
     engines: {node: '>=0.8'}
     dev: false
 
-  /commander@10.0.1:
-    resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
-    engines: {node: '>=14'}
-    dev: false
-
   /commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
+    dev: false
+
+  /commander@7.2.0:
+    resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
+    engines: {node: '>= 10'}
     dev: false
 
   /concat-map@0.0.1:
