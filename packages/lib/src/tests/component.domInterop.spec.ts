@@ -3,9 +3,9 @@ const { window } = new JSDOM()
 global.document = window.document
 global.window = global.document.defaultView!
 
-import { Component } from "."
-import { Cinnabun } from "./cinnabun"
-import { DomInterop } from "./domInterop"
+import { Component } from ".."
+import { Cinnabun } from "../cinnabun"
+import { DomInterop } from "../domInterop"
 import { expect } from "chai"
 import "mocha"
 
