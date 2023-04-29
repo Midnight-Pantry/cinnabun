@@ -13,7 +13,7 @@ type ServerRequestData = {
 }
 
 export class Cinnabun {
-  static readonly DEBUG_COMPONENT_REFCOUNT = true
+  static readonly DEBUG_COMPONENT_REFCOUNT = false
   static readonly isClient: boolean = "window" in globalThis
 
   //client singleton

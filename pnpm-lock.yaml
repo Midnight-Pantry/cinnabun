@@ -8,7 +8,7 @@ importers:
   package/csr-demo:
     specifiers:
       '@cinnabun/examples': workspace:^1.0.0
-      cinnabun: workspace:^0.1.12
+      cinnabun: workspace:^0.1.13
       typescript: ^4.9.5
       vite: ^4.3.3
     dependencies:
@@ -44,7 +44,7 @@ importers:
       '@fastify/websocket': ^8.0.0
       '@types/node': ^18.16.2
       '@types/websocket': ^1.0.5
-      cinnabun: workspace:^0.1.12
+      cinnabun: workspace:^0.1.13
       esbuild: ^0.17.18
       fastify: ^4.17.0
       fastify-plugin: ^4.5.0
