@@ -1,0 +1,12 @@
+{
+  "name": "cinnabun-cli",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "main": ".",
+  "dependencies": {
+    "commander": "^10.0.1",
+    "download-git-repo": "^3.0.2",
+    "inquirer": "^9.2.0"
+  }
+}
