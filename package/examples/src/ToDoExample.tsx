@@ -29,22 +29,23 @@ export const ToDoExample = () => {
 
   return (
     <form onsubmit={handleSubmit}>
-      <div className="todo-list" watch={todos} bind:render={() => true}>
+      <ul className="todo-list" watch={todos} bind:render={() => true}>
         {() => (
-          <ul>
+          <>
             {...todos.value.map((item, i) => (
               <li>
                 <input
                   type="checkbox"
                   id={`todo-item-${i}`}
                   onchange={() => removeToDo(i)}
+                  watch={todos}
                 />
                 <label htmlFor={`todo-item-${i}`}>{item.text}</label>
               </li>
             ))}
-          </ul>
+          </>
         )}
-      </div>
+      </ul>
       <br />
       <input
         placeholder="Add a new item"
@@ -58,14 +59,12 @@ export const ToDoExample = () => {
         Add
       </button>
       <br />
-      {() => (
-        <span
-          watch={todos}
-          bind:innerText={() =>
-            `${todos.value.length} item${todos.value.length == 1 ? "" : "s"}`
-          }
-        />
-      )}
+      <span
+        watch={todos}
+        bind:innerText={() =>
+          `${todos.value.length} item${todos.value.length == 1 ? "" : "s"}`
+        }
+      />
     </form>
   )
 }
