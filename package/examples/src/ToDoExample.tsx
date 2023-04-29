@@ -29,7 +29,7 @@ export const ToDoExample = () => {
 
   return (
     <form onsubmit={handleSubmit}>
-      <ul className="todo-list" watch={todos} bind:render={() => true}>
+      <ul className="todo-list" watch={todos} bind:render>
         {() => (
           <>
             {...todos.value.map((item, i) => (

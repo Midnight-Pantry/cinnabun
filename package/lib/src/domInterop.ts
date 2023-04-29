@@ -78,24 +78,12 @@ export class DomInterop {
     if (typeof child === "function") {
       const c = child(...component.childArgs)
       const res = DomInterop.renderChild(component, c)
-      if (c instanceof Component) {
-        component.funcComponents.push(c)
-      } else {
-        component.funcElements.push(c)
-      }
+      if (c instanceof Component) component.funcComponents.push(c)
       return res
     }
     return child.toString()
   }
 
-  static removeFuncElements(component: GenericComponent) {
-    if (component.funcElements.length > 0) {
-      for (const fe of component.funcElements) {
-        if (fe instanceof HTMLElement) fe.remove()
-      }
-      component.funcElements = []
-    }
-  }
   static removeFuncComponents(component: GenericComponent) {
     if (component.funcComponents.length > 0) {
       for (const fc of component.funcComponents) {
@@ -108,7 +96,7 @@ export class DomInterop {
 
   static unRender(component: GenericComponent) {
     try {
-      DomInterop.removeFuncElements(component)
+      DomInterop.removeFuncComponents(component)
       if (component.element) {
         //Array.from(component.element.children).forEach((c) => c.remove())
         return component.element.remove()
@@ -242,19 +230,7 @@ export class DomInterop {
         break
       }
       if (c instanceof Component) {
-        if (c.element) {
-          start++
-        } else if (c.funcElements.length) {
-          start += c.funcElements.length - 1
-        } else {
-          // for (const child of c.children) {
-          //   if (child instanceof Component && child.element) {
-          //     start++
-          //   } else if (typeof child === "string" || typeof child === "number") {
-          //     start++
-          //   }
-          // }
-        }
+        if (c.element) start++
       }
     }
     if (component.parent.element)
