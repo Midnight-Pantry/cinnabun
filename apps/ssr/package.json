@@ -5,7 +5,6 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
     "dev": "node build && node dist/server"
   },
   "keywords": [],
@@ -18,7 +17,7 @@
     "@fastify/jwt": "^6.7.1",
     "@fastify/static": "^6.10.1",
     "@fastify/websocket": "^8.0.0",
-    "cinnabun": "workspace:^0.1.15",
+    "cinnabun": "workspace:^",
     "esbuild": "^0.17.18",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0"

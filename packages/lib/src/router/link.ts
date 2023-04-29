@@ -29,7 +29,7 @@ export const Link = (props: LinkProps, children: Component<any>[]) => {
     ["bind:className"]: (self: Component<HTMLAnchorElement>) => {
       const curPath = Cinnabun.isClient
         ? store.value
-        : self.cbInstance?.serverRequest.path
+        : self.cbInstance?.getServerRequestData<string>("path")
 
       const pathMatches = !!matchPath(curPath ?? "/", to).routeMatch
 

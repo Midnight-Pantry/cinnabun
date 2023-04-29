@@ -64,7 +64,7 @@ export const Router = ({ store }: RouterProps, children: RouteComponent[]) => {
           c,
           Cinnabun.isClient
             ? val
-            : self.cbInstance!.getServerRequestData("path")!
+            : self.cbInstance!.getServerRequestData<string>("path")!
         )
         if (matchRes.routeMatch) {
           c.props.render = !!matchRes.routeMatch

@@ -5,7 +5,7 @@ importers:
   apps/components:
     dependencies:
       cinnabun:
-        specifier: workspace:^0.1.15
+        specifier: workspace:^
         version: link:../../packages/lib
 
   apps/csr:
@@ -14,7 +14,7 @@ importers:
         specifier: workspace:^1.0.0
         version: link:../components
       cinnabun:
-        specifier: workspace:^0.1.15
+        specifier: workspace:^
         version: link:../../packages/lib
     devDependencies:
       typescript:
@@ -23,12 +23,6 @@ importers:
       vite:
         specifier: ^4.3.3
         version: 4.3.3
-
-  apps/example-components:
-    dependencies:
-      cinnabun:
-        specifier: workspace:^0.1.13
-        version: link:../../packages/lib
 
   apps/ssr:
     dependencies:
@@ -51,7 +45,7 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       cinnabun:
-        specifier: workspace:^0.1.15
+        specifier: workspace:^
         version: link:../../packages/lib
       esbuild:
         specifier: ^0.17.18
@@ -81,12 +75,6 @@ importers:
       inquirer:
         specifier: ^9.2.0
         version: 9.2.0
-
-  packages/example-components:
-    dependencies:
-      cinnabun:
-        specifier: workspace:^0.1.13
-        version: link:../lib
 
   packages/lib:
     devDependencies:
