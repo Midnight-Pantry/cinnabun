@@ -46,9 +46,6 @@ program
     ])
     dest = selectedDest ?? defaultDir
 
-    console.log("template: ", template)
-    console.log("dest: ", dest)
-
     console.log(`Downloading project template '${template}'...`)
     await new Promise((resolve, reject) => {
       download(template, dest, (err) => {
