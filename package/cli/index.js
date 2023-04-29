@@ -21,10 +21,6 @@ program
   .option("-t, --template <template>", "Template to use")
   .option("-d, --dest <dest>", "Destination directory")
   .action(async ({ template, dest }) => {
-    // console.log("Installing your-package...")
-    // await execAsync(`npm install --save your-package`)
-    // console.log("your-package installed.")
-
     if (!template) {
       const { selectedTemplate } = await inquirer.prompt([
         {
