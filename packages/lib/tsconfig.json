@@ -22,6 +22,6 @@
       "*": ["node_modules/*"]
     }
   },
-  "include": ["./src/*", "./src/tests/*"],
+  "include": ["./src/*", "./src/tests"],
   "exclude": ["node_modules", "dist"]
 }
