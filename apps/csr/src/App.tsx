@@ -17,10 +17,6 @@ setTimeout(() => {
 export const App = () => {
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
-      <div watch={signal} bind:render>
-        <>{() => `test ${signal.value}`}</>
-      </div>
-
       <h1>Cinnabun JS</h1>
       <br />
       <nav>
@@ -57,10 +53,6 @@ export const App = () => {
             component={<NestedRoutingExample {...{ pathStore }} />}
           />
           <Route path="/todo" component={<ToDoExample />} />
-          <Route
-            path="/:myparam"
-            component={(props) => <h1>{props.params.myparam}</h1>}
-          />
         </Router>
       </main>
     </div>
