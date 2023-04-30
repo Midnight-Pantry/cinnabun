@@ -12,6 +12,7 @@
     "build": "tsc",
     "mocha": "tsc && ts-mocha ./dist/tests/*/**.spec.js",
     "cypress": "npx cypress run --spec ./cypress/e2e/csr --env port=5173",
+    "cypress-ssr": "npx cypress run --spec ./cypress/e2e --env port=3000",
     "cypress-open": "npx cypress open"
   },
   "keywords": [],
