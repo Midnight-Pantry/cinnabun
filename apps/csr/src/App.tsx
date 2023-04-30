@@ -7,10 +7,20 @@ import {
   NestedRoutingExample,
   ToDoExample,
 } from "@cinnabun/example-components"
+import { Component, createSignal } from "cinnabun"
+
+const signal = createSignal(123)
+setTimeout(() => {
+  signal.value = 456
+}, 500)
 
 export const App = () => {
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
+      <div watch={signal} bind:render>
+        <>{() => `test ${signal.value}`}</>
+      </div>
+
       <h1>Cinnabun JS</h1>
       <br />
       <nav>
