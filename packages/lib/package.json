@@ -10,9 +10,9 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "unit-test": "tsc && ts-mocha ./dist/tests/*/**.spec.js",
-    "cypress": "npx cypress open",
-    "cypress-run": "npx cypress run --spec ./cypress/e2e/csr"
+    "mocha": "tsc && ts-mocha ./dist/tests/*/**.spec.js",
+    "cypress": "npx cypress run --spec ./cypress/e2e/csr --env port=5173",
+    "cypress-open": "npx cypress open"
   },
   "keywords": [],
   "author": "Robby6Strings",
