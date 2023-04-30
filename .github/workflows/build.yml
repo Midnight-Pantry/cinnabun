@@ -29,5 +29,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-          DEPLOY_DIR: my/deploy/dir
-          SRC_PACKAGE_DIR: my/src/package
+          DEPLOY_DIR: packages/lib/
+          SRC_PACKAGE_DIR: packages/lib/
