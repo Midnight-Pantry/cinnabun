@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "node build && node dist/server"
+    "dev": "node build && node dist/server",
+    "build": "node build",
+    "test": "echo \"Error: no test specified\""
   },
   "keywords": [],
   "author": "",
