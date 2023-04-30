@@ -17,7 +17,7 @@
     "jsx": "preserve",
     "outDir": "dist",
     "baseUrl": ".",
-    "sourceMap": true,
+    "sourceMap": false,
     "paths": {
       "*": ["node_modules/*"]
     }
