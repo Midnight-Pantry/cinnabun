@@ -17,4 +17,5 @@ jobs:
         with:
           version: 8
           install: true
-          run_install: true
+      - name: Install dependencies
+        run: pnpm install
