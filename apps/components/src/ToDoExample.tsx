@@ -7,7 +7,6 @@ interface ToDoItem {
 const todos = createSignal<ToDoItem[]>([
   { text: "Make a coffee" },
   { text: "Write a cool new app" },
-  { text: "asdfg" },
 ])
 
 export const ToDoExample = () => {
