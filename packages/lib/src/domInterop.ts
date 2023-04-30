@@ -109,7 +109,7 @@ export class DomInterop {
         }
       }
     } catch (error) {
-      console.error("failed to unrender", component)
+      console.error("failed to unrender", component, error)
       debugger
     }
   }

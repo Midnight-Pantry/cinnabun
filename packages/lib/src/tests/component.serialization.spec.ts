@@ -1,39 +1,42 @@
-import JSDOM from "./jsdom"
 import { Component, Signal } from ".."
-import { DomInterop } from "../domInterop"
+import { Cinnabun } from "../cinnabun"
+import { SSR } from "../ssr"
 import { expect } from "chai"
+import { logger } from "./logging"
 import "mocha"
 
-beforeEach(() => {
-  const { window } = new JSDOM()
-  global.document = window.document
-  global.window = global.document.defaultView!
-})
+const logStep = logger("component.serialization")
 
-describe("When rendered, a component", () => {
+describe("When serialized, a component", () => {
   describe("with primitive children", () => {
+    logStep("A0")
+    const instance = new Cinnabun()
     const component = new Component("div", {
       children: ["test", " ", 123],
     })
-    const rendered = DomInterop.render(component)
     const expected = "<div>test 123</div>"
 
-    it(`produces the HTML: ${expected}`, () => {
-      expect((rendered as HTMLDivElement).outerHTML).to.equal(expected)
+    it(`produces the HTML: ${expected}`, async () => {
+      const { html } = await SSR.serverBake(component, instance)
+      expect(html).to.equal(expected)
     })
   })
   describe("with primitive func children", () => {
+    logStep("A1")
+    const instance = new Cinnabun()
     const component = new Component("div", {
       children: [() => "test", () => " ", () => 123],
     })
-    const rendered = DomInterop.render(component)
     const expected = "<div>test 123</div>"
 
-    it(`produces the HTML: ${expected}`, () => {
-      expect((rendered as HTMLDivElement).outerHTML).to.equal(expected)
+    it(`produces the HTML: ${expected}`, async () => {
+      const { html } = await SSR.serverBake(component, instance)
+      expect(html).to.equal(expected)
     })
   })
   describe("with componentFunc children", () => {
+    logStep("A2")
+    const instance = new Cinnabun()
     const component = new Component("div", {
       children: [
         () =>
@@ -46,17 +49,16 @@ describe("When rendered, a component", () => {
           }),
       ],
     })
-    const rendered = DomInterop.render(component)
     const expected = "<div><p>test</p><p>123</p></div>"
 
-    it(`produces the HTML: ${expected}`, () => {
-      expect((rendered as HTMLDivElement).outerHTML).to.equal(expected)
+    it(`produces the HTML: ${expected}`, async () => {
+      const { html } = await SSR.serverBake(component, instance)
+      expect(html).to.equal(expected)
     })
   })
-})
-
-describe("When mounted, a component that uses watch + bind", () => {
-  describe("to conditionally render", () => {
+  describe("with watch+bind props", () => {
+    logStep("A3")
+    const instance = new Cinnabun()
     const signal = new Signal(123)
     const component = new Component("div", {
       children: [
@@ -67,15 +69,16 @@ describe("When mounted, a component that uses watch + bind", () => {
         }),
       ],
     })
-    const rendered = DomInterop.render(component)
     const expected = "<div><p>test 123</p></div>"
 
-    it(`produces the HTML: ${expected}`, () => {
-      expect((rendered as HTMLDivElement).outerHTML).to.equal(expected)
+    it(`produces the HTML: ${expected}`, async () => {
+      const { html } = await SSR.serverBake(component, instance)
+      expect(html).to.equal(expected)
     })
   })
-
   describe("to render dynamic children", () => {
+    logStep("A4")
+    const instance = new Cinnabun()
     const signal = new Signal(["test", "123"])
     const component = new Component("ul", {
       watch: signal,
@@ -89,11 +92,11 @@ describe("When mounted, a component that uses watch + bind", () => {
           }),
       ],
     })
-    const rendered = DomInterop.render(component)
     const expected = "<ul><li>test</li><li>123</li></ul>"
 
-    it(`produces the HTML: ${expected}`, () => {
-      expect((rendered as HTMLDivElement).outerHTML).to.equal(expected)
+    it(`produces the HTML: ${expected}`, async () => {
+      const { html } = await SSR.serverBake(component, instance)
+      expect(html).to.equal(expected)
     })
   })
 })

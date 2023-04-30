@@ -38,6 +38,7 @@ export class Component<T extends HTMLElement> {
     }
 
     if (Cinnabun.isClient && watch) {
+      console.log("dafooooooq")
       this._props.watch = watch
       const signals = "length" in watch ? watch : [watch]
       for (const s of signals) {
@@ -72,7 +73,7 @@ export class Component<T extends HTMLElement> {
 
         // possibly shouldn't be using this.renderChildren?
         this._props[propName] = this.getPrimitive(v, () =>
-          DomInterop.renderChildren(this)
+          DomInterop.reRender(this)
         )
 
         if (propName === "render" && Cinnabun.isClient) {
@@ -182,7 +183,9 @@ export class Component<T extends HTMLElement> {
   destroyComponentRefs(el: Component<any>) {
     this.destroyChildComponentRefs(el)
     el.parent = null
-    const subs = Cinnabun.componentReferences.filter((s) => s.component === el)
+    const subs = Cinnabun.getComponentReferences(el).filter(
+      (s) => s.component === el
+    )
     while (subs.length) {
       subs.pop()!.onDestroyed()
     }

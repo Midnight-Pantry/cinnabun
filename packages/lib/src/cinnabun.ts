@@ -52,6 +52,12 @@ export class Cinnabun {
     DomInterop.render(tray)
   }
 
+  static getComponentReferences(component: GenericComponent) {
+    return Cinnabun.isClient
+      ? Cinnabun.componentReferences
+      : component.cbInstance!.serverComponentReferences
+  }
+
   static removeComponentReferences(component: GenericComponent) {
     Cinnabun.removeComponentChildReferences(component)
 
