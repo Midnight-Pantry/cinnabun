@@ -57,6 +57,10 @@ export const App = () => {
             component={<NestedRoutingExample {...{ pathStore }} />}
           />
           <Route path="/todo" component={<ToDoExample />} />
+          <Route
+            path="/:myparam"
+            component={(props) => <h1>{props.params.myparam}</h1>}
+          />
         </Router>
       </main>
     </div>
