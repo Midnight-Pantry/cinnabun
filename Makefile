@@ -5,4 +5,4 @@ start_ssr:
 	cd apps/ssr && pnpm run dev
 
 test:
-	make start_ssr & pnpm run -r test --parallel
+	make start_ssr & pnpm run -r --parallel test
