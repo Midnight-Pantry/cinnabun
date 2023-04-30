@@ -10,7 +10,9 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "test": "tsc && ts-mocha ./dist/tests/*/**.spec.js"
+    "unit-test": "tsc && ts-mocha ./dist/tests/*/**.spec.js",
+    "cypress": "npx cypress open",
+    "cypress-run": "npx cypress run --spec ./cypress/e2e/csr"
   },
   "keywords": [],
   "author": "Robby6Strings",
