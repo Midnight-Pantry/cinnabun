@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("two-way-binding", () => {
+describe("signals", () => {
   beforeEach(() => {
     const port = Cypress.env("port")
     cy.visit(`http://localhost:${port}`)

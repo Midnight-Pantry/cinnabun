@@ -1,3 +1,4 @@
+import { useRequestData } from "../ssr"
 import { matchPath } from "."
 import { Signal, Component } from ".."
 import { Cinnabun } from "../cinnabun"
@@ -84,9 +85,7 @@ export const Router = (
         const c = self.children[i] as RouteComponent
         const matchRes = (self as RouterComponent).matchRoute(
           c,
-          Cinnabun.isClient
-            ? val
-            : self.cbInstance!.getServerRequestData<string>("path")!
+          useRequestData<string>(self, "path", val)!
         )
         if (matchRes.routeMatch) {
           c.props.render = !!matchRes.routeMatch
