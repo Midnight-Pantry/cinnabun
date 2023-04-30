@@ -7,32 +7,32 @@ import { expect } from "chai"
 import "mocha"
 import { sleep } from "../utils"
 
-describe("When serialized, a Generic Component", () => {
-  describe("with primitive children", () => {
+describe("When serialized, a Generic Component", function () {
+  describe("with primitive children", function () {
     const instance = new Cinnabun()
     const component = new Component("div", {
       children: ["test", " ", 123],
     })
     const expected = "<div>test 123</div>"
 
-    it(`produces the HTML: ${expected}`, async () => {
+    it(`produces the HTML: ${expected}`, async function () {
       const { html } = await SSR.serverBake(component, instance)
       expect(html).to.equal(expected)
     })
   })
-  describe("with primitive func children", () => {
+  describe("with primitive func children", function () {
     const instance = new Cinnabun()
     const component = new Component("div", {
       children: [() => "test", () => " ", () => 123],
     })
     const expected = "<div>test 123</div>"
 
-    it(`produces the HTML: ${expected}`, async () => {
+    it(`produces the HTML: ${expected}`, async function () {
       const { html } = await SSR.serverBake(component, instance)
       expect(html).to.equal(expected)
     })
   })
-  describe("with componentFunc children", () => {
+  describe("with componentFunc children", function () {
     const instance = new Cinnabun()
     const component = new Component("div", {
       children: [
@@ -48,13 +48,13 @@ describe("When serialized, a Generic Component", () => {
     })
     const expected = "<div><p>test</p><p>123</p></div>"
 
-    it(`produces the HTML: ${expected}`, async () => {
+    it(`produces the HTML: ${expected}`, async function () {
       const { html } = await SSR.serverBake(component, instance)
       expect(html).to.equal(expected)
     })
   })
-  describe("with watch+bind props", () => {
-    it(`can conditionally render`, async () => {
+  describe("with watch+bind props", function () {
+    it(`can conditionally render`, async function () {
       const instance = new Cinnabun()
       const signal = new Signal(123)
       const component = new Component("div", {
@@ -65,7 +65,7 @@ describe("When serialized, a Generic Component", () => {
       expect(html).to.equal("")
     })
 
-    it("can dynamically render children", async () => {
+    it("can dynamically render children", async function () {
       const instance = new Cinnabun()
       const signal = new Signal(["test", "123"])
       const component = new Component("ul", {
@@ -81,8 +81,8 @@ describe("When serialized, a Generic Component", () => {
   })
 })
 
-describe("When serialized, a Suspense Component", () => {
-  describe("with the 'prefetch' flag", () => {
+describe("When serialized, a Suspense Component", function () {
+  describe("with the 'prefetch' flag", function () {
     const instance = new Cinnabun()
     const component = new SuspenseComponent("", {
       prefetch: true,
@@ -99,12 +99,12 @@ describe("When serialized, a Suspense Component", () => {
           }),
       ],
     })
-    it("will wait for its' promise to resolve", async () => {
+    it("will wait for its' promise to resolve", async function () {
       const { html } = await SSR.serverBake(component, instance)
       expect(html).to.equal("<p><span>1</span><span>2</span><span>3</span></p>")
     })
   })
-  describe("without the 'prefetch' flag", () => {
+  describe("without the 'prefetch' flag", function () {
     const instance = new Cinnabun()
     const component = new SuspenseComponent("", {
       promise: async () => {
@@ -120,15 +120,15 @@ describe("When serialized, a Suspense Component", () => {
           }),
       ],
     })
-    it("will render its' loading state", async () => {
+    it("will render its' loading state", async function () {
       const { html } = await SSR.serverBake(component, instance)
       expect(html).to.equal("<p>...loading</p>")
     })
   })
 })
 
-describe("When serialized, a Router Component", () => {
-  it("will only render the request path's corresponding Route Component", async () => {
+describe("When serialized, a Router Component", function () {
+  it("will only render the request path's corresponding Route Component", async function () {
     const instance = new Cinnabun()
     instance.setServerRequestData({ path: "/test", data: {} })
 
@@ -148,7 +148,7 @@ describe("When serialized, a Router Component", () => {
     expect(html).to.equal("<h1>Test</h1>")
   })
 
-  it("will provide path params to child routes, and they can provide them to their child component", async () => {
+  it("will provide path params to child routes, and they can provide them to their child component", async function () {
     const instance = new Cinnabun()
     instance.setServerRequestData({ path: "/moose", data: {} })
 
