@@ -38,7 +38,6 @@ export class Component<T extends HTMLElement> {
     }
 
     if (Cinnabun.isClient && watch) {
-      console.log("dafooooooq")
       this._props.watch = watch
       const signals = "length" in watch ? watch : [watch]
       for (const s of signals) {
