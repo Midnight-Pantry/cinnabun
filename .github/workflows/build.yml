@@ -24,10 +24,10 @@ jobs:
         run: make build
       - name: Test
         run: make test
-      - name: NPM publish
-        uses: mikeal/merge-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-          DEPLOY_DIR: packages/lib/
-          SRC_PACKAGE_DIR: packages/lib/
+      # - name: NPM publish
+      #   uses: mikeal/merge-release@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      #     DEPLOY_DIR: packages/lib/
+      #     SRC_PACKAGE_DIR: packages/lib/
