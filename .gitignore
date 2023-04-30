@@ -12,6 +12,7 @@ dist
 !ssr-demo/dist
 *.local
 videos
+screenshots
 
 # Editor directories and files
 .vscode/*
