@@ -103,4 +103,25 @@ describe("When serialized, a Suspense Component", () => {
       expect(html).to.equal("<p><span>1</span><span>2</span><span>3</span></p>")
     })
   })
+  describe("without the 'prefetch' flag", () => {
+    const instance = new Cinnabun()
+    const component = new SuspenseComponent("", {
+      promise: async () => {
+        await sleep(20)
+        return new Promise<number[]>((res) => res([1, 2, 3]))
+      },
+      children: [
+        (loading: boolean, data: number[]) =>
+          new Component("p", {
+            children: loading
+              ? ["...loading"]
+              : data.map((n) => new Component("span", { children: [n] })),
+          }),
+      ],
+    })
+    it("will render its' loading state", async () => {
+      const { html } = await SSR.serverBake(component, instance)
+      expect(html).to.equal("<p>...loading</p>")
+    })
+  })
 })
