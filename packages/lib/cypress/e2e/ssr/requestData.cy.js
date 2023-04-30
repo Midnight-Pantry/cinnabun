@@ -8,6 +8,8 @@ const preAuth = async function () {
     username: generateUUID(),
     password: "123",
   })
+
+  cy.getCookie("refreshToken").should("exist")
 }
 
 describe("requestData", () => {
