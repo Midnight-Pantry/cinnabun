@@ -5,7 +5,7 @@ import { parseJwt } from "./client/jwt"
 
 const isClient = Cinnabun.isClient
 
-const getUserData = () => {
+const getUserDataFromToken = () => {
   const tkn = localStorage.getItem("token")
   if (!tkn) return null
   return parseJwt(tkn)
@@ -14,11 +14,15 @@ const getUserData = () => {
 export const pathStore = createSignal(isClient ? window.location.pathname : "/")
 
 export const userStore = createSignal<{ username: string } | null>(
-  isClient ? getUserData() : null
+  isClient ? getUserDataFromToken() : null
 )
 
-export const isAuthenticated = (self: GenericComponent) =>
-  useRequestData<boolean>(self, "data.user", !!userStore.value)
+export const getUser = (self: GenericComponent) =>
+  useRequestData<{ username: string } | null>(
+    self,
+    "data.user",
+    userStore.value
+  )
 
-export const isNotAuthenticated = (self: GenericComponent) =>
-  !isAuthenticated(self)
+export const isAuthenticated = (self: GenericComponent) => !!getUser(self)
+export const isNotAuthenticated = (self: GenericComponent) => !getUser(self)

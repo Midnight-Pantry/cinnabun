@@ -3,21 +3,25 @@ import { Cinnabun as cb } from "cinnabun"
 import { IChatMessage } from "../../types/chat"
 import { LiveSocket } from "../../client/liveSocket"
 import { prefetchChatMessages } from "../../server/actions/chat"
-import { userStore } from "../../state"
+import { getUser, userStore } from "../../state"
+import { GenericComponent } from "cinnabun/types"
 
-let serverData: IChatMessage[] = []
+let serverData = Cinnabun.createSignal<IChatMessage[]>([])
 
 export const ChatMessageList = () => {
   if (!cb.isClient) {
     prefetchChatMessages().then((res) => {
-      if (res.error) return
-      serverData = res.data
+      if (res.error) {
+        console.log("ChatMessageList err", res)
+        return
+      }
+      serverData.value = res.data
     })
   }
 
   const chatMessages = cb.isClient
     ? cb.getRuntimeService(LiveSocket).chatMessages
-    : Cinnabun.createSignal(serverData)
+    : serverData
 
   return (
     <div
@@ -37,9 +41,15 @@ export const ChatMessageList = () => {
 }
 
 const ChatMessageItem = ({ message }: { message: IChatMessage }) => {
-  const isOwnMessage = message.username === userStore?.value?.username
+  const isOwnMessage = (userData: { username: string } | null | undefined) =>
+    message.username === userData?.username
   return (
-    <div className={`chat-message ${isOwnMessage ? "is-owner" : ""}`}>
+    <div
+      watch={userStore}
+      bind:className={(self: GenericComponent) =>
+        `chat-message ${isOwnMessage(getUser(self)) ? "is-owner" : ""}`
+      }
+    >
       <div className="chat-message-inner">
         <sup className="chat-message-sender">{message.username}</sup>
         <p>{message.contents}</p>
