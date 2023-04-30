@@ -14,6 +14,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          registry-url: https://npm.pkg.github.com/
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -24,3 +25,13 @@ jobs:
         run: make build
       - name: Test
         run: make test
+      - name: "change version"
+        uses: reedyuk/npm-version@1.1.1
+        with:
+          version: "1.0.1"
+          package: "packages/lib"
+          git-tag-version: "true"
+      - name: Publish package
+        run: cd packages/lib && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
