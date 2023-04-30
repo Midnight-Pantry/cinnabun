@@ -17,7 +17,8 @@ export type JSXProps = Record<string, string | number | null | undefined> | null
 export type NodeChildren = (Node | string)[]
 
 export type GenericComponent = Component<any>
-export type ComponentFunc = { (args?: any[]): GenericComponent }
+export type ComponentFunc = { (...args: any[]): GenericComponent }
+//Type '(loading: boolean, data: number) => Component<any>' is not assignable to type 'ComponentFunc'
 export type ComponentChild =
   | GenericComponent
   | ComponentFunc

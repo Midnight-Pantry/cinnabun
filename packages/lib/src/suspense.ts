@@ -1,4 +1,4 @@
-import { SuspenseProps } from "./types"
+import { ComponentFunc, SuspenseProps } from "./types"
 import { Component } from "./component"
 import { Cinnabun } from "./cinnabun"
 import { DomInterop } from "./domInterop"
@@ -7,6 +7,13 @@ export class SuspenseComponent extends Component<any> {
   promiseFunc: { (): Promise<any> } | undefined
   promiseInstance: Promise<any> | undefined
   promiseCache: any
+
+  constructor(
+    public tag: string,
+    props: SuspenseProps & { children: [ComponentFunc] }
+  ) {
+    super(tag, props)
+  }
 
   get childArgs(): any[] {
     return [!this.promiseCache, this.promiseCache]
@@ -49,7 +56,7 @@ export class SuspenseComponent extends Component<any> {
 
 export const Suspense = (
   { prefetch, promise, cache }: SuspenseProps,
-  children: [Component<any>]
+  children: [ComponentFunc]
 ) => {
   return new SuspenseComponent("", { prefetch, promise, cache, children })
 }
