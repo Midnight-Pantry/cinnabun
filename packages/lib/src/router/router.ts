@@ -2,14 +2,29 @@ import { matchPath } from "."
 import { Signal, Component } from ".."
 import { Cinnabun } from "../cinnabun"
 import { DomInterop } from "../domInterop"
-import { ComponentSubscription, PropsSetter } from "../types"
-import { RouteComponent } from "./route"
+import {
+  ComponentChild,
+  ComponentSubscription,
+  PropsSetter,
+  RouteProps,
+} from "../types"
 
-interface RouterProps {
-  store: Signal<string>
+class RouteComponent extends Component<any> {
+  constructor(path: string, component: ComponentChild) {
+    super("", {
+      path,
+      pathDepth: path.split("").filter((chr) => chr === "/").length,
+      children: [component],
+      render: false,
+    })
+  }
+
+  get childArgs() {
+    return [{ params: this.props.params }]
+  }
 }
 
-export class RouterComponent extends Component<any> {
+class RouterComponent extends Component<any> {
   constructor(subscription: ComponentSubscription, children: RouteComponent[]) {
     if (children.some((c) => !(c instanceof RouteComponent)))
       throw new Error("Must provide Route as child of Router")
@@ -47,7 +62,14 @@ export class RouterComponent extends Component<any> {
   }
 }
 
-export const Router = ({ store }: RouterProps, children: RouteComponent[]) => {
+export const Route = ({ path, component }: RouteProps) => {
+  return new RouteComponent(path, component)
+}
+
+export const Router = (
+  { store }: { store: Signal<string> },
+  children: RouteComponent[]
+) => {
   const subscription = (_: PropsSetter, self: Component<any>) => {
     return store.subscribe((val) => {
       let len = self.children.length
