@@ -13,7 +13,8 @@
 
 describe("example to-do app", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/todo")
+    const port = Cypress.env("port")
+    cy.visit(`http://localhost:${port}/todo`)
   })
 
   it("displays two todo items by default", () => {
