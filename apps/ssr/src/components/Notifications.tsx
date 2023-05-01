@@ -57,6 +57,32 @@ export class NotificationTrayComponent extends Component<any> {
   constructor(private animationDuration: number) {
     super("div", { className: "notification-tray" })
 
+    const addNotification = (notification: INotification) => {
+      const child = notification.component
+      this.prependChild(child)
+      const element: HTMLElement = child.element
+      element.addEventListener("mouseenter", function handler() {
+        child.props.hovered = true
+      })
+
+      element.addEventListener("mouseleave", function handler() {
+        child.props.hovered = false
+      })
+    }
+
+    const removeNotification = (notification: INotification) => {
+      const child = notification.component
+      child.element.removeEventListener("mouseenter", function handler() {
+        child.props.hovered = true
+      })
+
+      child.element.removeEventListener("mouseleave", function handler() {
+        child.props.hovered = false
+      })
+      DomInterop.unRender(child)
+      notificationStore.value.delete(notification.id)
+    }
+
     if (Cinnabun.Cinnabun.isClient) {
       const tickRateMs = 33
 
@@ -66,33 +92,24 @@ export class NotificationTrayComponent extends Component<any> {
         for (const [k, notification] of notificationStore.value.entries()) {
           const c = children.find((child) => child.props["data-id"] === k)
           if (!c) {
-            const child = notification.component
-            this.prependChild(child)
-            const element: HTMLElement = child.element
-
-            element.addEventListener(
-              "mouseenter",
-              () => (child.props.hovered = true)
-            )
-            element.addEventListener(
-              "mouseleave",
-              () => (child.props.hovered = false)
-            )
+            addNotification(notification)
           }
         }
         const deleteList: string[] = []
         children.forEach((c) => {
           if (c.props.hovered) return
-          const element: HTMLElement = c.element
-          const notifId: string = c.props["data-id"]
-          const notification: INotification | undefined =
-            notificationStore.value.get(notifId)
-          if (!notification) throw new Error("dafooq")
+
+          const element: HTMLElement = c.element,
+            notifId: string = c.props["data-id"],
+            notification: INotification | undefined =
+              notificationStore.value.get(notifId)
+
+          if (!notification) throw new Error("failed to get notification")
+
           notification.duration -= tickRateMs
 
           if (notification.duration <= 0) {
-            notificationStore.value.delete(notifId)
-            DomInterop.unRender(c)
+            removeNotification(notification)
             deleteList.push(notifId)
           } else if (notification.duration < this.animationDuration) {
             if (!c.props.hidden) {
