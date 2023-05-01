@@ -1,3 +1,4 @@
+import { Writable } from "stream"
 import { Cinnabun } from "./cinnabun"
 import { Component } from "./component"
 import { Signal } from "./signal"
@@ -15,18 +16,27 @@ type Accumulator = {
   promiseQueue: Promise<any>[]
 }
 
+export type SSRConfig = {
+  cinnabunInstance: Cinnabun
+  useFileBasedRouting?: boolean
+  stream?: Writable
+}
+
 export class SSR {
   static async serverBake(
     app: Component<any>,
-    cbInstance: Cinnabun
+    config: SSRConfig
   ): Promise<ServerBakeResult> {
+    console.time("render time")
     const accumulator: Accumulator = {
       html: [],
       promiseQueue: [],
     }
 
-    const serialized = await SSR.serialize(accumulator, app, cbInstance)
+    const serialized = await SSR.serialize(accumulator, app, config)
     // resolve promises, components should replace their corresponding item in the html arr
+
+    console.timeEnd("render time")
     return {
       componentTree: { children: [serialized], props: {} },
       html: accumulator.html.join(""),
@@ -65,9 +75,9 @@ export class SSR {
   public static async serialize(
     accumulator: Accumulator,
     component: GenericComponent,
-    cbInstance: Cinnabun
+    config: SSRConfig
   ): Promise<SerializedComponent> {
-    component.cbInstance = cbInstance
+    component.cbInstance = config.cinnabunInstance
     component.applyBindProps()
 
     const res: SerializedComponent = {
@@ -97,7 +107,7 @@ export class SSR {
           accumulator,
           component,
           shouldRender,
-          cbInstance
+          config
         )
         return {
           props: SSR.serializeProps(component),
@@ -110,48 +120,60 @@ export class SSR {
     if (component.tag === "svg") return SSR.serializeSvg(component)
 
     const renderClosingTag =
-      ["br", "hr", "img", "input"].indexOf(component.tag.toLowerCase()) === -1
+      ["br", "hr", "img", "input", "link", "meta"].indexOf(
+        component.tag.toLowerCase()
+      ) === -1
 
-    accumulator.html.push(
-      `<${component.tag}${Object.entries(rest ?? {})
-        .filter(
-          ([k]) =>
-            k !== "style" && !k.startsWith("bind:") && !k.startsWith("on")
-        )
-        .map(
-          ([k, v]) =>
-            ` ${SSR.serializePropName(k)}="${component.getPrimitive(v)}"`
-        )
-        .join("")}${renderClosingTag ? "" : "/"}>`
-    )
+    const html = `<${component.tag}${Object.entries(rest ?? {})
+      .filter(
+        ([k]) => k !== "style" && !k.startsWith("bind:") && !k.startsWith("on")
+      )
+      .map(
+        ([k, v]) =>
+          ` ${SSR.serializePropName(k)}="${component.getPrimitive(v)}"`
+      )
+      .join("")}${renderClosingTag ? "" : "/"}>`
+
+    SSR.render(html, config, accumulator)
 
     res.children = await SSR.serializeChildren(
       accumulator,
       component,
       shouldRender,
-      cbInstance
+      config
     )
 
-    if (renderClosingTag) accumulator.html.push(`</${component.tag}>`)
+    if (renderClosingTag) {
+      const cTag = `</${component.tag}>`
+      SSR.render(cTag, config, accumulator)
+    }
     return res
+  }
+
+  static render(content: string, config: SSRConfig, accumulator: Accumulator) {
+    if (config.stream) {
+      config.stream.write(content)
+    } else {
+      accumulator.html.push(content)
+    }
   }
 
   public static async serializeChildren(
     accumulator: Accumulator,
     component: GenericComponent,
     shouldRender: boolean,
-    cbInstance: Cinnabun
+    config: SSRConfig
   ): Promise<SerializedComponent[]> {
     const res: SerializedComponent[] = []
     for await (const c of component.children) {
       if (typeof c === "string" || typeof c === "number") {
-        if (shouldRender) accumulator.html.push(c.toString())
+        if (shouldRender) SSR.render(c.toString(), config, accumulator)
         res.push({ children: [], props: {} })
         continue
       }
 
       if (c instanceof Signal) {
-        if (shouldRender) accumulator.html.push(c.value)
+        if (shouldRender) SSR.render(c.value.toString(), config, accumulator)
         res.push({ children: [], props: {} })
         continue
       }
@@ -160,7 +182,7 @@ export class SSR {
         //instead of crashing from trying to serialize the object as a component
 
         //@ts-ignore
-        if (shouldRender) accumulator.html.push(c.toString())
+        if (shouldRender) SSR.render(c.toString(), config, accumulator)
         res.push({ children: [], props: {} })
         continue
       }
@@ -173,17 +195,17 @@ export class SSR {
         const val = c(...component.childArgs)
         if (val instanceof Component) {
           val.parent = component
-          const sc = await SSR.serialize(accumulator, val, cbInstance)
+          const sc = await SSR.serialize(accumulator, val, config)
           res.push(sc)
         } else if (typeof val === "string" || typeof val === "number") {
-          if (shouldRender) accumulator.html.push(val.toString())
+          if (shouldRender) SSR.render(val.toString(), config, accumulator)
           res.push({ children: [], props: {} })
           continue
         }
         continue
       }
 
-      const sc = await SSR.serialize(accumulator, c, cbInstance)
+      const sc = await SSR.serialize(accumulator, c, config)
       res.push(sc)
     }
     return res
@@ -202,4 +224,8 @@ export function useRequestData<T>(
   return Cinnabun.isClient
     ? fallback
     : self.cbInstance?.getServerRequestData<T>(requestDataPath)
+}
+
+export const FileRouter = () => {
+  return new Component("")
 }

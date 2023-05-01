@@ -7,12 +7,13 @@ import websocket from "@fastify/websocket"
 import fs from "fs"
 import path from "path"
 
-import { SSR } from "cinnabun/ssr"
+import { SSR, SSRConfig } from "cinnabun/ssr"
 import { App } from "../App"
 import { Cinnabun } from "cinnabun"
 import { socketHandler } from "./socket"
 import { configureAuthRoutes } from "./auth"
 import { configureChatRoutes } from "./chat"
+import { Template } from "../Template"
 
 declare module "fastify" {
   export interface FastifyInstance {
@@ -101,15 +102,42 @@ configureAuthRoutes(app)
 configureChatRoutes(app)
 
 app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
-  console.time("render time")
-  const instance = new Cinnabun()
-  instance.setServerRequestData({
+  const cinnabunInstance = new Cinnabun()
+  cinnabunInstance.setServerRequestData({
     path: req.url,
     data: { user: req.user },
   })
 
-  const { html, componentTree } = await SSR.serverBake(App(), instance)
-  console.timeEnd("render time")
+  const config: SSRConfig = {
+    cinnabunInstance,
+    stream: res.raw,
+  }
+
+  if (config.stream) {
+    res.header("Content-Type", "text/html").status(200)
+    res.header("Transfer-Encoding", "chunked")
+    res.raw.write("<!DOCTYPE html><html>")
+  }
+
+  const { html, componentTree } = await SSR.serverBake(
+    config.stream ? Template(App) : App(),
+    config
+  )
+
+  if (config.stream) {
+    res.raw.write(`
+      <script id="server-props">
+        window.__cbData = {
+          root: document.documentElement,
+          component: ${JSON.stringify(componentTree)}
+        }
+      </script>
+      <script src="/static/index.js"></script>
+    `)
+    res.raw.write("</html>")
+    res.raw.end()
+    return
+  }
 
   res
     .code(200)
