@@ -1,0 +1,6 @@
+cypress
+dist
+node_modules
+cypress.config.ts
+todo.md
+tests
