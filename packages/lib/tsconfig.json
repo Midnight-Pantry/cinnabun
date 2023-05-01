@@ -4,6 +4,7 @@
     "useDefineForClassFields": true,
     "module": "CommonJS",
     "lib": ["ESNext", "DOM", "dom.iterable"],
+    "types": ["node"],
     "moduleResolution": "Node",
     "strict": true,
     "resolveJsonModule": true,
