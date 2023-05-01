@@ -27,6 +27,7 @@ Promise.all([
     entryPoints: ["./src/client/index.ts"],
     outdir: "dist/static",
     ...sharedSettings,
+    format: "iife",
     plugins: [
       replaceServerFunctions(regexPatterns.ServerPromise),
       replaceServerFunctions(regexPatterns.$fn),
