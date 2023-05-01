@@ -36,7 +36,11 @@ export class Hydration {
 
     console.timeEnd("hydration time")
     console.log("hydrated", tray)
-    Hydration.validate(tray)
+
+    // hydration validation breaks with streaming,
+    // something to do with the way the browser parses the viewport meta tag 😢
+
+    //Hydration.validate(tray)
   }
 
   static hydrateComponent(

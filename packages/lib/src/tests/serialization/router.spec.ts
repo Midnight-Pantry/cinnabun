@@ -7,8 +7,8 @@ import "mocha"
 
 describe("When serialized, a Router Component", function () {
   it("will only render the request path's corresponding Route Component", async function () {
-    const instance = new Cinnabun()
-    instance.setServerRequestData({ path: "/test", data: {} })
+    const cinnabunInstance = new Cinnabun()
+    cinnabunInstance.setServerRequestData({ path: "/test", data: {} })
 
     const pathStore = new Signal<string>("/")
     const router = Router({ store: pathStore }, [
@@ -22,13 +22,13 @@ describe("When serialized, a Router Component", function () {
       }),
     ])
 
-    const { html } = await SSR.serverBake(router, instance)
+    const { html } = await SSR.serverBake(router, { cinnabunInstance })
     expect(html).to.equal("<h1>Test</h1>")
   })
 
   it("will provide path params to child routes, and they can provide them to their child component", async function () {
-    const instance = new Cinnabun()
-    instance.setServerRequestData({ path: "/moose", data: {} })
+    const cinnabunInstance = new Cinnabun()
+    cinnabunInstance.setServerRequestData({ path: "/moose", data: {} })
 
     const pathStore = new Signal<string>("/moose")
     const router = Router({ store: pathStore }, [
@@ -43,7 +43,7 @@ describe("When serialized, a Router Component", function () {
       }),
     ])
 
-    const { html } = await SSR.serverBake(router, instance)
+    const { html } = await SSR.serverBake(router, { cinnabunInstance })
     expect(html).to.equal("<h1>moose</h1>")
   })
 })

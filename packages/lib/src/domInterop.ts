@@ -116,7 +116,6 @@ export class DomInterop {
 
   static reRender(component: GenericComponent) {
     if (!component.shouldRender()) return
-    //if (component.tag.toLowerCase() === "ul") debugger
     const el = component.element ?? DomInterop.render(component, true)
     if (component.element) DomInterop.renderChildren(component)
     if (el.isConnected) return

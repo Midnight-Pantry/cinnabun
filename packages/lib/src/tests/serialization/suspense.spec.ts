@@ -8,7 +8,7 @@ import { sleep } from "../../utils"
 
 describe("When serialized, a Suspense Component", function () {
   describe("with the 'prefetch' flag", function () {
-    const instance = new Cinnabun()
+    const cinnabunInstance = new Cinnabun()
     const component = new SuspenseComponent("", {
       prefetch: true,
       promise: async () => {
@@ -25,12 +25,12 @@ describe("When serialized, a Suspense Component", function () {
       ],
     })
     it("will wait for its' promise to resolve", async function () {
-      const { html } = await SSR.serverBake(component, instance)
+      const { html } = await SSR.serverBake(component, { cinnabunInstance })
       expect(html).to.equal("<p><span>1</span><span>2</span><span>3</span></p>")
     })
   })
   describe("without the 'prefetch' flag", function () {
-    const instance = new Cinnabun()
+    const cinnabunInstance = new Cinnabun()
     const component = new SuspenseComponent("", {
       promise: async () => {
         await sleep(20)
@@ -46,7 +46,7 @@ describe("When serialized, a Suspense Component", function () {
       ],
     })
     it("will render its' loading state", async function () {
-      const { html } = await SSR.serverBake(component, instance)
+      const { html } = await SSR.serverBake(component, { cinnabunInstance })
       expect(html).to.equal("<p>...loading</p>")
     })
   })
