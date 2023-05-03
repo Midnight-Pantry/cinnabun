@@ -46,7 +46,6 @@ app.get("/*", async (req, res) => {
   try {
     const file = (await import(filePath)).default.default
     const x = file()
-    //console.log("FILE", x)
     const { componentTree } = await SSR.serverBake(
       Template({
         children: [x],

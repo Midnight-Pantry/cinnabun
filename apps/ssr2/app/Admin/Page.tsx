@@ -1,5 +1,5 @@
 import * as Cinnabun from "cinnabun"
 
 export default function Page() {
-  return <h1>Boobs</h1>
+  return <h1>Admin</h1>
 }

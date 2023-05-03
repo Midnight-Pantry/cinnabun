@@ -177,7 +177,9 @@ export class SSR {
         res.push({ children: [], props: {} })
         continue
       }
-      if (typeof c === "object" && !(c instanceof Component)) {
+
+      // TODO - fix bundling! would much rather be checking instanceof Component.
+      if (typeof c === "object" && !("getPrimitive" in c)) {
         //just a safety thing, so we see '[Object object]' in the frontend
         //instead of crashing from trying to serialize the object as a component
         console.log("nononono", c)

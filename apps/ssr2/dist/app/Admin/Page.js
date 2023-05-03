@@ -537,5 +537,5 @@ var h = (tag, props, ...children) => {
 
 // app/Admin/Page.tsx
 function Page() {
-  return /* @__PURE__ */ h("h1", null, "Boobs");
+  return /* @__PURE__ */ h("h1", null, "Admin");
 }
