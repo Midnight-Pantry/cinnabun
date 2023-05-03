@@ -1,8 +1,9 @@
 const esbuild = require("esbuild")
+const { prebuild } = require("./src/helpers.js")
 
 const sharedSettings = {
   bundle: true,
-  minify: true,
+  //minify: true,
   format: "cjs",
   target: "esnext",
   tsconfig: "_tsconfig.json",
@@ -10,20 +11,25 @@ const sharedSettings = {
   jsxFactory: "Cinnabun.h",
   jsxFragment: "Cinnabun.fragment",
   jsxImportSource: "Cinnabun",
+  external: ["esbuild"],
 }
 
-esbuild
-  .build({
-    sourcemap: "linked",
-    entryPoints: ["./src/index.ts"],
-    outdir: "dist/server",
-    platform: "node",
-    ...sharedSettings,
-  })
-  .then(() => {
-    console.log("build complete.")
-  })
-  .catch((error) => {
-    console.error("build failed: ", error)
-    process.exit(1)
-  })
+prebuild("./app").then(() => {
+  esbuild
+    .build({
+      sourcemap: "linked",
+      entryPoints: ["./src/index.ts"],
+      outdir: "dist/server",
+      platform: "node",
+      ...sharedSettings,
+    })
+    .then(() => {
+      console.log("build complete.")
+    })
+    .catch((error) => {
+      console.error("build failed: ", error)
+      process.exit(1)
+    })
+})
+
+//tsc ./src/helpers.ts --downlevelIteration

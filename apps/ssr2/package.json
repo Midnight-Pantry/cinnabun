@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "node build && node dist/server",
+    "compile-helpers": "tsc ./src/helpers.ts --downlevelIteration --esModuleInterop",
+    "prebuild": "pnpm compile-helpers",
+    "dev": "pnpm prebuild && node build && node dist/server",
     "build": "node build",
     "test": "echo \"Error: no test specified\""
   },

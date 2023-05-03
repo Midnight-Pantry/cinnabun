@@ -180,7 +180,7 @@ export class SSR {
       if (typeof c === "object" && !(c instanceof Component)) {
         //just a safety thing, so we see '[Object object]' in the frontend
         //instead of crashing from trying to serialize the object as a component
-
+        console.log("nononono", c)
         //@ts-ignore
         if (shouldRender) SSR.render(c.toString(), config, accumulator)
         res.push({ children: [], props: {} })
