@@ -94,7 +94,6 @@ function buildComponent(filePath, routeMap) {
                         ".js");
                     pathKey = filePath.toLowerCase();
                     if (pathKey.endsWith(path.sep)) {
-                        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                         pathKey = pathKey.substring(0, pathKey.length - 1);
                     }
                     routeMap[path.sep +
@@ -103,7 +102,7 @@ function buildComponent(filePath, routeMap) {
                             .replace("page.tsx", "")
                             .replace("page.jsx", "")] = outputPath;
                     return [4 /*yield*/, (0, esbuild_1.build)({
-                            bundle: true,
+                            //bundle: true,
                             entryPoints: [filePath],
                             outfile: outputPath,
                             jsx: "transform",

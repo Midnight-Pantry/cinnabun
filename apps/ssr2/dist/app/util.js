@@ -15,11 +15,9 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// app/util.ts
 var util_exports = {};
 __export(util_exports, {
   TEST: () => TEST
 });
 module.exports = __toCommonJS(util_exports);
-var TEST = 123;
+const TEST = 123;

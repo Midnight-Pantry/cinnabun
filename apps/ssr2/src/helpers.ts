@@ -38,7 +38,6 @@ async function buildComponent(
 
   let pathKey = filePath.toLowerCase()
   if (pathKey.endsWith(path.sep)) {
-    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     pathKey = pathKey.substring(0, pathKey.length - 1)
   }
 
@@ -51,7 +50,7 @@ async function buildComponent(
   ] = outputPath
 
   await build({
-    bundle: true,
+    //bundle: true,
     entryPoints: [filePath],
     outfile: outputPath,
     jsx: "transform",
