@@ -12,32 +12,38 @@ const sharedSettings = {
   jsxFactory: "Cinnabun.h",
   jsxFragment: "Cinnabun.fragment",
   jsxImportSource: "Cinnabun",
+  external: ["esbuild"],
 }
 
-Promise.all([
-  esbuild.build({
-    sourcemap: "linked",
-    entryPoints: ["./src/server/index.ts"],
-    outdir: "dist/server",
-    platform: "node",
-    ...sharedSettings,
-  }),
-  esbuild.build({
-    sourcemap: "linked",
-    entryPoints: ["./src/client/index.ts"],
-    outdir: "dist/static",
-    ...sharedSettings,
-    format: "iife",
-    plugins: [
-      replaceServerFunctions(regexPatterns.ServerPromise),
-      replaceServerFunctions(regexPatterns.$fn),
-    ],
-  }),
-])
-  .then(() => {
-    console.log("build complete.")
-  })
-  .catch((error) => {
-    console.error("build failed: ", error)
-    process.exit(1)
-  })
+try {
+  Promise.all([
+    esbuild.build({
+      logLevel: "info",
+      sourcemap: "linked",
+      entryPoints: ["./src/server/index.ts"],
+      outdir: "dist/server",
+      platform: "node",
+      ...sharedSettings,
+    }),
+    esbuild.build({
+      sourcemap: "linked",
+      entryPoints: ["./src/client/index.ts"],
+      outdir: "dist/static",
+      ...sharedSettings,
+      format: "iife",
+      plugins: [
+        replaceServerFunctions(regexPatterns.ServerPromise),
+        replaceServerFunctions(regexPatterns.$fn),
+      ],
+    }),
+  ])
+    .then(() => {
+      console.log("build complete.")
+    })
+    .catch((error) => {
+      console.error("build failed: ", error)
+      //process.exit(1)
+    })
+} catch (error) {
+  console.error("build failed: ", error)
+}
