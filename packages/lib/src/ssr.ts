@@ -179,10 +179,9 @@ export class SSR {
       }
 
       // TODO - fix bundling! would much rather be checking instanceof Component.
-      if (typeof c === "object" && !("getPrimitive" in c)) {
+      if (typeof c === "object" && !Component.isComponent(c)) {
         //just a safety thing, so we see '[Object object]' in the frontend
         //instead of crashing from trying to serialize the object as a component
-        console.log("nononono", c)
         //@ts-ignore
         if (shouldRender) SSR.render(c.toString(), config, accumulator)
         res.push({ children: [], props: {} })
@@ -191,6 +190,7 @@ export class SSR {
       if (typeof c === "function") {
         if ("promiseCache" in component && component.props.prefetch) {
           component.promiseCache = await component.props.promise()
+          console.log("promiseCache", component.promiseCache)
           component.props.promiseCache = component.promiseCache
         }
 
