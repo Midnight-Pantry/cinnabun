@@ -18,6 +18,11 @@ export class Component<T extends HTMLElement> {
   element: T | undefined
   cbInstance: Cinnabun | undefined
 
+  static isComponent(obj: any) {
+    if (typeof obj !== "object") return false
+    return "parent" in obj && "children" in obj && "element" in obj
+  }
+
   mounted: boolean = false
 
   private subscription: ComponentSubscription | undefined

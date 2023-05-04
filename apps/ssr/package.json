@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cinnabun/example-components": "workspace:^1.0.0",
+    "@cinnabun/example-components": "workspace:^",
     "@fastify/compress": "^6.2.1",
     "@fastify/cookie": "^8.3.0",
     "@fastify/jwt": "^6.7.1",
@@ -25,7 +25,7 @@
     "fastify-plugin": "^4.5.0"
   },
   "devDependencies": {
-    "@types/node": "^18.16.2",
+    "@types/node": "^18.16.3",
     "@types/websocket": "^1.0.5"
   }
 }

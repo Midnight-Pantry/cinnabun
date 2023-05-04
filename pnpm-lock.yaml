@@ -37,6 +37,46 @@ importers:
   apps/ssr:
     dependencies:
       '@cinnabun/example-components':
+        specifier: workspace:^
+        version: link:../components
+      '@fastify/compress':
+        specifier: ^6.2.1
+        version: 6.2.1
+      '@fastify/cookie':
+        specifier: ^8.3.0
+        version: 8.3.0
+      '@fastify/jwt':
+        specifier: ^6.7.1
+        version: 6.7.1
+      '@fastify/static':
+        specifier: ^6.10.1
+        version: 6.10.1
+      '@fastify/websocket':
+        specifier: ^8.0.0
+        version: 8.0.0
+      cinnabun:
+        specifier: workspace:^
+        version: link:../../packages/lib
+      esbuild:
+        specifier: ^0.17.18
+        version: 0.17.18
+      fastify:
+        specifier: ^4.17.0
+        version: 4.17.0
+      fastify-plugin:
+        specifier: ^4.5.0
+        version: 4.5.0
+    devDependencies:
+      '@types/node':
+        specifier: ^18.16.3
+        version: 18.16.3
+      '@types/websocket':
+        specifier: ^1.0.5
+        version: 1.0.5
+
+  apps/ssr2:
+    dependencies:
+      '@cinnabun/example-components':
         specifier: workspace:^1.0.0
         version: link:../components
       '@fastify/compress':
@@ -69,7 +109,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: ^18.16.2
-        version: 18.16.2
+        version: 18.16.3
       '@types/websocket':
         specifier: ^1.0.5
         version: 1.0.5
@@ -473,10 +513,6 @@ packages:
 
   /@types/node@14.18.43:
     resolution: {integrity: sha512-n3eFEaoem0WNwLux+k272P0+aq++5o05bA9CfiwKPdYPB5ZambWKdWoeHy7/OJiizMhzg27NLaZ6uzjLTzXceQ==}
-    dev: true
-
-  /@types/node@18.16.2:
-    resolution: {integrity: sha512-GQW/JL/5Fz/0I8RpeBG9lKp0+aNcXEaVL71c0D2Q0QHDTFvlYKT7an0onCUXj85anv7b4/WesqdfchLc0jtsCg==}
     dev: true
 
   /@types/node@18.16.3:
@@ -1619,9 +1655,9 @@ packages:
       avvio: 8.2.1
       fast-content-type-parse: 1.0.0
       fast-json-stringify: 5.7.0
-      find-my-way: 7.6.0
+      find-my-way: 7.6.1
       light-my-request: 5.9.1
-      pino: 8.11.0
+      pino: 8.12.1
       process-warning: 2.2.0
       proxy-addr: 2.0.7
       rfdc: 1.3.0
@@ -1718,8 +1754,8 @@ packages:
       to-regex-range: 5.0.1
     dev: true
 
-  /find-my-way@7.6.0:
-    resolution: {integrity: sha512-H7berWdHJ+5CNVr4ilLWPai4ml7Y2qAsxjw3pfeBxPigZmaDTzF0wjJLj90xRCmGcWYcyt050yN+34OZDJm1eQ==}
+  /find-my-way@7.6.1:
+    resolution: {integrity: sha512-2epQo+QEVkDf20yjWd/FbRhv3FiPK+APpmf3nRYxKUcTzoFAAGNBusBPL0YRfMosgPwA/vgixyKisBBdOLEFHg==}
     engines: {node: '>=14'}
     dependencies:
       fast-deep-equal: 3.1.3
@@ -2800,19 +2836,19 @@ packages:
       split2: 4.2.0
     dev: false
 
-  /pino-std-serializers@6.2.0:
-    resolution: {integrity: sha512-IWgSzUL8X1w4BIWTwErRgtV8PyOGOOi60uqv0oKuS/fOA8Nco/OeI6lBuc4dyP8MMfdFwyHqTMcBIA7nDiqEqA==}
+  /pino-std-serializers@6.2.1:
+    resolution: {integrity: sha512-wHuWB+CvSVb2XqXM0W/WOYUkVSPbiJb9S5fNB7TBhd8s892Xq910bRxwHtC4l71hgztObTjXL6ZheZXFjhDrDQ==}
     dev: false
 
-  /pino@8.11.0:
-    resolution: {integrity: sha512-Z2eKSvlrl2rH8p5eveNUnTdd4AjJk8tAsLkHYZQKGHP4WTh2Gi1cOSOs3eWPqaj+niS3gj4UkoreoaWgF3ZWYg==}
+  /pino@8.12.1:
+    resolution: {integrity: sha512-n4F7nrEUDH0u5pjlUPkrvsN6oZOhScZWwpWPniwVkMnO6a2DhpnMNWDUlW0SawVICgrNhOf0yTNgw2lYQBsPYA==}
     hasBin: true
     dependencies:
       atomic-sleep: 1.0.0
       fast-redact: 3.1.2
       on-exit-leak-free: 2.1.0
       pino-abstract-transport: 1.0.0
-      pino-std-serializers: 6.2.0
+      pino-std-serializers: 6.2.1
       process-warning: 2.2.0
       quick-format-unescaped: 4.0.4
       real-require: 0.2.0

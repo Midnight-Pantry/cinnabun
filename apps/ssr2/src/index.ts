@@ -47,9 +47,7 @@ app.get("/*", async (req, res) => {
     const file = (await import(filePath)).default.default
     const x = file()
     const { componentTree } = await SSR.serverBake(
-      Template({
-        children: [x],
-      }),
+      Template({ children: [x] }),
       config
     )
     res.raw.write(`
