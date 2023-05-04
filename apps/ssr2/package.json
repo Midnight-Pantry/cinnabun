@@ -7,7 +7,7 @@
   "scripts": {
     "compile-helpers": "tsc ./src/helpers.ts --downlevelIteration --esModuleInterop",
     "prebuild": "pnpm compile-helpers",
-    "dev": "pnpm prebuild && node build && node dist/server",
+    "dev": "pnpm prebuild && node build && node ./.cb/dist/server",
     "build": "node build",
     "test": "echo \"Error: no test specified\""
   },

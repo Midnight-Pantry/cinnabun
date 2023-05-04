@@ -1,36 +1,21 @@
 import * as fs from "fs"
 import * as path from "path"
-import * as vm from "vm"
 
-import { Component } from "cinnabun"
 import { build } from "esbuild"
 import assert from "assert"
 
 export type RouteMap = { [key: string]: string }
 
-export type ComponentInfo = {
-  path: string
-  component: Component<any>
-}
-
-export function requireFromString(code: string): any {
-  const module = { exports: {} }
-  const context = { module, exports: module.exports }
-  vm.runInNewContext(code, context)
-  return module.exports
-}
-
 async function buildComponent(
   filePath: string,
   routeMap: RouteMap
 ): Promise<string> {
-  console.log("~~~~~buildComponent", filePath)
-
   const componentName = path.join(
     path.dirname(filePath),
     path.basename(filePath)
   )
   const outputPath = path.join(
+    ".cb",
     "dist",
     componentName.replace(".tsx", "").replace(".ts", "").replace(".jsx", "") +
       ".js"
@@ -64,8 +49,6 @@ async function buildComponent(
       "process.env.NODE_ENV": JSON.stringify("production"),
     },
   })
-
-  console.log("build file", outputPath)
 
   return outputPath
 }

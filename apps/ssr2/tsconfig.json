@@ -13,7 +13,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "outDir": "dist",
+    "outDir": ".cb/dist",
     "jsx": "preserve",
     "jsxFactory": "Cinnabun.h",
     "jsxFragmentFactory": "Cinnabun.fragment",

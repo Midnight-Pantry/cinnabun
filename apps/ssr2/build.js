@@ -19,7 +19,7 @@ prebuild("./app").then(() => {
     .build({
       sourcemap: "linked",
       entryPoints: ["./src/index.ts"],
-      outdir: "dist/server",
+      outdir: ".cb/dist/server",
       platform: "node",
       ...sharedSettings,
     })
@@ -31,5 +31,3 @@ prebuild("./app").then(() => {
       process.exit(1)
     })
 })
-
-//tsc ./src/helpers.ts --downlevelIteration

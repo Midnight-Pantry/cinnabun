@@ -1,8 +1,8 @@
-import { Cinnabun } from "cinnabun"
 import fastify from "fastify"
 import fStatic from "@fastify/static"
 import path from "path"
 
+import { Cinnabun } from "cinnabun"
 import { SSR, SSRConfig } from "cinnabun/ssr"
 import { CB_ROUTE_MANIFEST } from "./routeManifest"
 
@@ -10,9 +10,11 @@ const port: number = parseInt(process.env.PORT ?? "3001")
 
 const app = fastify()
 
+const publicPath = path.join(process.cwd(), "public")
+
 app.register(fStatic, {
   prefix: "/static/",
-  root: path.join(__dirname, "../../dist/static"),
+  root: publicPath,
 })
 app.get("/favicon.ico", (_, res) => {
   res.status(404).send()
@@ -34,20 +36,26 @@ app.get("/*", async (req, res) => {
   res.header("Transfer-Encoding", "chunked")
   res.raw.write("<!DOCTYPE html><html>")
 
-  const Template = (await import("../app/Template")).default
+  const reqPath = req.url.replaceAll("/", path.sep)
 
-  let reqPath = req.url.replaceAll("/", path.sep)
+  const routes = CB_ROUTE_MANIFEST
 
-  const page =
-    CB_ROUTE_MANIFEST[reqPath] ?? CB_ROUTE_MANIFEST[reqPath + path.sep]
+  const pageMatch = routes[reqPath] ?? routes[reqPath + path.sep]
+  const templateMatch =
+    routes[reqPath + "template.tsx"] ??
+    routes[reqPath + path.sep + "template.tsx"]
 
-  const filePath = path.join("file://", process.cwd(), page)
+  const pageFilePath = path.join("file://", process.cwd(), pageMatch)
+  const templateFilePath = path.join("file://", process.cwd(), templateMatch)
 
   try {
-    const file = (await import(filePath)).default.default
+    const template = (
+      await import(templateMatch ? templateFilePath : "../app/Template")
+    ).default.default
+    const file = (await import(pageFilePath)).default.default
     const x = file()
     const { componentTree } = await SSR.serverBake(
-      Template({ children: [x] }),
+      template({ children: [x] }),
       config
     )
     res.raw.write(`

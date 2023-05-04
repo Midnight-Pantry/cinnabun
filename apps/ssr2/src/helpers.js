@@ -69,28 +69,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prebuild = exports.requireFromString = void 0;
+exports.prebuild = void 0;
 var fs = __importStar(require("fs"));
 var path = __importStar(require("path"));
-var vm = __importStar(require("vm"));
 var esbuild_1 = require("esbuild");
 var assert_1 = __importDefault(require("assert"));
-function requireFromString(code) {
-    var module = { exports: {} };
-    var context = { module: module, exports: module.exports };
-    vm.runInNewContext(code, context);
-    return module.exports;
-}
-exports.requireFromString = requireFromString;
 function buildComponent(filePath, routeMap) {
     return __awaiter(this, void 0, void 0, function () {
         var componentName, outputPath, pathKey;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    console.log("~~~~~buildComponent", filePath);
                     componentName = path.join(path.dirname(filePath), path.basename(filePath));
-                    outputPath = path.join("dist", componentName.replace(".tsx", "").replace(".ts", "").replace(".jsx", "") +
+                    outputPath = path.join(".cb", "dist", componentName.replace(".tsx", "").replace(".ts", "").replace(".jsx", "") +
                         ".js");
                     pathKey = filePath.toLowerCase();
                     if (pathKey.endsWith(path.sep)) {
@@ -118,7 +109,6 @@ function buildComponent(filePath, routeMap) {
                         })];
                 case 1:
                     _a.sent();
-                    console.log("build file", outputPath);
                     return [2 /*return*/, outputPath];
             }
         });

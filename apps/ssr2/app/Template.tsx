@@ -9,7 +9,10 @@ export default function Template({ children }: { children: ComponentChild[] }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>My App</title>
       </head>
-      <body>{...children}</body>
+      <body>
+        <h1>Main template</h1>
+        {...children}
+      </body>
     </>
   )
 }
