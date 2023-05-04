@@ -1,4 +1,5 @@
 !dist
 dist/server
 dist/static
+dist/app
 .cb
