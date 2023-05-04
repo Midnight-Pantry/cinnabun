@@ -14,6 +14,16 @@ export class Signal<T> {
     this._name = name
   }
 
+  static isSignal(obj: any) {
+    if (!(typeof obj === "object")) return false
+    return (
+      "value" in obj &&
+      "notify" in obj &&
+      "subscribe" in obj &&
+      "unsubscribe" in obj
+    )
+  }
+
   get value() {
     // If it exists, we add it to the subscribers.
     // Do not call it, unlike a regular subscriber.

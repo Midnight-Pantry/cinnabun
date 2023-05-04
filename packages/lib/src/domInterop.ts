@@ -49,8 +49,8 @@ export class DomInterop {
         typeof c === "function" ||
         typeof c === "string" ||
         typeof c === "number" ||
-        (c instanceof Component && c.props.render) ||
-        c instanceof Signal
+        (Component.isComponent(c) && c.props.render) ||
+        Signal.isSignal(c)
     )
   }
 
@@ -68,17 +68,23 @@ export class DomInterop {
     component: GenericComponent,
     child: ComponentChild
   ): string | Node {
-    if (child instanceof Signal) {
+    if (Signal.isSignal(child)) {
+      //@ts-ignore
+      const s = child as Signal<any>
+
       component.subscribeTo((_, __) =>
-        child.subscribe(() => DomInterop.renderChildren(component))
+        s.subscribe(() => DomInterop.renderChildren(component))
       )
-      return child.value.toString()
+      return s.value.toString()
     }
-    if (child instanceof Component) return DomInterop.render(child)
+
+    if (Component.isComponent(child))
+      return DomInterop.render(child as Component<any>)
     if (typeof child === "function") {
       const c = child(...component.childArgs)
       const res = DomInterop.renderChild(component, c)
-      if (c instanceof Component) component.funcComponents.push(c)
+      if (Component.isComponent(c))
+        component.funcComponents.push(c as Component<any>)
       return res
     }
     return child.toString()
@@ -102,8 +108,8 @@ export class DomInterop {
         return component.element.remove()
       }
       for (const c of component.children) {
-        if (c instanceof Component<any>) {
-          DomInterop.unRender(c)
+        if (Component.isComponent(c)) {
+          DomInterop.unRender(c as Component<any>)
         } else if (c instanceof Node) {
           c.parentNode?.removeChild(c)
         }
@@ -223,13 +229,14 @@ export class DomInterop {
 
     for (let i = 0; i < component.parent.children.length; i++) {
       const c = component.parent.children[i]
-      if (c instanceof Component && !c.props.render) continue
+      if (Component.isComponent(c) && !(c as Component<any>).props.render)
+        continue
       if (c === component) {
         start++
         break
       }
-      if (c instanceof Component) {
-        if (c.element) start++
+      if (Component.isComponent(c)) {
+        if ((c as Component<any>).element) start++
       }
     }
     if (component.parent.element)

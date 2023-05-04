@@ -98,7 +98,7 @@ export class Component<T extends HTMLElement> {
   }
 
   getPrimitive(prop: any, signalCallback?: { (): void }): any {
-    if (prop instanceof Signal) {
+    if (Signal.isSignal(prop)) {
       if (signalCallback)
         this.subscribeTo((_, __) => prop.subscribe(signalCallback.bind(this)))
       return prop.value
@@ -147,8 +147,8 @@ export class Component<T extends HTMLElement> {
     this.destroyChildComponentRefs(this)
     this.children = newChildren
     for (let i = 0; i < this.children.length; i++) {
-      const c = this.children[i]
-      if (c instanceof Component) c.parent = this
+      const c = this.children[i] as Component<any>
+      if (Component.isComponent(c)) c.parent = this
     }
   }
 
@@ -156,7 +156,8 @@ export class Component<T extends HTMLElement> {
     for (const c of el.children) {
       if (typeof c === "string" || typeof c === "number") continue
       const val = typeof c === "function" ? c(...this.childArgs) : c
-      if (val instanceof Component) this.destroyComponentRefs(val)
+      //@ts-ignore
+      if (Component.isComponent(val)) this.destroyComponentRefs(val)
     }
   }
 
@@ -182,16 +183,15 @@ export class Component<T extends HTMLElement> {
     if (this.props.onDestroyed) this.props.onDestroyed(this)
   }
 
-  getParentOfType<Class extends ClassConstructor<Component<any>>>(
-    classRef: Class
-  ): InstanceType<Class> | undefined {
+  getParent<Class extends ClassConstructor<Component<any>>>(func: {
+    (component: Component<any>): boolean
+  }): InstanceType<Class> | undefined {
     if (!this.parent) return undefined
 
-    if (this.parent instanceof classRef)
-      return this.parent as InstanceType<Class>
+    const res = func(this.parent)
+    if (res) return this.parent as InstanceType<Class>
 
-    //@ts-ignore (screw typescript, this is correct)
-    return this.parent.getParentOfType(classRef)
+    return this.parent.getParent(func)
   }
 }
 

@@ -61,7 +61,7 @@ export class SSR {
       // const p =
       //   typeof component.props[k] === "undefined" ? true : component.props[k]
       const p = component.props[k]
-      if (p instanceof Signal) {
+      if (Signal.isSignal(p)) {
         res[k] = p.value
       } else {
         if (k === "children") continue
@@ -172,13 +172,14 @@ export class SSR {
         continue
       }
 
-      if (c instanceof Signal) {
-        if (shouldRender) SSR.render(c.value.toString(), config, accumulator)
+      if (Signal.isSignal(c)) {
+        //@ts-ignore
+        const s = c as Signal<any>
+        if (shouldRender) SSR.render(s.value.toString(), config, accumulator)
         res.push({ children: [], props: {} })
         continue
       }
 
-      // TODO - fix bundling! would much rather be checking instanceof Component.
       if (typeof c === "object" && !Component.isComponent(c)) {
         //just a safety thing, so we see '[Object object]' in the frontend
         //instead of crashing from trying to serialize the object as a component
@@ -190,14 +191,14 @@ export class SSR {
       if (typeof c === "function") {
         if ("promiseCache" in component && component.props.prefetch) {
           component.promiseCache = await component.props.promise()
-          console.log("promiseCache", component.promiseCache)
           component.props.promiseCache = component.promiseCache
         }
 
         const val = c(...component.childArgs)
-        if (val instanceof Component) {
-          val.parent = component
-          const sc = await SSR.serialize(accumulator, val, config)
+        if (Component.isComponent(val)) {
+          const cpnt = val as Component<any>
+          cpnt.parent = component
+          const sc = await SSR.serialize(accumulator, cpnt, config)
           res.push(sc)
         } else if (typeof val === "string" || typeof val === "number") {
           if (shouldRender) SSR.render(val.toString(), config, accumulator)

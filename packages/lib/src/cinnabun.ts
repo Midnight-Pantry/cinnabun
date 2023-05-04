@@ -75,7 +75,8 @@ export class Cinnabun {
 
   static removeComponentChildReferences(component: GenericComponent) {
     for (const c of component.children) {
-      if (c instanceof Component) Cinnabun.removeComponentReferences(c)
+      if (Component.isComponent(c))
+        Cinnabun.removeComponentReferences(c as Component<any>)
     }
   }
 
@@ -107,8 +108,6 @@ export class Cinnabun {
   static getRuntimeService<Class extends ClassConstructor<any>>(
     classRef: Class
   ): InstanceType<Class> {
-    return Cinnabun.runtimeServices.find((s) => {
-      return s instanceof classRef
-    })
+    return Cinnabun.runtimeServices.find((s) => s instanceof classRef)
   }
 }

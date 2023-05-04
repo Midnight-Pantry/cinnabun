@@ -6,6 +6,7 @@ import { DomInterop } from "../domInterop"
 import { ComponentChild, PropsSetter, RouteProps } from "../types"
 
 class RouteComponent extends Component<any> {
+  isRouteComponent: boolean = true
   constructor(path: string, component: ComponentChild) {
     super("", {
       path,
@@ -18,11 +19,16 @@ class RouteComponent extends Component<any> {
   get childArgs() {
     return [{ params: this.props.params }]
   }
+
+  static isRouteComponent(obj: any) {
+    if (!(typeof obj === "object")) return false
+    return "isRouteComponent" in obj && "props" in obj && "path" in obj.props
+  }
 }
 
 class RouterComponent extends Component<any> {
   constructor(store: Signal<string>, children: RouteComponent[]) {
-    if (children.some((c) => !(c instanceof RouteComponent)))
+    if (children.some((c) => !RouteComponent.isRouteComponent(c)))
       throw new Error("Must provide Route as child of Router")
 
     children.sort((a, b) => {
@@ -63,11 +69,13 @@ class RouterComponent extends Component<any> {
 
   getParentPath() {
     let parentPath = ""
-    let parentRoute = this.getParentOfType(RouteComponent)
+    let parentRoute = this.getParent((c) => RouteComponent.isRouteComponent(c))
 
     while (parentRoute) {
       parentPath = parentRoute.props.path + parentPath
-      parentRoute = parentRoute.getParentOfType(RouteComponent)
+      parentRoute = parentRoute.getParent((c) =>
+        RouteComponent.isRouteComponent(c)
+      )
     }
     return parentPath
   }
