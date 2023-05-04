@@ -1,4 +1,4 @@
-import * as Cinnabun from "cinnabun"
+import { Cinnabun } from "cinnabun"
 import fastify from "fastify"
 import fStatic from "@fastify/static"
 import path from "path"
@@ -6,7 +6,7 @@ import path from "path"
 import { SSR, SSRConfig } from "cinnabun/ssr"
 import { CB_ROUTE_MANIFEST } from "./routeManifest"
 
-const port: number = parseInt(process.env.PORT ?? "3000")
+const port: number = parseInt(process.env.PORT ?? "3001")
 
 const app = fastify()
 
@@ -19,7 +19,7 @@ app.get("/favicon.ico", (_, res) => {
 })
 
 app.get("/*", async (req, res) => {
-  const cinnabunInstance = new Cinnabun.Cinnabun()
+  const cinnabunInstance = new Cinnabun()
   cinnabunInstance.setServerRequestData({
     path: req.url,
     data: {},
@@ -74,5 +74,5 @@ app.listen({ port }, function (err) {
   }
 
   console.log(`Server is listening on port ${port}`)
-  console.log("http://localhost:3000")
+  console.log("http://localhost:3001")
 })

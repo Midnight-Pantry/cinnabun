@@ -2,17 +2,19 @@
   "name": "@cinnabun/example-components",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "dist/index.js",
+  "module": "index.ts",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\"",
-    "build": "pnpm i && tsc"
+    "build": "pnpm i && node build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cinnabun": "workspace:^"
+    "cinnabun": "workspace:^",
+    "esbuild": "^0.17.18"
   },
   "devDependencies": {
     "@types/node": "^18.16.3",
