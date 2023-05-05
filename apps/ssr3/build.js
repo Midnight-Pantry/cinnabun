@@ -2,6 +2,8 @@ const esbuild = require("esbuild")
 
 const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
 
+const { prebuild } = require("./prebuild")
+
 const sharedSettings = {
   bundle: true,
   minify: true,
@@ -14,30 +16,32 @@ const sharedSettings = {
   jsxImportSource: "Cinnabun",
 }
 
-Promise.all([
-  esbuild.build({
-    sourcemap: "linked",
-    entryPoints: ["./src/server/index.ts"],
-    outdir: "dist/server",
-    platform: "node",
-    ...sharedSettings,
-  }),
-  esbuild.build({
-    sourcemap: "linked",
-    entryPoints: ["./src/client/index.ts"],
-    outdir: "dist/static",
-    ...sharedSettings,
-    format: "iife",
-    plugins: [
-      replaceServerFunctions(regexPatterns.ServerPromise),
-      replaceServerFunctions(regexPatterns.$fn),
-    ],
-  }),
-])
-  .then(() => {
-    console.log("build complete.")
-  })
-  .catch((error) => {
-    console.error("build failed: ", error)
-    process.exit(1)
-  })
+prebuild().then(() => {
+  Promise.all([
+    esbuild.build({
+      sourcemap: "linked",
+      entryPoints: ["./src/server/index.ts"],
+      outdir: "dist/server",
+      platform: "node",
+      ...sharedSettings,
+    }),
+    esbuild.build({
+      sourcemap: "linked",
+      entryPoints: ["./src/client/index.ts"],
+      outdir: "dist/static",
+      ...sharedSettings,
+      format: "iife",
+      plugins: [
+        replaceServerFunctions(regexPatterns.ServerPromise),
+        replaceServerFunctions(regexPatterns.$fn),
+      ],
+    }),
+  ])
+    .then(() => {
+      console.log("build complete.")
+    })
+    .catch((error) => {
+      console.error("build failed: ", error)
+      process.exit(1)
+    })
+})
