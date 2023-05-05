@@ -6,7 +6,6 @@ import path from "path"
 import { SSR, SSRConfig } from "cinnabun/ssr"
 import { App } from "../App"
 import { Cinnabun } from "cinnabun"
-import { Template } from "../Template"
 
 const port: number = parseInt(process.env.PORT ?? "3000")
 const app = fastify()
@@ -36,7 +35,7 @@ app.get("/*", async (req, res) => {
   res.header("Transfer-Encoding", "chunked")
   res.raw.write("<!DOCTYPE html><html>")
 
-  const { componentTree } = await SSR.serverBake(Template(App), config)
+  const { componentTree } = await SSR.serverBake(App(), config)
 
   res.raw.write(`
       <script id="server-props">
