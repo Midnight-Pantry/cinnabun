@@ -97,6 +97,9 @@ importers:
       cinnabun:
         specifier: workspace:^
         version: link:../../packages/lib
+      cinnabun-cli:
+        specifier: workspace:^
+        version: link:../../packages/cli
       esbuild:
         specifier: ^0.17.18
         version: 0.17.18

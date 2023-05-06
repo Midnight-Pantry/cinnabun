@@ -4,10 +4,12 @@ import { ComponentProps } from "./types"
 
 export const lazy = (
   func: Promise<{ default: any }>,
-  props: Partial<ComponentProps<any>>
+  props: Partial<ComponentProps<any>>,
+  prefetch: boolean = true
 ) => {
   return new SuspenseComponent("", {
     promise: async () => func,
+    prefetch,
     children: [
       (loading: boolean, res: { default: any }) => {
         if (loading) return new FragmentComponent()

@@ -20,6 +20,7 @@
     "@fastify/static": "^6.10.1",
     "@fastify/websocket": "^8.0.0",
     "cinnabun": "workspace:^",
+    "cinnabun-cli": "workspace:^",
     "esbuild": "^0.17.18",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0"

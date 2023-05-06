@@ -1,6 +1,7 @@
 import { Command, Option } from "commander"
 import esbuild from "esbuild"
 import { generateFileRouter } from "../build/transform-plugin"
+import path from "path"
 
 export default new Command("start")
   .description("start your cinnabun project")
@@ -13,7 +14,9 @@ export default new Command("start")
       stdin: {
         contents: `
           import {App} from "./src/App"
-          import {createServer} from "${__dirname}/../build/server.js"
+          import {createServer} from "${path
+            .join(__dirname, "..", "build", "server.js")
+            .replaceAll(path.sep, "/")}"
           (() => ({
             App,
             createServer

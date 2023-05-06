@@ -57,11 +57,10 @@ var FileRoutes = () => {
           `new RouteComponent("${transformRoutePath(
             pageRoutes[i],
             true
-          )}", [(props) => Cinnabun.lazy(${r}, props)]),\n      `
+          )}", (props) => Cinnabun.lazy(${r}, props)),\n      `
       )
       .join("")}
   ])
-  )
 }`
   return content
 }

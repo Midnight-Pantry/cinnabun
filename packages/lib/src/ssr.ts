@@ -151,7 +151,6 @@ export class SSR {
   }
 
   static render(content: string, config: SSRConfig, accumulator: Accumulator) {
-    console.log("ssr/render", content)
     if (config.stream) {
       config.stream.write(content)
     } else {

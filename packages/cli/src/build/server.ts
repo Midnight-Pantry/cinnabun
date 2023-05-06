@@ -23,7 +23,6 @@ export function createServer(App: ComponentFunc) {
   })
 
   app.get("/*", async (req, res) => {
-    console.log("req.url: ", req.url)
     const cinnabunInstance = new Cinnabun()
 
     cinnabunInstance.setServerRequestData({

@@ -100,14 +100,12 @@ const generateServer = () => ({
 const generateFileRouter = () => ({
   name: "fileRoute-generator-plugin",
   setup(build) {
-    build.onLoad({ filter: /fileRouter\.js?$/ }, async (args) => {
+    build.onLoad({ filter: /fileRouter\.ts?$/ }, async (args) => {
       const contents = await fs.promises.readFile(args.path, "utf8")
 
       const replaced = contents
         .replace("//@ts-expect-error TS2552", "")
         .replace('var FileRoutes = "$FILE_ROUTES"', prebuild())
-
-      console.log("REPLACED", replaced)
 
       return {
         contents: replaced,
