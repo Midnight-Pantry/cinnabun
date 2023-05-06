@@ -1,25 +1,31 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "CommonJS",
-    "lib": ["ESNext", "DOM", "dom.iterable"],
-    "types": ["node"],
-    "moduleResolution": "Node",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "moduleDetection": "force",
+    "outDir": "dist",
+    "target": "ES2020", // Node.js 14
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "allowSyntheticDefaultImports": true, // To provide backwards compatibility, Node.js allows you to import most CommonJS packages with a default import. This flag tells TypeScript that it's okay to use import on CommonJS modules.
+    "resolveJsonModule": false, // ESM doesn't yet support JSON modules.
+    "jsx": "react",
+    "declaration": true,
+    "pretty": true,
+    "newLine": "lf",
+    "stripInternal": true,
     "strict": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "noEmit": false,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "skipLibCheck": true,
-    "jsx": "preserve",
-    "outDir": "dist",
-    "baseUrl": ".",
-    "sourceMap": false
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noEmitOnError": true,
+    "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "src/**/*.test.ts"]
+  "exclude": ["node_modules", "dist", "./**/*.test.ts"]
 }

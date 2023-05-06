@@ -1,4 +1,4 @@
-import glob from "glob"
+import glob from "fast-glob"
 import fs from "fs"
 import path from "path"
 import { PackageJson } from "type-fest"
@@ -49,9 +49,9 @@ export const getPackageJson = (cwd: string) => {
  * Check if the current environment is production.
  * @returns Whether the current environment is production
  */
-export const isProduction = () => process.env.NODE_ENV === "production"
-export const isDevelopment = () => process.env.NODE_ENV === "development"
-export const isTest = () => process.env.NODE_ENV === "test"
+export const isProduction = () => process.env["NODE_ENV"] === "production"
+export const isDevelopment = () => process.env["NODE_ENV"] === "development"
+export const isTest = () => process.env["NODE_ENV"] === "test"
 
 export const findFirstExistingFile = (files: string[], cwd: string) => {
   const existingFile = files.find((file) => fs.existsSync(path.join(cwd, file)))
@@ -120,7 +120,7 @@ export const readENV = (
   const envVars = env.split("\n").reduce((acc, line) => {
     const [key, value] = line.split("=")
 
-    if (!key.startsWith("PUBLIC_") && !config.isServer) {
+    if (!key || (!key.startsWith("PUBLIC_") && !config.isServer)) {
       return acc
     }
 

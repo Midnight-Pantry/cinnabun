@@ -1,21 +1,11 @@
-import {
-  describe,
-  expect,
-  beforeAll,
-  afterEach,
-  beforeEach,
-  assert,
-  afterAll,
-  it,
-  vi,
-} from "vitest"
+import { describe, expect, afterEach, beforeEach, assert, it } from "vitest"
 import fs from "fs"
 import {
   findFirstExistingFile,
   findRoot,
   getPackageJson,
   readENV,
-} from "./utils"
+} from "./utils.js"
 import path from "path"
 
 const packageJson = {
