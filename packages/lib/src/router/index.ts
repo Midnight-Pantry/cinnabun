@@ -1,5 +1,6 @@
 export * from "./router"
 export * from "./link"
+export * from "./generated"
 
 export function matchPath(
   path: string,

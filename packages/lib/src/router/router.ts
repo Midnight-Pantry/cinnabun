@@ -20,7 +20,7 @@ class RouteComponent extends Component<any> {
   }
 }
 
-class RouterComponent extends Component<any> {
+export class RouterComponent extends Component<any> {
   constructor(store: Signal<string>, children: RouteComponent[]) {
     if (children.some((c) => !(c instanceof RouteComponent)))
       throw new Error("Must provide Route as child of Router")

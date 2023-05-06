@@ -1,6 +1,7 @@
 export { Component } from "./component"
 export { Signal, createSignal } from "./signal"
 export { Suspense } from "./suspense"
+export { lazy } from "./lazy"
 
 import { Component } from "."
 import { FragmentComponent } from "./component"
