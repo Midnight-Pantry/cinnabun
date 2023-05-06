@@ -38,12 +38,11 @@ const transformRoutePath = (routePath, isComponentRoute) => {
 const createFileRouter = (routes) => {
   const cwd = process.cwd().replaceAll(path.sep, "/")
 
-  console.log("createFileRouter", routes)
   const pageRoutes = routes.filter((r) =>
     ["Page.tsx", "Page.jsx"].some((name) => r.includes(name))
   )
   const routeImports = pageRoutes.map(
-    (r, i) => `import("${cwd}/${transformRoutePath(r)}")`
+    (r) => `import("${cwd}/${transformRoutePath(r)}")`
   )
   const content = `import * as Cinnabun from "../../"
 import { Cinnabun as cb, createSignal } from "../../../"
@@ -75,31 +74,3 @@ const prebuild = () => {
 module.exports = {
   prebuild,
 }
-
-// return (
-//   <Router store={pathStore}>
-//   ${routeImports
-//     .map(
-//       (r, i) =>
-//         `<Route path="${transformRoutePath(
-//           pageRoutes[i],
-//           true
-//         )}" component={(props) => <Page${i} {...props} />} />\n      `
-//     )
-//     .join("")}
-// </Router>
-// )
-
-// export const FileRouter = () => {
-//   return new RouterComponent(pathStore, [
-//     ${routeImports
-//       .map(
-//         (r, i) => `//@ts-ignore
-// new RouteComponent("${transformRoutePath(
-//           pageRoutes[i],
-//           true
-//         )}", (props) => Page${i}(props))`
-//       )
-//       .join(",\n")}
-//   ])
-// }

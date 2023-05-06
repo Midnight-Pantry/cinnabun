@@ -27,15 +27,11 @@ const generateFileRouter = () => ({
   name: "fileRoute-generator-plugin",
   setup(build) {
     build.onLoad({ filter: /generated\\fileRouter\.tsx?$/ }, async (args) => {
-      console.log("reading fileRouter")
       const contents = await fs.promises.readFile(args.path, "utf8")
 
       const replaced = contents
         .replace("//@ts-expect-error TS2552", "")
         .replace("var FileRoutes = $FILE_ROUTES", prebuild())
-
-      console.log("~~~~~~~~ fileRouter contents\n", contents)
-      console.log("~~~~~~~~ fileRouter replaced", replaced)
 
       return {
         contents: replaced,
