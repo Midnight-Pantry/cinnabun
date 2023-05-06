@@ -1,6 +1,6 @@
 import { Command, Option } from "commander"
 import esbuild from "esbuild"
-import { generateFileRouter, generateServer } from "../build/transform-plugin"
+import { generateFileRouter } from "../build/transform-plugin"
 
 export default new Command("start")
   .description("start your cinnabun project")
@@ -9,16 +9,6 @@ export default new Command("start")
     new Option("-h, --host <host>", "host to run on").default("localhost")
   )
   .action(async ({ port }) => {
-    // await Promise.all([buildServer(), buildClient()])
-
-    /*
-
-
-    
-    
-    export {default as App} from "./src/App.tsx"
-          export * from "${__dirname}/../build/server.js"
-          */
     const result = await esbuild.build({
       stdin: {
         contents: `

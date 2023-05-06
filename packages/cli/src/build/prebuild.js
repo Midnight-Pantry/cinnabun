@@ -46,22 +46,21 @@ const createFileRouter = (routes) => {
   )
   const content = `import * as Cinnabun from "../../"
 import { Cinnabun as cb, createSignal } from "../../../"
-import { Route, Router } from "../"
+import { RouteComponent, RouterComponent } from "../"
 const pathStore = createSignal(cb.isClient ? window.location.pathname : "/")
 
 var FileRoutes = () => {
-  return (
-    <Router store={pathStore}>
+  return new RouterComponent(pathStore, [
     ${routeImports
       .map(
         (r, i) =>
-          `<Route path="${transformRoutePath(
+          `new RouteComponent("${transformRoutePath(
             pageRoutes[i],
             true
-          )}" component={(props) => Cinnabun.lazy(${r}, props)} />\n      `
+          )}", [(props) => Cinnabun.lazy(${r}, props)]),\n      `
       )
       .join("")}
-  </Router>
+  ])
   )
 }`
   return content

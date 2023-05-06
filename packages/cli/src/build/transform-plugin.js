@@ -105,11 +105,13 @@ const generateFileRouter = () => ({
 
       const replaced = contents
         .replace("//@ts-expect-error TS2552", "")
-        .replace("var FileRoutes = $FILE_ROUTES", prebuild())
+        .replace('var FileRoutes = "$FILE_ROUTES"', prebuild())
+
+      console.log("REPLACED", replaced)
 
       return {
         contents: replaced,
-        loader: "jsx",
+        loader: "js",
       }
     })
   },

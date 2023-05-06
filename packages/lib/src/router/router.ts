@@ -5,7 +5,7 @@ import { Cinnabun } from "../cinnabun"
 import { DomInterop } from "../domInterop"
 import { ComponentChild, PropsSetter, RouteProps } from "../types"
 
-class RouteComponent extends Component<any> {
+export class RouteComponent extends Component<any> {
   constructor(path: string, component: ComponentChild) {
     super("", {
       path,
