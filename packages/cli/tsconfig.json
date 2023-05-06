@@ -8,6 +8,7 @@
     "moduleResolution": "Node",
     "strict": true,
     "resolveJsonModule": true,
+    "declaration": false,
     "isolatedModules": true,
     "esModuleInterop": true,
     "noEmit": false,
