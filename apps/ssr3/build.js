@@ -27,14 +27,14 @@ const sharedSettings = {
 Promise.all([
   esbuild.build({
     sourcemap: "linked",
-    entryPoints: ["./.cb/src/server/index.ts"],
+    entryPoints: ["./src/server/index.ts"],
     outdir: "dist/server",
     platform: "node",
     ...sharedSettings,
     plugins: [generateFileRouter()],
   }),
   esbuild.build({
-    entryPoints: ["./.cb/src/client/index.ts"],
+    entryPoints: ["./src/client/index.ts"],
     outdir: "dist/static",
     splitting: true,
     ...sharedSettings,
