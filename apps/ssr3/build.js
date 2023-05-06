@@ -1,6 +1,10 @@
 const esbuild = require("esbuild")
 
-const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
+const {
+  regexPatterns,
+  replaceServerFunctions,
+  generateFileRouter,
+} = require("./transform.plugin")
 
 const { prebuild } = require("./prebuild")
 const { postbuild } = require("./postbuild")
@@ -10,7 +14,7 @@ const { postbuild } = require("./postbuild")
  */
 const sharedSettings = {
   bundle: true,
-  minify: true,
+  //minify: true,
   format: "cjs",
   target: "esnext",
   tsconfig: "_tsconfig.json",
@@ -18,38 +22,36 @@ const sharedSettings = {
   jsxFactory: "Cinnabun.h",
   jsxFragment: "Cinnabun.fragment",
   jsxImportSource: "Cinnabun",
-  jsxSideEffects: true,
-  inject: ["Cinnabun"],
 }
 
-prebuild().then(() => {
-  Promise.all([
-    esbuild.build({
-      sourcemap: "linked",
-      entryPoints: ["./.cb/src/server/index.ts"],
-      outdir: "dist/server",
-      platform: "node",
-      ...sharedSettings,
-    }),
-    esbuild.build({
-      sourcemap: "linked",
-      entryPoints: ["./.cb/src/client/index.ts"],
-      outdir: "dist/static",
-      splitting: true,
-      ...sharedSettings,
-      format: "esm",
-      plugins: [
-        replaceServerFunctions(regexPatterns.ServerPromise),
-        replaceServerFunctions(regexPatterns.$fn),
-      ],
-    }),
-  ])
-    .then(() => {
-      console.log("build complete.")
-      postbuild()
-    })
-    .catch((error) => {
-      console.error("build failed: ", error)
-      process.exit(1)
-    })
-})
+Promise.all([
+  esbuild.build({
+    sourcemap: "linked",
+    entryPoints: ["./.cb/src/server/index.ts"],
+    outdir: "dist/server",
+    platform: "node",
+    ...sharedSettings,
+    plugins: [generateFileRouter()],
+  }),
+  esbuild.build({
+    sourcemap: "linked",
+    entryPoints: ["./.cb/src/client/index.ts"],
+    outdir: "dist/static",
+    splitting: true,
+    ...sharedSettings,
+    format: "esm",
+    plugins: [
+      generateFileRouter(),
+      replaceServerFunctions(regexPatterns.ServerPromise),
+      replaceServerFunctions(regexPatterns.$fn),
+    ],
+  }),
+])
+  .then(() => {
+    console.log("build complete.")
+    postbuild()
+  })
+  .catch((error) => {
+    console.error("build failed: ", error)
+    process.exit(1)
+  })

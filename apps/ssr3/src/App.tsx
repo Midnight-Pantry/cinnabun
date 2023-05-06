@@ -1,5 +1,5 @@
 import * as Cinnabun from "cinnabun"
-import { FileRouter } from "../app/FileRouter"
+import { FileRouter } from "cinnabun/router"
 
 export const App = () => {
   return (

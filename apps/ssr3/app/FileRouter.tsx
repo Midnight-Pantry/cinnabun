@@ -4,9 +4,8 @@ import { Route, Router } from "cinnabun/router"
 import Page0 from "./Page"
 import Page1 from "./users/Page"
 import Page2 from "./users/[id]/Page"
-const pathStore = createSignal(
-  cb.isClient ? window.location.pathname : "/"
-)
+const pathStore = createSignal(cb.isClient ? window.location.pathname : "/")
+
 export const FileRouter = () => {
   return (
     <Router store={pathStore}>
