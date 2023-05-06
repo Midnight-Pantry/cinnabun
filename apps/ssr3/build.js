@@ -34,7 +34,6 @@ Promise.all([
     plugins: [generateFileRouter()],
   }),
   esbuild.build({
-    sourcemap: "linked",
     entryPoints: ["./.cb/src/client/index.ts"],
     outdir: "dist/static",
     splitting: true,

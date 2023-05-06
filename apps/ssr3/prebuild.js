@@ -1,7 +1,7 @@
 var fs = require("fs")
 var path = require("path")
 
-function getFiles(source, outputRoutes) {
+function getFiles(source, outputRoutes = []) {
   if (fs.lstatSync(source).isDirectory()) {
     let files = fs.readdirSync(source)
     files.forEach(function (file) {
@@ -13,12 +13,11 @@ function getFiles(source, outputRoutes) {
       }
     })
   }
+  return outputRoutes
 }
 
 const scanDir = () => {
-  const files = []
-  getFiles("app", files)
-  return files
+  return getFiles("app")
 }
 
 const transformRoutePath = (routePath, isComponentRoute) => {
@@ -35,19 +34,6 @@ const transformRoutePath = (routePath, isComponentRoute) => {
   }
   return res
 }
-
-// export const Route = ({ path, component }: RouteProps) => {
-//   //@ts-ignore
-//   console.log("~~~~~ROUTE", path, component)
-//   return new RouteComponent(path, component)
-// }
-
-// export const Router = (
-//   { store }: { store: Signal<string> },
-//   children: RouteComponent[]
-// ) => {
-//   return new RouterComponent(store, children)
-// }
 
 const createFileRouter = (routes) => {
   const cwd = process.cwd().replaceAll(path.sep, "/")
@@ -81,17 +67,7 @@ var FileRoutes = () => {
 }`
   return content
 }
-
-{
-  /* <Cinnabun.Suspense promise={() => import(`./test`)}>
-      {(loading: boolean, component: any) => {
-        return loading ? <p>loading...</p> : component.default()
-      }}
-    </Cinnabun.Suspense> */
-}
-
 const prebuild = () => {
-  console.log("Test prebuild")
   const routes = scanDir()
   return createFileRouter(routes)
 }
