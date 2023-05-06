@@ -191,7 +191,7 @@ export class Component<T extends HTMLElement> {
 }
 
 export class FragmentComponent extends Component<any> {
-  constructor(children: ComponentChild[]) {
+  constructor(children: ComponentChild[] = []) {
     super("", { children })
   }
 }

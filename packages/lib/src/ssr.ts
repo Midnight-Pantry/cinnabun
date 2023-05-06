@@ -151,6 +151,7 @@ export class SSR {
   }
 
   static render(content: string, config: SSRConfig, accumulator: Accumulator) {
+    console.log("ssr/render", content)
     if (config.stream) {
       config.stream.write(content)
     } else {
@@ -224,8 +225,4 @@ export function useRequestData<T>(
   return Cinnabun.isClient
     ? fallback
     : self.cbInstance?.getServerRequestData<T>(requestDataPath)
-}
-
-export const FileRouter = () => {
-  return new Component("")
 }
