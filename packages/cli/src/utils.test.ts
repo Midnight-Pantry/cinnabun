@@ -40,7 +40,7 @@ describe("root and package.json", () => {
   const tempDir = ".tmp-test"
 
   afterEach(() => {
-    fs.rmdirSync(tempDir, { recursive: true })
+    fs.rmSync(tempDir, { recursive: true })
   })
 
   beforeEach(() => {
@@ -71,7 +71,7 @@ describe("enviroment variables", () => {
   const tempDir = ".tmp-test"
 
   afterEach(() => {
-    fs.rmdirSync(tempDir, { recursive: true })
+    fs.rmSync(tempDir, { recursive: true })
   })
 
   beforeEach(() => {
