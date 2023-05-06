@@ -1,1 +1,3 @@
-export const test = () => 123
+export default function () {
+  return 123
+}
