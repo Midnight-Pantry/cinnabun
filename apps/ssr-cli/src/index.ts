@@ -1,5 +1,5 @@
 import { Hydration } from "cinnabun/hydration"
-import { App } from "../App"
+import { App } from "./App"
 import { SSRProps } from "cinnabun/src/types"
 import "./index.css"
 

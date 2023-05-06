@@ -2,6 +2,7 @@ import { Command, Option } from "commander"
 import esbuild from "esbuild"
 import { generateFileRouter } from "../build/transform-plugin"
 import path from "path"
+import { buildClient } from "../build/build"
 
 export default new Command("start")
   .description("start your cinnabun project")
@@ -39,6 +40,8 @@ export default new Command("start")
     })
 
     const { App, createServer } = eval(result.outputFiles![0].text) as any
+
+    await buildClient()
 
     createServer(App).listen({ port }, function (err: any) {
       if (err) {

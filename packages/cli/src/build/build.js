@@ -4,7 +4,7 @@ const {
   regexPatterns,
   replaceServerFunctions,
   generateFileRouter,
-} = require("./transform.plugin")
+} = require("./transform-plugin")
 
 /**
  * @type {esbuild.BuildOptions}
