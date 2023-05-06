@@ -57,12 +57,11 @@ const createFileRouter = (routes) => {
     ["Page.tsx", "Page.jsx"].some((name) => r.includes(name))
   )
   const routeImports = pageRoutes.map(
-    (r, i) => `import Page${i} from "${cwd}/${transformRoutePath(r)}"`
+    (r, i) => `import("${cwd}/${transformRoutePath(r)}")`
   )
   const content = `import * as Cinnabun from "../../"
 import { Cinnabun as cb, createSignal } from "../../../"
 import { Route, Router } from "../"
-${routeImports.join("\n")}
 const pathStore = createSignal(cb.isClient ? window.location.pathname : "/")
 
 var FileRoutes = () => {
@@ -74,13 +73,21 @@ var FileRoutes = () => {
           `<Route path="${transformRoutePath(
             pageRoutes[i],
             true
-          )}" component={(props) => <Page${i} {...props} />} />\n      `
+          )}" component={(props) => Cinnabun.lazy(${r}, props)} />\n      `
       )
       .join("")}
   </Router>
   )
 }`
   return content
+}
+
+{
+  /* <Cinnabun.Suspense promise={() => import(`./test`)}>
+      {(loading: boolean, component: any) => {
+        return loading ? <p>loading...</p> : component.default()
+      }}
+    </Cinnabun.Suspense> */
 }
 
 const prebuild = () => {
