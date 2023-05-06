@@ -1,7 +1,7 @@
-import glob from "glob"
+import glob from "fast-glob"
 import fs from "fs"
 import path from "path"
-import { PackageJson } from "type-fest"
+import type { PackageJson } from "type-fest"
 
 /**
  *

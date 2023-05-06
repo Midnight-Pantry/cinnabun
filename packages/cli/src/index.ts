@@ -1,7 +1,9 @@
 // TypeScript (.ts)
 import commander, { Command } from "commander"
 import chalk from "chalk"
-import { build, start, dev } from "./routes"
+import start from "./routes/start.js"
+import dev from "./routes/dev.js"
+import build from "./routes/build.js"
 
 const program = new Command()
 
