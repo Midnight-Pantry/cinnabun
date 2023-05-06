@@ -44,7 +44,7 @@ app.get("/*", async (req, res) => {
           component: ${JSON.stringify(componentTree)}
         }
       </script>
-      <script src="/static/index.js"></script>
+      <script type="module" src="/static/index.js"></script>
     `)
   res.raw.write("</html>")
   res.raw.end()

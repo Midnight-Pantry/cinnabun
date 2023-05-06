@@ -18,6 +18,6 @@
     "jsxFactory": "Cinnabun.h",
     "jsxFragmentFactory": "Cinnabun.fragment",
   },
-  "include": ["./src/**/*", "./app/**/*"],
+  "include": ["./src/**/*", "./app/**/*", "app"],
   "exclude": ["node_modules"]
 }

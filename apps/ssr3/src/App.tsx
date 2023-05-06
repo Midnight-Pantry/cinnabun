@@ -1,5 +1,5 @@
 import * as Cinnabun from "cinnabun"
-import { FileRouter } from "cinnabun/ssr"
+import { FileRouter } from "../app/FileRouter"
 
 export const App = () => {
   return (
@@ -16,6 +16,7 @@ export const App = () => {
           <div style={{ display: "flex", minHeight: "100vh" }}>
             <h1>Cinnabun JS - SSR</h1>
             <main style={{ textAlign: "center", flexGrow: "1" }}>
+              <h1>Welcoom</h1>
               <FileRouter />
             </main>
           </div>

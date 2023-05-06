@@ -3,7 +3,11 @@ const esbuild = require("esbuild")
 const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
 
 const { prebuild } = require("./prebuild")
+const { postbuild } = require("./postbuild")
 
+/**
+ * @type {esbuild.BuildOptions}
+ */
 const sharedSettings = {
   bundle: true,
   minify: true,
@@ -14,23 +18,26 @@ const sharedSettings = {
   jsxFactory: "Cinnabun.h",
   jsxFragment: "Cinnabun.fragment",
   jsxImportSource: "Cinnabun",
+  jsxSideEffects: true,
+  inject: ["Cinnabun"],
 }
 
 prebuild().then(() => {
   Promise.all([
     esbuild.build({
       sourcemap: "linked",
-      entryPoints: ["./src/server/index.ts"],
+      entryPoints: ["./.cb/src/server/index.ts"],
       outdir: "dist/server",
       platform: "node",
       ...sharedSettings,
     }),
     esbuild.build({
       sourcemap: "linked",
-      entryPoints: ["./src/client/index.ts"],
+      entryPoints: ["./.cb/src/client/index.ts"],
       outdir: "dist/static",
+      splitting: true,
       ...sharedSettings,
-      format: "iife",
+      format: "esm",
       plugins: [
         replaceServerFunctions(regexPatterns.ServerPromise),
         replaceServerFunctions(regexPatterns.$fn),
@@ -39,6 +46,7 @@ prebuild().then(() => {
   ])
     .then(() => {
       console.log("build complete.")
+      postbuild()
     })
     .catch((error) => {
       console.error("build failed: ", error)
