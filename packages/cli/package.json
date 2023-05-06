@@ -1,19 +1,27 @@
 {
-  "name": "create-cinnabun-app",
-  "version": "0.0.12",
-  "type": "module",
-  "description": "A command-line tool for quickly creating Cinnabun applications from a template.",
-  "scripts": {
-    "build": "echo \"No build script specified for cli.\"",
-    "test": "echo \"Error: no test specified\""
-  },
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main",
   "bin": {
-    "create-cinnabun-app": "./index.js"
+    "cinnabun": "dist/index.js"
   },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "chalk": "4.1.2",
     "commander": "^7.2.0",
-    "download-git-repo": "^3.0.2",
-    "inquirer": "^9.2.0"
+    "glob": "^10.2.2",
+    "inquirer": "^9.2.0",
+    "vitest": "^0.31.0"
   },
-  "license": "ISC"
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "type-fest": "^3.10.0"
+  }
 }
