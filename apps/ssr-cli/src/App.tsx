@@ -1,5 +1,6 @@
 import * as Cinnabun from "cinnabun"
-import { FileRouter } from "cinnabun/router"
+import { FileRouter, Link } from "cinnabun/router"
+import { pathStore } from "./state"
 
 export const App = () => {
   return (
@@ -17,6 +18,23 @@ export const App = () => {
             <h1>Cinnabun JS - SSR</h1>
             <main style={{ textAlign: "center", flexGrow: "1" }}>
               <h1>Welcoom</h1>
+              <nav>
+                <ul>
+                  <li>
+                    <Link store={pathStore} to="/" innerText="Home" />
+                  </li>
+                  <li>
+                    <Link store={pathStore} to="/users" innerText="Users" />
+                  </li>
+                  <li>
+                    <Link
+                      store={pathStore}
+                      to="/users/123"
+                      innerText="Users/123"
+                    />
+                  </li>
+                </ul>
+              </nav>
               <FileRouter />
             </main>
           </div>
