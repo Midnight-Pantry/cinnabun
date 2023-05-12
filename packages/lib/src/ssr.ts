@@ -61,7 +61,7 @@ export class SSR {
       // const p =
       //   typeof component.props[k] === "undefined" ? true : component.props[k]
       const p = component.props[k]
-      if (p instanceof Signal) {
+      if (Signal.isSignal(p)) {
         res[k] = p.value
       } else {
         if (k === "children") continue
@@ -172,12 +172,12 @@ export class SSR {
         continue
       }
 
-      if (c instanceof Signal) {
+      if (Signal.isSignal(c)) {
         if (shouldRender) SSR.render(c.value.toString(), config, accumulator)
         res.push({ children: [], props: {} })
         continue
       }
-      if (typeof c === "object" && !(c instanceof Component)) {
+      if (typeof c === "object" && !Component.isComponent(c)) {
         //just a safety thing, so we see '[Object object]' in the frontend
         //instead of crashing from trying to serialize the object as a component
 
@@ -193,7 +193,7 @@ export class SSR {
         }
 
         const val = c(...component.childArgs)
-        if (val instanceof Component) {
+        if (Component.isComponent(val)) {
           val.parent = component
           const sc = await SSR.serialize(accumulator, val, config)
           res.push(sc)

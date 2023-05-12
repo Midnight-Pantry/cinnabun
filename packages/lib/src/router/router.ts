@@ -18,11 +18,16 @@ export class RouteComponent extends Component<any> {
   get childArgs() {
     return [{ params: this.props.params }]
   }
+
+  static isRouteComponent(data: any): data is RouteComponent {
+    if (!(typeof data === "object")) return false
+    return "props" in data && "path" in data.props && "pathDepth" in data.props
+  }
 }
 
 export class RouterComponent extends Component<any> {
   constructor(store: Signal<string>, children: RouteComponent[]) {
-    if (children.some((c) => !(c instanceof RouteComponent)))
+    if (children.some((c) => !RouteComponent.isRouteComponent(c)))
       throw new Error("Must provide Route as child of Router")
 
     children.sort((a, b) => {
@@ -63,11 +68,15 @@ export class RouterComponent extends Component<any> {
 
   getParentPath() {
     let parentPath = ""
-    let parentRoute = this.getParentOfType(RouteComponent)
+    let parentRoute = this.getParentOfType((parent) =>
+      RouteComponent.isRouteComponent(parent)
+    )
 
     while (parentRoute) {
       parentPath = parentRoute.props.path + parentPath
-      parentRoute = parentRoute.getParentOfType(RouteComponent)
+      parentRoute = parentRoute.getParentOfType((parent) =>
+        RouteComponent.isRouteComponent(parent)
+      )
     }
     return parentPath
   }

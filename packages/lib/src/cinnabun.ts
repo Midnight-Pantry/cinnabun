@@ -75,7 +75,7 @@ export class Cinnabun {
 
   static removeComponentChildReferences(component: GenericComponent) {
     for (const c of component.children) {
-      if (c instanceof Component) Cinnabun.removeComponentReferences(c)
+      if (Component.isComponent(c)) Cinnabun.removeComponentReferences(c)
     }
   }
 

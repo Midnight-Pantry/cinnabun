@@ -49,8 +49,8 @@ export class DomInterop {
         typeof c === "function" ||
         typeof c === "string" ||
         typeof c === "number" ||
-        (c instanceof Component && c.props.render) ||
-        c instanceof Signal
+        (Component.isComponent(c) && c.props.render) ||
+        Signal.isSignal(c)
     )
   }
 
@@ -68,17 +68,17 @@ export class DomInterop {
     component: GenericComponent,
     child: ComponentChild
   ): string | Node {
-    if (child instanceof Signal) {
+    if (Signal.isSignal(child)) {
       component.subscribeTo((_, __) =>
         child.subscribe(() => DomInterop.renderChildren(component))
       )
       return child.value.toString()
     }
-    if (child instanceof Component) return DomInterop.render(child)
+    if (Component.isComponent(child)) return DomInterop.render(child)
     if (typeof child === "function") {
       const c = child(...component.childArgs)
       const res = DomInterop.renderChild(component, c)
-      if (c instanceof Component) component.funcComponents.push(c)
+      if (Component.isComponent(c)) component.funcComponents.push(c)
       return res
     }
     return child.toString()
@@ -102,7 +102,7 @@ export class DomInterop {
         return component.element.remove()
       }
       for (const c of component.children) {
-        if (c instanceof Component<any>) {
+        if (Component.isComponent(c)) {
           DomInterop.unRender(c)
         } else if (c instanceof Node) {
           c.parentNode?.removeChild(c)
@@ -223,12 +223,12 @@ export class DomInterop {
 
     for (let i = 0; i < component.parent.children.length; i++) {
       const c = component.parent.children[i]
-      if (c instanceof Component && !c.props.render) continue
+      if (Component.isComponent(c) && !c.props.render) continue
       if (c === component) {
         start++
         break
       }
-      if (c instanceof Component) {
+      if (Component.isComponent(c)) {
         if (c.element) start++
       }
     }

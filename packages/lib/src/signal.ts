@@ -55,6 +55,11 @@ export class Signal<T> {
     if (LOG_NUM_SUBS)
       console.debug(this._name + " subscribers:", this._subscribers.size)
   }
+
+  static isSignal(data: any): data is Signal<any> {
+    if (!(typeof data === "object")) return false
+    return "subscribe" in data && "unsubscribe" in data
+  }
 }
 
 export function computed<T>(func: { (): any }, name?: string) {
