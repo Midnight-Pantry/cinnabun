@@ -13,6 +13,8 @@ const { jsxInject, jsxFactory, jsxFragment } = esBuildSettings
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+const template = fs.readFileSync(path.resolve(__dirname, "index.html"), "utf-8")
+
 const rootId = "app"
 
 async function createServer() {
@@ -40,12 +42,6 @@ async function createServer() {
     const reqPath = req.originalUrl
 
     try {
-      // 1. Read index.html
-      let template = fs.readFileSync(
-        path.resolve(__dirname, "index.html"),
-        "utf-8"
-      )
-
       const { default: App } = await vite.ssrLoadModule("./src/App")
 
       const cinnabunInstance = new Cinnabun()
@@ -54,22 +50,21 @@ async function createServer() {
         data: {},
       })
 
-      // 2. Apply Vite HTML transforms. This injects the Vite HMR client,
+      //    Apply Vite HTML transforms. This injects the Vite HMR client,
       //    and also applies HTML transforms from Vite plugins, e.g. global
       //    preambles from @vitejs/plugin-react
-      template = await vite.transformIndexHtml(reqPath, template)
+      const devTemplate = await vite.transformIndexHtml(reqPath, template)
 
-      // 3. Bake!
+      //    Bake!
       const { html, componentTree } = await SSR.serverBake(App(), {
         cinnabunInstance,
       })
 
-      // 6. Send the rendered HTML back.
       res
         .status(200)
         .set({ "Content-Type": "text/html" })
         .end(
-          template
+          devTemplate
             .replace(
               `<div id="${rootId}"></div>`,
               `<div id="${rootId}">${html}</div>`
