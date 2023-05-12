@@ -37,13 +37,16 @@ export default new Command("start")
       jsxFragment: "Cinnabun.fragment",
       jsxImportSource: "Cinnabun",
       plugins: [generateFileRouter()],
+      external: ["esbuild"],
     })
 
     const { App, createServer } = eval(result.outputFiles![0].text) as any
 
     await buildClient()
 
-    createServer(App).listen({ port }, function (err: any) {
+    const server = await createServer(App)
+
+    server.listen({ port }, function (err: any) {
       if (err) {
         console.error(err)
         process.exit(1)

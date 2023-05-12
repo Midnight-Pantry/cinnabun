@@ -141,15 +141,6 @@ importers:
       '@chialab/esbuild-plugin-virtual':
         specifier: ^0.17.1
         version: 0.17.1
-      '@fastify/compress':
-        specifier: ^6.2.1
-        version: 6.2.1
-      '@fastify/static':
-        specifier: ^6.10.1
-        version: 6.10.1
-      '@fastify/websocket':
-        specifier: ^8.0.0
-        version: 8.0.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -162,19 +153,25 @@ importers:
       esbuild:
         specifier: ^0.17.18
         version: 0.17.18
+      express:
+        specifier: ^4.18.2
+        version: 4.18.2
       fast-glob:
         specifier: ^3.2.12
         version: 3.2.12
-      fastify:
-        specifier: ^4.17.0
-        version: 4.17.0
       inquirer:
         specifier: ^9.2.0
         version: 9.2.0(typescript@5.0.4)
+      vite:
+        specifier: ^4.3.5
+        version: 4.3.5(@types/node@20.0.0)
       vitest:
         specifier: ^0.31.0
         version: 0.31.0
     devDependencies:
+      '@types/express':
+        specifier: ^4.17.17
+        version: 4.17.17
       '@types/node':
         specifier: ^20.0.0
         version: 20.0.0
@@ -698,7 +695,6 @@ packages:
 
   /@types/node@20.0.0:
     resolution: {integrity: sha512-cD2uPTDnQQCVpmRefonO98/PPijuOnnEy5oytWJFPY1N9aJCz2wJ5kSGWO+zJoed2cY2JxQh6yBuUq4vIn61hw==}
-    dev: true
 
   /@types/qs@6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
@@ -4296,7 +4292,7 @@ packages:
       mlly: 1.2.0
       pathe: 1.1.0
       picocolors: 1.0.0
-      vite: 4.3.3(@types/node@18.16.3)
+      vite: 4.3.5(@types/node@18.16.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -4338,6 +4334,73 @@ packages:
       rollup: 3.21.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /vite@4.3.5(@types/node@18.16.3):
+    resolution: {integrity: sha512-0gEnL9wiRFxgz40o/i/eTBwm+NEbpUeTWhzKrZDSdKm6nplj+z4lKz8ANDgildxHm47Vg8EUia0aicKbawUVVA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 18.16.3
+      esbuild: 0.17.18
+      postcss: 8.4.23
+      rollup: 3.21.0
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: false
+
+  /vite@4.3.5(@types/node@20.0.0):
+    resolution: {integrity: sha512-0gEnL9wiRFxgz40o/i/eTBwm+NEbpUeTWhzKrZDSdKm6nplj+z4lKz8ANDgildxHm47Vg8EUia0aicKbawUVVA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 20.0.0
+      esbuild: 0.17.18
+      postcss: 8.4.23
+      rollup: 3.21.0
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: false
 
   /vitest@0.31.0:
     resolution: {integrity: sha512-JwWJS9p3GU9GxkG7eBSmr4Q4x4bvVBSswaCFf1PBNHiPx00obfhHRJfgHcnI0ffn+NMlIh9QGvG75FlaIBdKGA==}
@@ -4392,7 +4455,7 @@ packages:
       strip-literal: 1.0.1
       tinybench: 2.5.0
       tinypool: 0.5.0
-      vite: 4.3.3(@types/node@18.16.3)
+      vite: 4.3.5(@types/node@18.16.3)
       vite-node: 0.31.0(@types/node@18.16.3)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
