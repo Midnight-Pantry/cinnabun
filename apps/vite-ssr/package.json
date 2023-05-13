@@ -7,7 +7,7 @@
     "dev": "tsc && node dist/server",
     "build:client": "vite build --outDir build/client",
     "build:server": "vite build --outDir build/server --ssr src/entry-server.js",
-    "build": "pnpm build:client && pnpm build:server"
+    "builda": "pnpm build:client && pnpm build:server"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

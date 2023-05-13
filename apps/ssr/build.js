@@ -1,6 +1,6 @@
-const esbuild = require("esbuild")
+import esbuild from "esbuild"
 
-const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
+import { regexPatterns, replaceServerFunctions } from "./transform.plugin.js"
 
 const sharedSettings = {
   bundle: true,

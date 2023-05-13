@@ -1,4 +1,3 @@
-import * as Cinnabun from "cinnabun"
 import { Signal } from "cinnabun"
 import { Link, Router, Route } from "cinnabun/router"
 

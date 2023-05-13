@@ -1,40 +1,45 @@
-import { Writable } from "stream"
-import { Cinnabun } from "./cinnabun"
-import { Component } from "./component"
-import { Signal } from "./signal"
-import { ComponentProps, GenericComponent, SerializedComponent } from "./types"
+import { Cinnabun } from "../cinnabun.js"
+import { Component } from "../component.js"
+import { Signal } from "../signal.js"
 
-export type ServerPromise<T> = Promise<T>
+/**
+ * @typedef {import('../types.js').SerializedComponent} SerializedComponent
+ * @typedef {import('../types.js').ComponentProps} ComponentProps
+ * @typedef {import("stream").Writable} Writable
+ */
 
-type ServerBakeResult = {
-  componentTree: SerializedComponent
-  html: string
-}
+/**
+ * @typedef {Object} ServerBakeResult
+ * @property {SerializedComponent} componentTree
+ * @property {string} html
+ */
 
-type Accumulator = {
-  html: string[]
-  promiseQueue: Promise<any>[]
-}
+/**
+ * @typedef {Object} Accumulator
+ * @property {string[]} html
+ * @property {Promise<any>[]} promiseQueue
+ */
 
-export type SSRConfig = {
-  cinnabunInstance: Cinnabun
-  useFileBasedRouting?: boolean
-  stream?: Writable
-}
+/**
+ * @typedef SSRConfig
+ * @property {Cinnabun} cinnabunInstance
+ * @property {Writable | undefined} stream
+ */
 
 export class SSR {
-  static async serverBake(
-    app: Component<any>,
-    config: SSRConfig
-  ): Promise<ServerBakeResult> {
+  /**
+   * @param {Component} app
+   * @param {SSRConfig} config
+   * @returns {Promise<ServerBakeResult>}
+   */
+  static async serverBake(app, config) {
     console.time("render time")
-    const accumulator: Accumulator = {
+    const accumulator = {
       html: [],
       promiseQueue: [],
     }
 
     const serialized = await SSR.serialize(accumulator, app, config)
-    // resolve promises, components should replace their corresponding item in the html arr
 
     console.timeEnd("render time")
     return {
@@ -43,7 +48,11 @@ export class SSR {
     }
   }
 
-  public static serializePropName(val: string): string {
+  /**
+   * @param {string} val
+   * @returns {string}
+   */
+  static serializePropName(val) {
     switch (val) {
       case "className":
         return "class"
@@ -52,10 +61,13 @@ export class SSR {
     }
   }
 
-  public static serializeProps<T extends HTMLElement>(
-    component: GenericComponent
-  ): Partial<ComponentProps<T>> {
-    const res: Partial<ComponentProps<T>> = {}
+  /**
+   *
+   * @param {Component} component
+   * @returns {Partial<ComponentProps>}
+   */
+  static serializeProps(component) {
+    const res = {}
 
     for (const k of Object.keys(component.props)) {
       // const p =
@@ -72,15 +84,17 @@ export class SSR {
     return res
   }
 
-  public static async serialize(
-    accumulator: Accumulator,
-    component: GenericComponent,
-    config: SSRConfig
-  ): Promise<SerializedComponent> {
+  /**
+   * @param {Accumulator} accumulator
+   * @param {Component} component
+   * @param {SSRConfig} config
+   * @returns {Promise<SerializedComponent>}
+   */
+  static async serialize(accumulator, component, config) {
     component.cbInstance = config.cinnabunInstance
     component.applyBindProps()
 
-    const res: SerializedComponent = {
+    const res = {
       props: SSR.serializeProps(component),
       children: [],
     }
@@ -150,7 +164,13 @@ export class SSR {
     return res
   }
 
-  static render(content: string, config: SSRConfig, accumulator: Accumulator) {
+  /**
+   *
+   * @param {string} content
+   * @param {SSRConfig} config
+   * @param {Accumulator} accumulator
+   */
+  static render(content, config, accumulator) {
     if (config.stream) {
       config.stream.write(content)
     } else {
@@ -158,13 +178,15 @@ export class SSR {
     }
   }
 
-  public static async serializeChildren(
-    accumulator: Accumulator,
-    component: GenericComponent,
-    shouldRender: boolean,
-    config: SSRConfig
-  ): Promise<SerializedComponent[]> {
-    const res: SerializedComponent[] = []
+  /**
+   * @param {Accumulator} accumulator
+   * @param {Component} component
+   * @param {boolean} shouldRender
+   * @param {SSRConfig} config
+   * @returns {Promise<SerializedComponent[]>}
+   */
+  static async serializeChildren(accumulator, component, shouldRender, config) {
+    const res = []
     for await (const c of component.children) {
       if (typeof c === "string" || typeof c === "number") {
         if (shouldRender) SSR.render(c.toString(), config, accumulator)
@@ -211,17 +233,25 @@ export class SSR {
     return res
   }
 
-  public static serializeSvg(_: Component<any>): SerializedComponent {
+  /**
+   *
+   * @param {Component} _
+   * @returns {SerializedComponent}
+   */
+  static serializeSvg(_) {
     throw new Error("not implemented yet")
   }
 }
 
-export function useRequestData<T>(
-  self: GenericComponent,
-  requestDataPath: string,
-  fallback: T
-) {
+/**
+ * @template T
+ * @param {Component} self - The component instance.
+ * @param {string} requestDataPath - The path for the request data.
+ * @param {T} fallback - The fallback value.
+ * @returns {T} - The requested data or the fallback value.
+ */
+export function useRequestData(self, requestDataPath, fallback) {
   return Cinnabun.isClient
     ? fallback
-    : self.cbInstance?.getServerRequestData<T>(requestDataPath)
+    : self.cbInstance?.getServerRequestData < T > requestDataPath
 }

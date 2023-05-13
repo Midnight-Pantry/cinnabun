@@ -1,23 +1,22 @@
-export * from "./router"
-export * from "./link"
+export * from "./router.js"
+export * from "./link.js"
 export * from "./generated"
 
-export function matchPath(
-  path: string,
-  location: string
-): {
-  params: any
-  routeMatch: RegExpMatchArray | null
-} {
-  let paramNames: any[] = []
-  const cPath: string = location
+/**
+ * @param {string} path
+ * @param {string} location
+ * @returns {{ params: any routeMatch: RegExpMatchArray | null }}
+ */
+export function matchPath(path, location) {
+  let paramNames = []
+  const cPath = location
   let regexPath =
     cPath.replace(/([:*])(\w+)/g, (_full, _colon, name) => {
       paramNames.push(name)
       return "([^/]+)"
     }) + "(?:/|$)"
 
-  let params: any = {}
+  let params = {}
   let routeMatch = path.match(new RegExp(regexPath))
   if (routeMatch !== null) {
     params = routeMatch.slice(1).reduce((str, value, index) => {

@@ -1,6 +1,5 @@
-import * as Cinnabun from "cinnabun"
 import { createSignal } from "cinnabun"
-import { Greeter } from "./Greeter"
+import { Greeter } from "./Greeter.jsx"
 
 export const SignalsExample = () => {
   const count = createSignal(0)

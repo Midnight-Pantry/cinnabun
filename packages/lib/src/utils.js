@@ -1,8 +1,18 @@
-export const sleep = async (ms: number) => {
+/**
+ *
+ * @param {number} ms
+ * @returns {Promise<void>}
+ */
+export const sleep = async (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export const getCookie = (key: string) => {
+/**
+ *
+ * @param {string} key
+ * @returns {unknown}
+ */
+export const getCookie = (key) => {
   const cookies = document.cookie.split(";")
   for (let i = 0; i < cookies.length; i++) {
     const cookie = cookies[i].trim()
@@ -19,7 +29,12 @@ export const getCookie = (key: string) => {
   return null
 }
 
-export const getInputType = (val: any): string => {
+/**
+ *
+ * @param {unknown} val
+ * @returns {string}
+ */
+export const getInputType = (val) => {
   switch (typeof val) {
     case "boolean":
       return "checkbox"

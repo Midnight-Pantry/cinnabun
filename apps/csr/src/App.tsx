@@ -1,5 +1,5 @@
 import { Link, Route, Router } from "cinnabun/router"
-import { pathStore } from "./state"
+import { pathStore } from "./state.js"
 import {
   SignalsExample,
   ContextExample,
@@ -7,7 +7,7 @@ import {
   NestedRoutingExample,
   ToDoExample,
 } from "@cinnabun/example-components"
-import { Component, createSignal } from "cinnabun"
+import { createSignal } from "cinnabun"
 
 const signal = createSignal(123)
 setTimeout(() => {

@@ -2,10 +2,10 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "Node16",
+    "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "types": ["node"],
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "strict": true,
     "resolveJsonModule": true,
     "declaration": false,
@@ -19,8 +19,9 @@
     "skipLibCheck": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "sourceMap": false
+    "sourceMap": false,
+    "preserveSymlinks": false
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "index.d.ts"],
   "exclude": ["node_modules", "dist", "src/**/*.test.ts"]
 }

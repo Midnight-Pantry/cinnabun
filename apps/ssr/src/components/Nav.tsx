@@ -1,6 +1,6 @@
 import * as Cinnabun from "cinnabun"
 import { Link } from "cinnabun/router"
-import { pathStore } from "../state"
+import { pathStore } from "../state.js"
 
 export const Nav = () => {
   return (

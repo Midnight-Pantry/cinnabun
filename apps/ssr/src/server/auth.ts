@@ -1,5 +1,3 @@
-import { FastifyInstance, FastifyReply } from "fastify"
-
 export interface IUser {
   username: string
   password: string
@@ -31,59 +29,54 @@ export class UserService {
   }
 }
 
-export function configureAuthRoutes(app: FastifyInstance) {
-  const sendToken = async (username: string, res: FastifyReply) => {
-    const token = app.jwt.sign({ username })
-    const refreshToken = await res.jwtSign({ username }, { expiresIn: "1d" })
-    res
-      .setCookie("refreshToken", refreshToken, {
-        domain: "localhost",
-        path: "/",
-        httpOnly: false,
-        sameSite: true, // alternative CSRF protection
-      })
-      .code(200)
-      .send({ token })
-  }
-
-  app.post("/login", async (req, res) => {
-    const { username, password } = req.body as {
-      username?: string
-      password?: string
-    }
-    if (!username || !password) {
-      res.status(400).send()
-      return
-    }
-    const authed = UserService.login({ username, password })
-    if (!authed) {
-      res.status(400).send()
-      return
-    }
-    sendToken(username, res)
-  })
-
-  app.post("/create-account", async (req, res) => {
-    const { username, password } = req.body as {
-      username?: string
-      password?: string
-    }
-    if (!username || !password) {
-      res.status(400).send()
-      return
-    }
-
-    const created = UserService.create({ username, password })
-    if (!created) {
-      res.status(403).send()
-      return
-    }
-
-    sendToken(username, res)
-  })
-
-  app.post("/logout", async (_req, res) => {
-    res.clearCookie("refreshToken")
-    res.code(200).send()
-  })
+export function configureAuthRoutes(app: Express.Application) {
+  // const sendToken = async (username: string, res: FastifyReply) => {
+  //   const token = app.jwt.sign({ username })
+  //   const refreshToken = await res.jwtSign({ username }, { expiresIn: "1d" })
+  //   res
+  //     .setCookie("refreshToken", refreshToken, {
+  //       domain: "localhost",
+  //       path: "/",
+  //       httpOnly: false,
+  //       sameSite: true, // alternative CSRF protection
+  //     })
+  //     .code(200)
+  //     .send({ token })
+  // }
+  // app.post("/login", async (req, res) => {
+  //   const { username, password } = req.body as {
+  //     username?: string
+  //     password?: string
+  //   }
+  //   if (!username || !password) {
+  //     res.status(400).send()
+  //     return
+  //   }
+  //   const authed = UserService.login({ username, password })
+  //   if (!authed) {
+  //     res.status(400).send()
+  //     return
+  //   }
+  //   sendToken(username, res)
+  // })
+  // app.post("/create-account", async (req, res) => {
+  //   const { username, password } = req.body as {
+  //     username?: string
+  //     password?: string
+  //   }
+  //   if (!username || !password) {
+  //     res.status(400).send()
+  //     return
+  //   }
+  //   const created = UserService.create({ username, password })
+  //   if (!created) {
+  //     res.status(403).send()
+  //     return
+  //   }
+  //   sendToken(username, res)
+  // })
+  // app.post("/logout", async (_req, res) => {
+  //   res.clearCookie("refreshToken")
+  //   res.code(200).send()
+  // })
 }

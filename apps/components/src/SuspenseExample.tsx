@@ -1,7 +1,5 @@
-import * as Cinnabun from "cinnabun"
 import { Suspense } from "cinnabun"
 import { Either } from "cinnabun/types"
-import { sleep } from "cinnabun/utils"
 
 type ProductCategoriesResponse = Either<{ error: Error }, { data: string[] }>
 

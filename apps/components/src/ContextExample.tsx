@@ -1,4 +1,3 @@
-import * as Cinnabun from "cinnabun"
 import { createSignal } from "cinnabun"
 
 const _context = createSignal(0)

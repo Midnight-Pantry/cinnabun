@@ -1,10 +1,10 @@
-import { Hydration } from "cinnabun/hydration"
-import { App } from "../App"
-import { Template } from "../Template"
-import { SSRProps } from "cinnabun/src/types"
 import "./index.css"
-import { createLiveSocket } from "./liveSocket"
 import { Cinnabun } from "cinnabun"
+import { Hydration } from "cinnabun/hydration"
+import { SSRProps } from "cinnabun/types"
+import { App } from "../App.jsx"
+import { Template } from "../Template.jsx"
+import { createLiveSocket } from "./liveSocket.js"
 
 if ("__cbData" in window) {
   Cinnabun.registerRuntimeServices(createLiveSocket())

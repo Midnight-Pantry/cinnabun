@@ -13,10 +13,10 @@ describe("When serialized, a Suspense Component", function () {
       prefetch: true,
       promise: async () => {
         await sleep(20)
-        return new Promise<number[]>((res) => res([1, 2, 3]))
+        return new Promise((res) => res([1, 2, 3]))
       },
       children: [
-        (loading: boolean, data: number[]) =>
+        (loading, data) =>
           new Component("p", {
             children: loading
               ? ["...loading"]
@@ -34,10 +34,10 @@ describe("When serialized, a Suspense Component", function () {
     const component = new SuspenseComponent("", {
       promise: async () => {
         await sleep(20)
-        return new Promise<number[]>((res) => res([1, 2, 3]))
+        return new Promise((res) => res([1, 2, 3]))
       },
       children: [
-        (loading: boolean, data: number[]) =>
+        (loading, data) =>
           new Component("p", {
             children: loading
               ? ["...loading"]

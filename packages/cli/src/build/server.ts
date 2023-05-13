@@ -1,29 +1,29 @@
 import path from "path"
 import express from "express"
 import { Cinnabun } from "cinnabun"
-import { SSR, SSRConfig } from "cinnabun/ssr"
-import { ComponentFunc } from "cinnabun/src/types"
-//import { createServer as createViteServer } from "vite"
+import { SSR } from "cinnabun/ssr"
+import { createServer as createViteServer } from "vite"
 
-export async function createServer(App: ComponentFunc) {
+export async function createServer(App: { (): any }) {
   console.log("Creating server", process.cwd())
   const publicDir = path.resolve(process.cwd(), "dist", "static")
 
   const app = express()
   app.use("/static", express.static(publicDir))
 
-  // const vite = await createViteServer({
-  //   server: { middlewareMode: true },
-  //   appType: "custom",
-  //   esbuild: {
-  //     jsx: "transform",
-  //     jsxInject: "import * as Cinnabon from 'cinnabun'",
-  //     jsxFactory: "Cinnabon.h",
-  //     jsxFragment: "Cinnabon.fragment",
-  //   },
-  // })
+  const vite = await createViteServer({
+    server: { middlewareMode: true },
+    appType: "custom",
+    plugins: [],
+    esbuild: {
+      jsx: "transform",
+      jsxInject: "import * as Cinnabon from 'cinnabun'",
+      jsxFactory: "Cinnabon.h",
+      jsxFragment: "Cinnabon.fragment",
+    },
+  })
 
-  // app.use(vite.middlewares)
+  app.use(vite.middlewares)
   app.get("/favicon.ico", (_, res) => {
     res.status(404).send()
   })
@@ -36,16 +36,14 @@ export async function createServer(App: ComponentFunc) {
       data: {},
     })
 
-    const config: SSRConfig = {
-      cinnabunInstance,
-      stream: res,
-    }
-
     res.header("Content-Type", "text/html").status(200)
     res.header("Transfer-Encoding", "chunked")
     res.write("<!DOCTYPE html><html>")
 
-    const { componentTree } = await SSR.serverBake(App(), config)
+    const { componentTree } = await SSR.serverBake(App(), {
+      cinnabunInstance,
+      stream: res,
+    })
 
     res.write(`
       <script id="server-props">

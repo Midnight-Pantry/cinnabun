@@ -1,5 +1,15 @@
-import { Component } from "./"
-import { Signal } from "./"
+import { Component } from "./component.js"
+import { Signal } from "./signal.js"
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      [key: string]: Partial<ComponentProps<any>>
+    }
+  }
+}
+
+export type ServerPromise<T> = Promise<T>
 
 export type ClassConstructor<InstanceType = any> = {
   new (...args: any[]): InstanceType
@@ -12,11 +22,11 @@ type Only<T, U> = {
 }
 export type Either<T, U> = Only<T, U> | Only<U, T>
 
-export type Tag = string | ((props: any, children: any[]) => Component<any>)
+export type Tag = string | ((props: any, children: any[]) => Component)
 export type JSXProps = Record<string, string | number | null | undefined> | null
 export type NodeChildren = (Node | string)[]
 
-export type GenericComponent = Component<any>
+export type GenericComponent = Component
 export type ComponentFunc = { (...args: any[]): GenericComponent }
 //Type '(loading: boolean, data: number) => Component<any>' is not assignable to type 'ComponentFunc'
 export type ComponentChild =
@@ -28,7 +38,7 @@ export type ComponentChild =
 
 export type PropsSetter = { (props: ComponentProps<any>): void }
 export type ComponentSubscription = {
-  (fn: PropsSetter, self: Component<HTMLElement>): { (): void }
+  (fn: PropsSetter, self: Component): { (): void }
 }
 
 export type SuspenseProps = {
@@ -46,8 +56,8 @@ export type WatchedElementRef = {
 }
 
 export type ComponentEventProps<T extends HTMLElement> = {
-  onMounted?: { (c: Component<T>): void }
-  onDestroyed?: { (c: Component<T>): void }
+  onMounted?: { (c: Component): void }
+  onDestroyed?: { (c: Component): void }
 }
 export type ReactivityProps = {
   subscription?: ComponentSubscription

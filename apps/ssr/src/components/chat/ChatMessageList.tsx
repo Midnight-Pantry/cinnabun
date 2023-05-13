@@ -1,10 +1,10 @@
 import * as Cinnabun from "cinnabun"
 import { Cinnabun as cb } from "cinnabun"
-import { IChatMessage } from "../../types/chat"
-import { LiveSocket } from "../../client/liveSocket"
-import { prefetchChatMessages } from "../../server/actions/chat"
-import { getUser, userStore } from "../../state"
 import { GenericComponent } from "cinnabun/types"
+import { IChatMessage } from "../../types/chat.js"
+import { LiveSocket } from "../../client/liveSocket.js"
+import { prefetchChatMessages } from "../../server/actions/chat.js"
+import { getUser, userStore } from "../../state.js"
 
 let serverData = Cinnabun.createSignal<IChatMessage[]>([])
 
@@ -31,7 +31,7 @@ export const ChatMessageList = () => {
     >
       {() => (
         <>
-          {...chatMessages.value.map((message) => (
+          {...chatMessages.value.map((message: IChatMessage) => (
             <ChatMessageItem message={message} />
           ))}
         </>

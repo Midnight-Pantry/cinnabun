@@ -1,4 +1,3 @@
-import * as Cinnabun from "cinnabun"
 import { createSignal } from "cinnabun"
 
 interface ToDoItem {
@@ -31,7 +30,7 @@ export const ToDoExample = () => {
       <ul className="todo-list" watch={todos} bind:render>
         {() => (
           <>
-            {...todos.value.map((item, i) => (
+            {...todos.value.map((item: { text: any }, i: number) => (
               <li>
                 <input
                   type="checkbox"

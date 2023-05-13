@@ -6,11 +6,21 @@
     "type": "git",
     "url": "https://github.com/Robby6Strings/cinnabun"
   },
-  "main": "index.ts",
-  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./ssr": "./dist/ssr/index.js",
+    "./router": "./dist/router/index.js",
+    "./utils": "./dist/utils.js",
+    "./domInterop": "./dist/domInterop.js",
+    "./hydration": "./dist/hydration.js",
+    "./types": "./src/types.ts"
+  },
   "scripts": {
-    "build": "pnpm i && tsc",
-    "mocha": "tsc && ts-mocha ./dist/tests/*/**.spec.js",
+    "build": "pnpm i",
+    "mocha": "mocha ./src/tests/*/**.spec.js",
     "cypress": "npx cypress run --spec ./cypress/e2e --env port=3000",
     "cypress-csr": "npx cypress run --spec ./cypress/e2e/csr --env port=5173",
     "cypress-ssr": "npx cypress run --spec ./cypress/e2e/ssr --env port=3000",
@@ -30,7 +40,6 @@
     "esbuild": "^0.17.18",
     "jsdom": "^21.1.2",
     "mocha": "^10.2.0",
-    "ts-mocha": "^10.0.0",
     "typescript": "^5.0.4"
   }
 }

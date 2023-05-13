@@ -1,8 +1,8 @@
+import "./notifications.css"
 import * as Cinnabun from "cinnabun"
 import { createSignal, Component } from "cinnabun"
-import "./notifications.css"
-import { generateUUID } from "../utils"
-import { DomInterop } from "cinnabun/src/domInterop"
+import { generateUUID } from "../utils.js"
+import { DomInterop } from "cinnabun/domInterop"
 
 export enum NotificationType {
   INFO = "info",
@@ -43,7 +43,7 @@ export const addNotification = ({
   notificationStore.value.set(notification.id!, notification as INotification)
 }
 
-class NotificationComponent extends Component<any> {
+class NotificationComponent extends Component {
   constructor(id: string, type: NotificationType, text: string) {
     super("div", {
       ["data-id"]: id,
@@ -53,14 +53,14 @@ class NotificationComponent extends Component<any> {
   }
 }
 
-export class NotificationTrayComponent extends Component<any> {
+export class NotificationTrayComponent extends Component {
   constructor(private animationDuration: number) {
     super("div", { className: "notification-tray" })
 
     const addNotification = (notification: INotification) => {
       const child = notification.component
       this.prependChild(child)
-      const element: HTMLElement = child.element
+      const element: HTMLElement = child.element!
       element.addEventListener("mouseenter", function handler() {
         child.props.hovered = true
       })
@@ -72,11 +72,12 @@ export class NotificationTrayComponent extends Component<any> {
 
     const removeNotification = (notification: INotification) => {
       const child = notification.component
-      child.element.removeEventListener("mouseenter", function handler() {
+      const el = child.element!
+      el.removeEventListener("mouseenter", function handler() {
         child.props.hovered = true
       })
 
-      child.element.removeEventListener("mouseleave", function handler() {
+      el.removeEventListener("mouseleave", function handler() {
         child.props.hovered = false
       })
       DomInterop.unRender(child)
@@ -99,10 +100,9 @@ export class NotificationTrayComponent extends Component<any> {
         children.forEach((c) => {
           if (c.props.hovered) return
 
-          const element: HTMLElement = c.element,
-            notifId: string = c.props["data-id"],
-            notification: INotification | undefined =
-              notificationStore.value.get(notifId)
+          const notifId: string = c.props["data-id"]
+          const notification: INotification | undefined =
+            notificationStore.value.get(notifId)
 
           if (!notification) throw new Error("failed to get notification")
 
@@ -113,7 +113,7 @@ export class NotificationTrayComponent extends Component<any> {
             deleteList.push(notifId)
           } else if (notification.duration < this.animationDuration) {
             if (!c.props.hidden) {
-              element.classList.add("hide")
+              c.element!.classList.add("hide")
               c.props.hidden = true
             }
           }

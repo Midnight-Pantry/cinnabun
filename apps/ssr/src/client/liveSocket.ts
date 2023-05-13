@@ -1,6 +1,6 @@
 import { Signal, createSignal } from "cinnabun"
-import { IChatMessage } from "../types/chat"
-import { getChatMessages } from "./actions/chat"
+import { IChatMessage } from "../types/chat.js"
+import { getChatMessages } from "./actions/chat.js"
 
 type TypedMessage = {
   type: string
@@ -47,7 +47,7 @@ export class LiveSocket {
         break
       case "-chat":
         const idx = this.chatMessages.value.findIndex(
-          (item) => item.id === message.data.id
+          (item: IChatMessage) => item.id === message.data.id
         )
         if (idx === -1) return
         this.chatMessages.value.splice(idx, 1)

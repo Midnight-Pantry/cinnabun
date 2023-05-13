@@ -1,9 +1,10 @@
-import { Component, Signal } from "."
-import { Cinnabun } from "./cinnabun"
-import { ComponentChild, GenericComponent } from "./types"
+import { Component } from "./component.js"
+import { Signal } from "./signal.js"
+import { Cinnabun } from "./cinnabun.js"
 
 export class DomInterop {
-  static updateElement(component: GenericComponent) {
+  /** @param {Component} component */
+  static updateElement(component) {
     if (!component.element) return
     const {
       htmlFor,
@@ -37,13 +38,15 @@ export class DomInterop {
     }
   }
 
-  static getRenderedChildren(component: GenericComponent) {
+  /** @param {Component} component */
+  static getRenderedChildren(component) {
     return DomInterop.getRenderableChildren(component).map((c) =>
       DomInterop.renderChild(component, c)
     )
   }
 
-  static getRenderableChildren(component: GenericComponent) {
+  /** @param {Component} component */
+  static getRenderableChildren(component) {
     return component.children.filter(
       (c) =>
         typeof c === "function" ||
@@ -54,7 +57,8 @@ export class DomInterop {
     )
   }
 
-  static renderChildren(component: GenericComponent) {
+  /** @param {Component} component */
+  static renderChildren(component) {
     if (!component.props.render) return
     if (!component.element) return
     DomInterop.removeFuncComponents(component)
@@ -64,10 +68,13 @@ export class DomInterop {
     )
   }
 
-  static renderChild(
-    component: GenericComponent,
-    child: ComponentChild
-  ): string | Node {
+  /**
+   *
+   * @param {Component} component
+   * @param {import('./types.js').ComponentChild} child
+   * @returns {string | Node}
+   */
+  static renderChild(component, child) {
     if (Signal.isSignal(child)) {
       component.subscribeTo((_, __) =>
         child.subscribe(() => DomInterop.renderChildren(component))
@@ -84,7 +91,8 @@ export class DomInterop {
     return child.toString()
   }
 
-  static removeFuncComponents(component: GenericComponent) {
+  /** @param {Component} component */
+  static removeFuncComponents(component) {
     if (component.funcComponents.length > 0) {
       for (const fc of component.funcComponents) {
         DomInterop.unRender(fc)
@@ -94,7 +102,8 @@ export class DomInterop {
     }
   }
 
-  static unRender(component: GenericComponent) {
+  /** @param {Component} component */
+  static unRender(component) {
     try {
       DomInterop.removeFuncComponents(component)
       if (component.element) {
@@ -114,7 +123,8 @@ export class DomInterop {
     }
   }
 
-  static reRender(component: GenericComponent) {
+  /** @param {Component} component */
+  static reRender(component) {
     if (!component.shouldRender()) return
     const el = component.element ?? DomInterop.render(component, true)
     if (component.element) DomInterop.renderChildren(component)
@@ -135,10 +145,12 @@ export class DomInterop {
     }
   }
 
-  static render<T extends HTMLElement>(
-    component: Component<T>,
-    isRerender: boolean = false
-  ): T | Node {
+  /**
+   * @param {Component} component
+   * @param {boolean} [isRerender=false]
+   * @returns {HTMLElement | Node}
+   */
+  static render(component, isRerender = false) {
     const { children, onMounted, onDestroyed, subscription, promise } =
       component.props
 
@@ -163,7 +175,7 @@ export class DomInterop {
 
     if (component.tag === "svg") return DomInterop.svg(component)
     if (!component.element) {
-      component.element = document.createElement(component.tag) as T
+      component.element = document.createElement(component.tag)
     }
 
     if (children) component.replaceChildren(children)
@@ -181,7 +193,12 @@ export class DomInterop {
     return component.element
   }
 
-  static svg(component: Component<any>): SVGSVGElement {
+  /**
+   *
+   * @param {Component} component
+   * @returns {SVGElement}
+   */
+  static svg(component) {
     const el = document.createElementNS(
       "http://www.w3.org/2000/svg",
       component.tag
@@ -210,14 +227,15 @@ export class DomInterop {
       }
     }
 
-    //@ts-ignore
-    return el as SVGElement
+    return el
   }
 
-  static getMountLocation(
-    component: GenericComponent,
-    start = 0
-  ): { element: HTMLElement | null; idx: number } {
+  /**
+   * @param {Component} component
+   * @param {number} [start=0]
+   * @returns {{ element: HTMLElement | null, idx: number }}
+   */
+  static getMountLocation(component, start = 0) {
     if (!component.parent) return { element: null, idx: -1 }
     //if (component.element) start++
 

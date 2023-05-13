@@ -7,12 +7,15 @@ import {
   ToDoExample,
 } from "@cinnabun/example-components"
 import { Route, Router } from "cinnabun/router"
-import { pathStore } from "./state"
-import { ProductList } from "./components/ProductList"
-import { AuthButtons } from "./components/AuthButtons"
-import { Nav } from "./components/Nav"
-import { Chat } from "./components/chat/Chat"
-import { NotificationTray, addNotification } from "./components/Notifications"
+import { pathStore } from "./state.js"
+import { ProductList } from "./components/ProductList.jsx"
+import { AuthButtons } from "./components/AuthButtons.jsx"
+import { Nav } from "./components/Nav.jsx"
+import { Chat } from "./components/chat/Chat.jsx"
+import {
+  NotificationTray,
+  addNotification,
+} from "./components/Notifications.jsx"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (

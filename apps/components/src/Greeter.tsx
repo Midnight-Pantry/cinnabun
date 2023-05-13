@@ -1,4 +1,3 @@
-import * as Cinnabun from "cinnabun"
 import { Signal } from "cinnabun"
 
 function getTextAndGif(val: number): [string, string] {

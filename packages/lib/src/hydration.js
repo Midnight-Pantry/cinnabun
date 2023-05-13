@@ -1,11 +1,17 @@
-import { Cinnabun } from "./cinnabun"
-import { Component } from "./component"
-import { DomInterop } from "./domInterop"
-import { Signal } from "./signal"
-import { SSRProps, ComponentChild, SerializedComponent } from "./types"
+import { Cinnabun } from "./cinnabun.js"
+import { Component } from "./component.js"
+import { DomInterop } from "./domInterop.js"
+import { Signal } from "./signal.js"
+
+/**
+ * @typedef {import('./types.js').SSRProps} SSRProps
+ * @typedef {import('./types.js').ComponentChild} ComponentChild
+ * @typedef {import('./types.js').SerializedComponent} SerializedComponent
+ */
 
 export class Hydration {
-  static validate(component: Component<any>) {
+  /** @param {Component} component */
+  static validate(component) {
     if (component.tag && component.shouldRender()) {
       const hasElement = component.element
       const elementMatchesTag =
@@ -19,7 +25,13 @@ export class Hydration {
       if (Component.isComponent(c)) Hydration.validate(c)
     }
   }
-  static hydrate(app: Component<any>, ssrProps: SSRProps) {
+
+  /**
+   *
+   * @param {Component} app
+   * @param {SSRProps} ssrProps
+   */
+  static hydrate(app, ssrProps) {
     console.log("hydrating", ssrProps)
     console.time("hydration time")
 
@@ -43,14 +55,17 @@ export class Hydration {
     //Hydration.validate(tray)
   }
 
-  static hydrateComponent(
-    parent: Component<any>,
-    c: ComponentChild,
-    sc: SerializedComponent,
-    parentElement: Element | ChildNode
-  ) {
+  /**
+   *
+   * @param {Component} parent
+   * @param {ComponentChild} c
+   * @param {SerializedComponent} sc
+   * @param {Element | ChildNode} parentElement
+   * @returns
+   */
+  static hydrateComponent(parent, c, sc, parentElement) {
     if (!sc) return
-    const childOffset: number = Cinnabun.rootMap.get(parentElement) ?? 0
+    const childOffset = Cinnabun.rootMap.get(parentElement) ?? 0
 
     if (typeof c === "string" || typeof c === "number" || Signal.isSignal(c)) {
       Cinnabun.rootMap.set(parentElement, childOffset + 1)

@@ -1,7 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import { Suspense } from "cinnabun"
 import { Either } from "cinnabun/types"
-import { ServerPromise } from "cinnabun/ssr"
+import { ServerPromise } from "cinnabun/types"
 
 type ProductListResponse = Either<{ message: string }, { items: string[] }>
 

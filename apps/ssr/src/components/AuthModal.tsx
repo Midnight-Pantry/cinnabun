@@ -1,8 +1,8 @@
 import * as Cinnabun from "cinnabun"
-import { handleCreateAccount, handleLogin } from "../client/actions/auth"
+import { handleCreateAccount, handleLogin } from "../client/actions/auth.js"
 import "./modal.css"
 import "./tabs.css"
-import { NotificationType, addNotification } from "./Notifications"
+import { NotificationType, addNotification } from "./Notifications.jsx"
 
 export const authModalVisible = Cinnabun.createSignal(false)
 

@@ -1,6 +1,6 @@
 cypress
 dist
 node_modules
-cypress.config.ts
+cypress.config.js
 todo.md
 tests

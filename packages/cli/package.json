@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/main",
-  "type": "commonjs",
+  "type": "module",
   "bin": {
     "cinnabun": "dist/index.js"
   },

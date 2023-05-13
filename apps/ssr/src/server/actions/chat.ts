@@ -1,6 +1,6 @@
-import { ServerPromise } from "cinnabun/ssr"
-import { ChatMessagesResponse } from "../../types/chat"
-import { ChatMessages } from "../chat"
+import { ServerPromise } from "cinnabun/types"
+import { ChatMessagesResponse } from "../../types/chat.js"
+import { ChatMessages } from "../chat.js"
 
 export async function prefetchChatMessages(): ServerPromise<ChatMessagesResponse> {
   try {

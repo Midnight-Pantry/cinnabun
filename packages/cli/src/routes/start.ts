@@ -1,8 +1,14 @@
 import { Command, Option } from "commander"
-import esbuild from "esbuild"
-import { generateFileRouter } from "../build/transform-plugin"
 import path from "path"
-import { buildClient } from "../build/build"
+
+import type { createServer as ServerCreator } from "../build/server"
+
+const plugin_createServer = path.join(
+  path.dirname(import.meta.url),
+  "..",
+  "build",
+  "server.js"
+)
 
 export default new Command("start")
   .description("start your cinnabun project")
@@ -11,47 +17,16 @@ export default new Command("start")
     new Option("-h, --host <host>", "host to run on").default("localhost")
   )
   .action(async ({ port }) => {
-    const result = await esbuild.build({
-      stdin: {
-        contents: `
-          import {App} from "./src/App"
-          import {createServer} from "${path
-            .join(__dirname, "..", "build", "server.js")
-            .replaceAll(path.sep, "/")}"
-          (() => ({
-            App,
-            createServer
-          }))()
-         
-        `,
-        resolveDir: process.cwd(),
-      },
-      platform: "node",
-      bundle: true,
-      write: false,
-      format: "cjs",
-      target: "esnext",
-      tsconfig: "_tsconfig.json",
-      jsx: "transform",
-      jsxFactory: "Cinnabun.h",
-      jsxFragment: "Cinnabun.fragment",
-      jsxImportSource: "Cinnabun",
-      plugins: [generateFileRouter()],
-      external: ["esbuild"],
-    })
+    const { createServer } = (await import(
+      plugin_createServer.replaceAll(path.sep, "/")
+    )) as {
+      createServer: typeof ServerCreator
+    }
 
-    const { App, createServer } = eval(result.outputFiles![0].text) as any
-
-    await buildClient()
-
+    const { App } = await import(path.join(process.cwd(), "src", "App"))
     const server = await createServer(App)
 
-    server.listen({ port }, function (err: any) {
-      if (err) {
-        console.error(err)
-        process.exit(1)
-      }
-
+    server.listen({ port }, function () {
       console.log(`Server is listening on port ${port}`)
       console.log("http://localhost:3000")
     })

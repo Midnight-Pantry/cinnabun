@@ -1,4 +1,3 @@
-import * as Cinnabun from "cinnabun"
 import { FileRouter, Link } from "cinnabun/router"
 import { pathStore } from "./state"
 

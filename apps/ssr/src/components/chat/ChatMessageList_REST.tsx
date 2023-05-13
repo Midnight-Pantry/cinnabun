@@ -1,8 +1,8 @@
 import * as Cinnabun from "cinnabun"
 import { Cinnabun as cb } from "cinnabun"
-import { ChatMessagesResponse } from "../../types/chat"
-import { getChatMessages } from "../../client/actions/chat"
-import { prefetchChatMessages } from "../../server/actions/chat"
+import { ChatMessagesResponse } from "../../types/chat.js"
+import { getChatMessages } from "../../client/actions/chat.js"
+import { prefetchChatMessages } from "../../server/actions/chat.js"
 
 export const ChatMessageList_REST = () => {
   return (
