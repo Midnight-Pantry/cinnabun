@@ -1,7 +1,8 @@
-import { Route, Router } from "../../router"
-import { Component, Signal } from "../.."
-import { Cinnabun } from "../../cinnabun"
-import { SSR } from "../../ssr"
+import { Cinnabun } from "../../cinnabun.js"
+import { Component } from "../../component.js"
+import { Route, Router } from "../../router/index.js"
+import { Signal } from "../../signal.js"
+import { SSR } from "../../ssr/index.js"
 import { expect } from "chai"
 import "mocha"
 

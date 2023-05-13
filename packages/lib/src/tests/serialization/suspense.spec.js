@@ -1,10 +1,10 @@
-import { SuspenseComponent } from "../../suspense"
-import { Component } from "../.."
-import { Cinnabun } from "../../cinnabun"
-import { SSR } from "../../ssr"
+import { Cinnabun } from "../../cinnabun.js"
+import { Component } from "../../component.js"
+import { SuspenseComponent } from "../../suspense.js"
+import { SSR } from "../../ssr/index.js"
+import { sleep } from "../../utils.js"
 import { expect } from "chai"
 import "mocha"
-import { sleep } from "../../utils"
 
 describe("When serialized, a Suspense Component", function () {
   describe("with the 'prefetch' flag", function () {

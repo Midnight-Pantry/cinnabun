@@ -1,12 +1,13 @@
+import { Component } from "./component.js"
+import { FragmentComponent } from "./component.js"
+
 export { Cinnabun } from "./cinnabun.js"
 export { Component } from "./component.js"
 export { Signal, createSignal } from "./signal.js"
 export { Suspense } from "./suspense.js"
 export { lazy } from "./lazy.js"
-export * from "./router"
+export * from "./router/index.js"
 
-import { Component } from "./component.js"
-import { FragmentComponent } from "./component.js"
 /**
  * @namespace JSX
  */

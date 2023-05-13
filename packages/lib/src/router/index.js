@@ -1,6 +1,6 @@
 export * from "./router.js"
 export * from "./link.js"
-export * from "./generated"
+export * from "./generated/index.js"
 
 /**
  * @param {string} path

@@ -1,10 +1,10 @@
-import { Component } from "./component.js"
-import { Signal } from "./signal.js"
+import type { Component } from "./component.js"
+import type { Signal } from "./signal.js"
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      [key: string]: Partial<ComponentProps<any>>
+      [key: string]: Partial<ComponentProps>
     }
   }
 }
@@ -36,7 +36,7 @@ export type ComponentChild =
   | number
   | { (): string | number }
 
-export type PropsSetter = { (props: ComponentProps<any>): void }
+export type PropsSetter = { (props: ComponentProps): void }
 export type ComponentSubscription = {
   (fn: PropsSetter, self: Component): { (): void }
 }
@@ -55,7 +55,7 @@ export type WatchedElementRef = {
   onDestroyed: { (): void }
 }
 
-export type ComponentEventProps<T extends HTMLElement> = {
+export type ComponentEventProps = {
   onMounted?: { (c: Component): void }
   onDestroyed?: { (c: Component): void }
 }
@@ -64,8 +64,8 @@ export type ReactivityProps = {
   watch?: Signal<any> | Signal<any>[]
 }
 
-export type ComponentProps<T extends HTMLElement> = ReactivityProps &
-  ComponentEventProps<T> & {
+export type ComponentProps = ReactivityProps &
+  ComponentEventProps & {
     id?: string
     innerText?: string | number | Signal<string> | Signal<number>
     className?: string
@@ -80,7 +80,7 @@ export type RouteProps = {
   component: ComponentChild
 }
 
-export type LinkProps = ComponentProps<HTMLAnchorElement> & {
+export type LinkProps = ComponentProps & {
   store: Signal<string>
   to: string
   activeClass?: string

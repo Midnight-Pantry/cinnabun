@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
     "useDefineForClassFields": true,
+    "allowJs": true,
     "module": "ESNext",
-    "lib": ["ESNext", "DOM"],
+    "target": "ESNext",
     "moduleResolution": "nodenext",
+    "lib": ["ESNext", "DOM"],
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -13,7 +14,10 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "jsxFactory": "Cinnabun.h",
+    "jsxFragmentFactory": "Cinnabun.fragment",
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

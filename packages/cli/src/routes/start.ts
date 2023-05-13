@@ -1,7 +1,7 @@
 import { Command, Option } from "commander"
 import path from "path"
 
-import type { createServer as ServerCreator } from "../build/server"
+import type { createServer as ServerCreator } from "../build/server.js"
 
 const plugin_createServer = path.join(
   path.dirname(import.meta.url),
