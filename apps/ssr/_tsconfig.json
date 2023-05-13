@@ -2,7 +2,7 @@
   "jsx": "transform",
   "jsxFactory": "Cinnabun.h",
   "jsxFragment": "Cinnabun.fragment",
-  "module": "CommonJS",
+  "module": "ESNext",
   "lib": ["ESNext", "DOM"],
   "moduleResolution": "Node",
   "esModuleInterop": true,

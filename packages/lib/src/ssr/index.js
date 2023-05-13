@@ -253,5 +253,5 @@ export class SSR {
 export function useRequestData(self, requestDataPath, fallback) {
   return Cinnabun.isClient
     ? fallback
-    : self.cbInstance?.getServerRequestData < T > requestDataPath
+    : self.cbInstance?.getServerRequestData(requestDataPath)
 }

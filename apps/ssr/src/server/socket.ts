@@ -1,5 +1,4 @@
 import { FastifyRequest } from "fastify"
-
 import { SocketStream } from "@fastify/websocket"
 
 export const socketHandler = (conn: SocketStream, _req: FastifyRequest) => {

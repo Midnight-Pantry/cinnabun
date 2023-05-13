@@ -2,10 +2,13 @@ import esbuild from "esbuild"
 
 import { regexPatterns, replaceServerFunctions } from "./transform.plugin.js"
 
+/**
+ * @type {esbuild.BuildOptions}
+ */
 const sharedSettings = {
   bundle: true,
   minify: true,
-  format: "cjs",
+  format: "esm",
   target: "esnext",
   tsconfig: "_tsconfig.json",
   jsx: "transform",
@@ -21,6 +24,16 @@ Promise.all([
     outdir: "dist/server",
     platform: "node",
     ...sharedSettings,
+    banner: {
+      js: `
+      import path from 'path';
+      import { fileURLToPath } from 'url';
+      import { createRequire as topLevelCreateRequire } from 'module';
+      const require = topLevelCreateRequire(import.meta.url);
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = path.dirname(__filename);
+      `,
+    },
   }),
   esbuild.build({
     sourcemap: "linked",
