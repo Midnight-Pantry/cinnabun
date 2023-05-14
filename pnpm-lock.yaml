@@ -74,7 +74,7 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5
 
-  apps/ssr-cli:
+  apps/ssr-cli-WIP:
     dependencies:
       '@cinnabun/example-components':
         specifier: workspace:^1.0.0
