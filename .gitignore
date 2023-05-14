@@ -9,7 +9,8 @@ lerna-debug.log*
 
 node_modules
 dist
-!ssr-demo/dist
+build
+
 *.local
 videos
 screenshots
