@@ -79,43 +79,12 @@ importers:
       '@cinnabun/example-components':
         specifier: workspace:^1.0.0
         version: link:../components
-      '@fastify/compress':
-        specifier: ^6.2.1
-        version: 6.2.1
-      '@fastify/cookie':
-        specifier: ^8.3.0
-        version: 8.3.0
-      '@fastify/jwt':
-        specifier: ^6.7.1
-        version: 6.7.1
-      '@fastify/static':
-        specifier: ^6.10.1
-        version: 6.10.1
-      '@fastify/websocket':
-        specifier: ^8.0.0
-        version: 8.0.0
       cinnabun:
         specifier: workspace:^
         version: link:../../packages/lib
       cinnabun-cli:
         specifier: workspace:^
         version: link:../../packages/cli
-      esbuild:
-        specifier: ^0.17.18
-        version: 0.17.18
-      fastify:
-        specifier: ^4.17.0
-        version: 4.17.0
-      fastify-plugin:
-        specifier: ^4.5.0
-        version: 4.5.0
-    devDependencies:
-      '@types/node':
-        specifier: ^18.16.2
-        version: 18.16.3
-      '@types/websocket':
-        specifier: ^1.0.5
-        version: 1.0.5
 
   apps/vite-ssr:
     dependencies:
@@ -159,6 +128,9 @@ importers:
       fast-glob:
         specifier: ^3.2.12
         version: 3.2.12
+      global-modules:
+        specifier: ^2.0.0
+        version: 2.0.0
       inquirer:
         specifier: ^9.2.0
         version: 9.2.0(typescript@5.0.4)
@@ -172,6 +144,9 @@ importers:
       '@types/express':
         specifier: ^4.17.17
         version: 4.17.17
+      '@types/global-modules':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^20.0.0
         version: 20.0.0
@@ -646,6 +621,10 @@ packages:
       '@types/express-serve-static-core': 4.17.34
       '@types/qs': 6.9.7
       '@types/serve-static': 1.15.1
+    dev: true
+
+  /@types/global-modules@2.0.0:
+    resolution: {integrity: sha512-AsEQE+Rhe82YGPmO2vpzhpdvsYwUbK9ev7ZhTY7QQBHuKeLxCr8K0K47HmlaVkuSe0YivNAjjEGoEnkGKhivMA==}
     dev: true
 
   /@types/jsdom@21.1.1:
@@ -2340,6 +2319,22 @@ packages:
       ini: 2.0.0
     dev: true
 
+  /global-modules@2.0.0:
+    resolution: {integrity: sha512-NGbfmJBp9x8IxyJSd1P+otYK8vonoJactOogrVfFRIAEY1ukil8RSKDz2Yo7wh1oihl51l/r6W4epkeKJHqL8A==}
+    engines: {node: '>=6'}
+    dependencies:
+      global-prefix: 3.0.0
+    dev: false
+
+  /global-prefix@3.0.0:
+    resolution: {integrity: sha512-awConJSVCHVGND6x3tmMaKcQvwXLhjdkmomy2W+Goaui8YPgYgXJZewhg3fWC+DlfqqQuWg8AwqjGTD2nAPVWg==}
+    engines: {node: '>=6'}
+    dependencies:
+      ini: 1.3.8
+      kind-of: 6.0.3
+      which: 1.3.1
+    dev: false
+
   /got@8.3.2:
     resolution: {integrity: sha512-qjUJ5U/hawxosMryILofZCkm3C84PLJS/0grRIpjAwu+Lkxxj5cxeCU25BG0/3mDSpXKTyZr8oh8wIgLaH0QCw==}
     engines: {node: '>=4'}
@@ -2646,7 +2641,6 @@ packages:
 
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
-    dev: true
 
   /isstream@0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
@@ -2759,6 +2753,11 @@ packages:
     resolution: {integrity: sha512-eguHnq22OE3uVoSYG0LVWNP+4ppamWr9+zWBe1bsNcovIMy6huUJFPgy4mGwCd/rnl3vOLGW1MTlu4c57CT1xA==}
     dependencies:
       json-buffer: 3.0.0
+    dev: false
+
+  /kind-of@6.0.3:
+    resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
+    engines: {node: '>=0.10.0'}
     dev: false
 
   /lazy-ass@1.6.0:
@@ -4423,6 +4422,13 @@ packages:
       tr46: 4.1.1
       webidl-conversions: 7.0.0
     dev: true
+
+  /which@1.3.1:
+    resolution: {integrity: sha512-HxJdYWq1MTIQbJ3nw0cqssHoTNU267KlrDuGZ1WYlxDStUtKUhOaJmh112/TZmHxxUfuJqPXSOm7tDyas0OSIQ==}
+    hasBin: true
+    dependencies:
+      isexe: 2.0.0
+    dev: false
 
   /which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}

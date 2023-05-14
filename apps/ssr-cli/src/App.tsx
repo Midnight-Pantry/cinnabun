@@ -1,7 +1,9 @@
-import { FileRouter, Link } from "cinnabun/router"
-import { pathStore } from "./state"
+import { Link, RouterComponent } from "cinnabun/router"
+import { pathStore } from "./state.js"
 
-export const App = () => {
+type FileRouter = { (): RouterComponent }
+
+export const App = ({ FileRouter }: { FileRouter: FileRouter }) => {
   return (
     <>
       <head>

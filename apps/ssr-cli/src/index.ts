@@ -1,6 +1,6 @@
 import { Hydration } from "cinnabun/hydration"
-import { App } from "./App"
-import { SSRProps } from "cinnabun/src/types"
+import { App } from "./App.jsx"
+import { SSRProps } from "cinnabun/types"
 import "./index.css"
 
 if ("__cbData" in window) {

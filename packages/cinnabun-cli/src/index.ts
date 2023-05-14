@@ -1,6 +1,7 @@
 // TypeScript (.ts)
 import commander, { Command } from "commander"
 import chalk from "chalk"
+import init from "./routes/init.js"
 import start from "./routes/start.js"
 import dev from "./routes/dev.js"
 import build from "./routes/build.js"
@@ -28,6 +29,7 @@ program
   .version("0.0.1")
   .option("-h, --help", "display help for command")
 
+program.addCommand(init)
 program.addCommand(start)
 program.addCommand(dev)
 program.addCommand(build)

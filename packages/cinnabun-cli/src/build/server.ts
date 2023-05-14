@@ -1,10 +1,12 @@
 import path from "path"
 import express from "express"
-import { Cinnabun } from "cinnabun"
-import { SSR } from "cinnabun/ssr"
 import { createServer as createViteServer } from "vite"
+import { Cinnabun, Component } from "cinnabun"
+import { SSR } from "cinnabun/ssr"
 
-export async function createServer(App: { (): any }) {
+type AppEntrance = { (): Component }
+
+export async function createServer(App: AppEntrance) {
   console.log("Creating server", process.cwd())
   const publicDir = path.resolve(process.cwd(), "dist", "static")
 
@@ -14,7 +16,6 @@ export async function createServer(App: { (): any }) {
   const vite = await createViteServer({
     server: { middlewareMode: true },
     appType: "custom",
-    plugins: [],
     esbuild: {
       jsx: "transform",
       jsxInject: "import * as Cinnabon from 'cinnabun'",

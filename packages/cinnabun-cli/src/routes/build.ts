@@ -1,4 +1,3 @@
-// TypeScript (.ts)
 import { Command, Option } from "commander"
 
 export default new Command("build")

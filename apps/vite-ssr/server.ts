@@ -3,13 +3,10 @@ import path from "path"
 import { fileURLToPath } from "url"
 import express from "express"
 import { createServer as createViteServer } from "vite"
-import { Cinnabun } from "cinnabun/dist/cinnabun.js"
-import { SSR } from "cinnabun/dist/ssr.js"
-import esBuildSettings from "cinnabun/settings.esbuild.js"
+import { Cinnabun } from "cinnabun"
+import { SSR } from "cinnabun/ssr"
 
 //https://vitejs.dev/guide/ssr.html
-
-const { jsxInject, jsxFactory, jsxFragment } = esBuildSettings
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -27,10 +24,11 @@ async function createServer() {
     server: { middlewareMode: true },
     appType: "custom",
     esbuild: {
+      jsxInject: "import * as Cinnabun from 'cinnabun'",
       jsx: "transform",
-      jsxInject,
-      jsxFactory,
-      jsxFragment,
+      jsxFactory: "Cinnabun.h",
+      jsxFragment: "Cinnabun.fragment",
+      jsxImportSource: "Cinnabun",
     },
   })
 
@@ -56,6 +54,7 @@ async function createServer() {
       const devTemplate = await vite.transformIndexHtml(reqPath, template)
 
       //    Bake!
+      //@ts-ignore
       const { html, componentTree } = await SSR.serverBake(App(), {
         cinnabunInstance,
       })
