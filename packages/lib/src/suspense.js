@@ -4,13 +4,13 @@ import { DomInterop } from "./domInterop.js"
 
 export class SuspenseComponent extends Component {
   /** @type { { (): Promise<any> } | undefined } */
-  promiseFunc
+  promiseFunc = undefined
 
   /** @type { Promise<any> | undefined } */
-  promiseInstance
+  promiseInstance = undefined
 
   /** @type {any} */
-  promiseCache
+  promiseCache = undefined
 
   /**
    * @param {string} tag

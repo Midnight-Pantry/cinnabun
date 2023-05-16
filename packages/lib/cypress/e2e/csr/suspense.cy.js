@@ -12,4 +12,10 @@ describe("suspense", () => {
   it("when the component has loaded, it should display a list", () => {
     cy.get("main ul").should("exist")
   })
+
+  describe("with the 'prefetch' flag", () => {
+    it("should display prefetched content", async () => {
+      cy.get("header").should("have.text", "prefetched!")
+    })
+  })
 })

@@ -5,6 +5,7 @@ import { SSRProps } from "cinnabun/types"
 import { App } from "../App.jsx"
 import { Template } from "../Template.jsx"
 import { createLiveSocket } from "./liveSocket.js"
+import { SSR } from "cinnabun/ssr"
 
 if ("__cbData" in window) {
   Cinnabun.registerRuntimeServices(createLiveSocket())
@@ -16,7 +17,11 @@ if ("__cbData" in window) {
   //TestSerialization()
 }
 
-// async function TestSerialization() {
-//   const { html, componentTree } = await SSR.serverBake(App())
-//   console.log(html, componentTree)
-// }
+async function TestSerialization() {
+  const cinnabunInstance = new Cinnabun()
+  Object.assign(cinnabunInstance, { isClient: false })
+  const { html, componentTree } = await SSR.serverBake(App(), {
+    cinnabunInstance,
+  })
+  console.log(html, componentTree)
+}

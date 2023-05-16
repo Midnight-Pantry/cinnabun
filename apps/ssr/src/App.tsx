@@ -38,9 +38,11 @@ if (Cinnabun.Cinnabun.isClient) {
 export const App = () => {
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
-      <h1>Cinnabun JS - SSR</h1>
-      <br />
-      <ProductList />
+      <header style={{ textAlign: "center" }}>
+        <h1>Cinnabun JS - SSR</h1>
+        <br />
+        <ProductList />
+      </header>
       <Nav />
 
       <main style={{ textAlign: "center", flexGrow: "1" }}>

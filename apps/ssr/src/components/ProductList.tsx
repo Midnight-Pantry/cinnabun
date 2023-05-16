@@ -12,10 +12,7 @@ type ProductListResponse = Either<{ message: string }, { items: string[] }>
 //   }
 // }
 async function loadProductList(): ServerPromise<ProductListResponse> {
-  if (Math.random() < 0.7) return { items: ["this", "was", "prefetched!"] }
-  return {
-    message: "Oops! Something went wrong 😢 (not really, just testing :P)",
-  }
+  return { items: ["this", "was", "prefetched!"] }
 }
 
 export const ProductList = () => {

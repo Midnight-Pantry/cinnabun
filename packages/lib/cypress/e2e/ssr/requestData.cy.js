@@ -4,9 +4,11 @@ const { generateUUID } = require("../util")
 const port = Cypress.env("port")
 
 const preAuth = async function () {
-  await cy.request("POST", `http://localhost:${port}/create-account`, {
-    username: generateUUID(),
-    password: "123",
+  await new Promise((res) => {
+    cy.request("POST", `http://localhost:${port}/create-account`, {
+      username: generateUUID(),
+      password: "123",
+    }).then(res)
   })
 
   cy.getCookie("refreshToken").should("exist")
