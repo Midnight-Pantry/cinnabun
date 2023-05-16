@@ -1,10 +1,10 @@
 // TypeScript (.ts)
 import commander, { Command } from "commander"
 import chalk from "chalk"
-import init from "./routes/init.js"
-import start from "./routes/start.js"
-import dev from "./routes/dev.js"
-import build from "./routes/build.js"
+import init from "./routes/init"
+import start from "./routes/start"
+import dev from "./routes/dev"
+import build from "./routes/build"
 
 const program = new Command()
 
