@@ -16,7 +16,7 @@ export class DomInterop {
       style,
       promise,
       ...rest
-    } = component.props
+    } = component.getProps()
 
     if (style) Object.assign(component.element.style, style)
     if (htmlFor && "htmlFor" in component.element)
@@ -52,14 +52,14 @@ export class DomInterop {
         typeof c === "function" ||
         typeof c === "string" ||
         typeof c === "number" ||
-        (Component.isComponent(c) && c.props.render) ||
+        (Component.isComponent(c) && c.getProps().render) ||
         Signal.isSignal(c)
     )
   }
 
   /** @param {Component} component */
   static renderChildren(component) {
-    if (!component.props.render) return
+    if (!component.getProps().render) return
     if (!component.element) return
     DomInterop.removeFuncComponents(component)
 
@@ -152,7 +152,7 @@ export class DomInterop {
    */
   static render(component, isRerender = false) {
     const { children, onMounted, onDestroyed, subscription, promise } =
-      component.props
+      component.getProps()
 
     Cinnabun.removeComponentReferences(component)
 
@@ -204,7 +204,7 @@ export class DomInterop {
       component.tag
     )
 
-    const { render, ...props } = component.props
+    const { render, ...props } = component.getProps()
 
     for (const [k, v] of Object.entries(props)) {
       el.setAttribute(k, v)
@@ -241,7 +241,7 @@ export class DomInterop {
 
     for (let i = 0; i < component.parent.children.length; i++) {
       const c = component.parent.children[i]
-      if (Component.isComponent(c) && !c.props.render) continue
+      if (Component.isComponent(c) && !c.getProps().render) continue
       if (c === component) {
         start++
         break

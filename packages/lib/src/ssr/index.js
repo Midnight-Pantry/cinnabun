@@ -23,7 +23,7 @@ import { Signal } from "../signal.js"
 /**
  * @typedef SSRConfig
  * @property {Cinnabun} cinnabunInstance
- * @property {Writable | undefined} stream
+ * @property {Writable} [stream]
  */
 
 export class SSR {
@@ -68,16 +68,14 @@ export class SSR {
    */
   static serializeProps(component) {
     const res = {}
-
-    for (const k of Object.keys(component.props)) {
-      // const p =
-      //   typeof component.props[k] === "undefined" ? true : component.props[k]
-      const p = component.props[k]
+    const props = component.getProps()
+    for (const k of Object.keys(props)) {
+      const p = props[k]
       if (Signal.isSignal(p)) {
         res[k] = p.value
       } else {
         if (k === "children") continue
-        if (k === "promise" && "prefetch" in component.props) continue
+        if (k === "promise" && "prefetch" in props) continue
         res[k] = p
       }
     }
@@ -110,7 +108,7 @@ export class SSR {
       render,
       watch,
       ...rest
-    } = component.props
+    } = component.getProps()
 
     const shouldRender = component.shouldRender()
 
@@ -209,9 +207,10 @@ export class SSR {
         continue
       }
       if (typeof c === "function") {
-        if ("promiseCache" in component && component.props.prefetch) {
-          component.promiseCache = await component.props.promise()
-          component.props.promiseCache = component.promiseCache
+        const props = component.getProps()
+        if ("promiseCache" in component && props.prefetch) {
+          component.promiseCache = await props.promise()
+          component.setProps({ ...props, promiseCache: component.promiseCache })
         }
 
         const val = c(...component.childArgs)

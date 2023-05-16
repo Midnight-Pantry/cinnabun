@@ -3,9 +3,6 @@ import { DomInterop } from "./domInterop.js"
 import { Signal } from "./signal.js"
 
 export class Component {
-  /** @private @type {import("./types.js").ComponentProps} */
-  _props = {}
-
   /**
    * @protected
    * @type {undefined | import("./types.js").ComponentSubscription<any>}
@@ -22,10 +19,13 @@ export class Component {
   funcComponents = []
 
   /** @type {HTMLElement | undefined} */
-  element
+  element = undefined
 
-  /** @type {Cinnabun | undefined} */
-  cbInstance
+  /**
+   * Gets assigned as the first step in the serialization pipeline. Used for accessing component refs & request data.
+   * @type {Cinnabun | undefined}
+   */
+  cbInstance = undefined
 
   /** @type {boolean} */
   mounted = false
@@ -37,38 +37,53 @@ export class Component {
   constructor(tag, props = {}) {
     this.tag = tag
 
-    this.props = props
-    if (typeof this._props.render === "undefined") this._props.render = true
-  }
-  get props() {
-    return this._props
-  }
-
-  /** @param {import("./types.js").ComponentProps} props */
-  set props(props) {
-    const { children, watch, ...rest } = props
-
-    Object.assign(this._props, rest)
-    if (children) {
-      if (this.validateChildren(children)) this.replaceChildren(children)
+    /** @private @type {import("./types.js").ComponentProps} */
+    let _props = {
+      render: true,
+    }
+    this.getProps = () => {
+      return { ..._props }
     }
 
-    if (Cinnabun.isClient && watch) {
-      this._props.watch = watch
-      const signals = "length" in watch ? watch : [watch]
-      for (const s of signals) {
-        const unsub = s.subscribe(this.applyBindProps.bind(this))
-        Cinnabun.addComponentReference({
-          component: this,
-          onDestroyed: () => unsub(),
-        })
+    /** @param {import("./types.js").ComponentProps} newProps */
+    this.setProps = (newProps) => {
+      const { children, watch, ...rest } = newProps
+      Object.assign(_props, rest)
+
+      if (children) {
+        if (this.validateChildren(children)) this.replaceChildren(children)
+      }
+      if (Cinnabun.isClient && watch) {
+        _props.watch = watch
+        const signals = "length" in watch ? watch : [watch]
+        for (const s of signals) {
+          const unsub = s.subscribe(this.applyBindProps.bind(this))
+          Cinnabun.addComponentReference({
+            component: this,
+            onDestroyed: () => unsub(),
+          })
+        }
       }
     }
+
+    /** @param {import("./types.js").ComponentProps} newProps */
+    this.setPropsQuietly = (newProps) => {
+      _props = newProps
+    }
+
+    /**
+     * @private
+     * @param {keyof import("./types.js").ComponentProps} key
+     * @param {*} val
+     */
+    this._setProp = (key, val) => {
+      _props[key] = val
+    }
+
+    this.setProps(props)
   }
 
-  /**
-   * @returns {*[]}
-   */
+  /** @returns {*[]} */
   get childArgs() {
     return []
   }
@@ -86,30 +101,29 @@ export class Component {
   }
 
   applyBindProps() {
-    const bindFns = Object.entries(this.props).filter(([k]) =>
-      k.startsWith("bind:")
-    )
+    const props = this.getProps()
+    const bindFns = Object.entries(props).filter(([k]) => k.startsWith("bind:"))
     if (bindFns.length > 0) {
       for (const [k, v] of bindFns) {
         const propName = k.substring(k.indexOf(":") + 1)
-
-        // possibly shouldn't be using this.renderChildren?
-        this._props[propName] = this.getPrimitive(v, () =>
-          DomInterop.reRender(this)
+        this._setProp(
+          propName,
+          this.getPrimitive(v, () => DomInterop.reRender(this))
         )
 
+        const props = this.getProps()
+
         if (propName === "render" && Cinnabun.isClient) {
-          //debugger
-          if (!this._props.render || !this.parent?._props.render) {
+          if (!props.render || !this.parent?.getProps().render) {
             DomInterop.unRender(this)
-          } else if (this._props.render) {
+          } else if (props.render) {
             DomInterop.reRender(this)
           }
         } else if (propName === "children") {
-          if (this._props.children) this.replaceChildren(this._props.children)
+          if (props.children) this.replaceChildren(props.children)
           if (Cinnabun.isClient) DomInterop.renderChildren(this)
         } else if (this.element) {
-          Object.assign(this.element, { [propName]: this._props[propName] })
+          Object.assign(this.element, { [propName]: props[propName] })
         }
       }
     }
@@ -136,11 +150,7 @@ export class Component {
     if (this.subscription) return
     this.subscription = subscription
 
-    /** @param {import("./types.js").ComponentProps} props */
-    const setProps = (props) => {
-      this.props = Object.assign(this.props, props)
-    }
-    const unsubscriber = this.subscription(setProps, this)
+    const unsubscriber = this.subscription(this.setPropsQuietly, this)
     Cinnabun.addComponentReference({
       component: this,
       onDestroyed: () => unsubscriber(),
@@ -196,7 +206,7 @@ export class Component {
 
   /** @returns {boolean} */
   shouldRender() {
-    if (!this._props.render) return false
+    if (!this.getProps().render) return false
     if (this.parent) return this.parent?.shouldRender()
     return true
   }
@@ -215,20 +225,19 @@ export class Component {
   }
 
   onDestroy() {
-    if (this.props.onDestroyed) this.props.onDestroyed(this)
+    const props = this.getProps()
+    if (props.onDestroyed) props.onDestroyed(this)
   }
 
   /**
    * Get the parent component of a specific type.
-   * @template {import("./types.js").ClassConstructor} Class - The class constructor of the component type.
    * @param {{(c:Component): boolean}} predicate - The predicate function to match the component.
-   * @returns {InstanceType<Class> | undefined} - The parent component of the specified type, or undefined if not found.
+   * @returns {Component | undefined} - The parent component of the specified type, or undefined if not found.
    */
   getParentOfType(predicate) {
     if (!this.parent) return undefined
 
-    if (predicate(this.parent))
-      return /** @type {InstanceType<Class>} */ (this.parent)
+    if (predicate(this.parent)) return this.parent
 
     return this.parent.getParentOfType(predicate)
   }

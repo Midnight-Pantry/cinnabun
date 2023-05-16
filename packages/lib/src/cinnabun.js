@@ -4,9 +4,50 @@ import { DomInterop } from "./domInterop.js"
 export { h, fragment } from "./index.js"
 
 export class Cinnabun {
-  /** @readonly */
+  constructor() {
+    /** @type {import("./types.js").WatchedElementRef[]} */
+    let serverComponentReferences = []
+    this.getServerComponentReferences = () => serverComponentReferences
+
+    /** @param {import("./types.js").WatchedElementRef[]} newVal  */
+    this.setServerComponentReferences = (newVal) =>
+      (serverComponentReferences = newVal)
+
+    /** @private @type {import("./types.js").ServerRequestData} */
+    let serverRequest = {
+      path: "/",
+      data: {},
+    }
+
+    /** @param {import("./types.js").ServerRequestData} data */
+    this.setServerRequestData = (data) => {
+      serverRequest = data
+    }
+
+    /**
+     * Retrieve server request data based on the provided keys path.
+     * @template T - The type of the requested data.
+     * @param {string} keysPath - The dot-separated keys path to retrieve the data.
+     * @returns {T | undefined} - The requested data or undefined if not found.
+     */
+    this.getServerRequestData = (keysPath) => {
+      const props = keysPath.split(".")
+      /** @type {*} */
+      let value = { ...serverRequest }
+      for (let i = 0; i < props.length; i++) {
+        value = value[props[i]]
+        if (value === undefined) {
+          return undefined
+        }
+      }
+      return value
+    }
+  }
+  /** @readonly @type {boolean} */
+  // @ts-ignore
   static DEBUG_COMPONENT_REFCOUNT = false
   /** @readonly @type {boolean} */
+  // @ts-ignore
   static isClient = "window" in globalThis
 
   // ~~~~~ CLIENT SINGLETON
@@ -18,40 +59,6 @@ export class Cinnabun {
 
   /** @type {import("./types.js").ClassInstance<any>[]} */
   static runtimeServices = []
-
-  // ~~~~~ SSR INSTANCE
-  /** @private @type {import("./types.js").WatchedElementRef[]} */
-  serverComponentReferences = []
-
-  /** @private @type {import("./types.js").ServerRequestData} */
-  serverRequest = {
-    path: "/",
-    data: {},
-  }
-
-  /** @param {import("./types.js").ServerRequestData} data */
-  setServerRequestData(data) {
-    this.serverRequest = data
-  }
-
-  /**
-   * Retrieve server request data based on the provided keys path.
-   * @template T - The type of the requested data.
-   * @param {string} keysPath - The dot-separated keys path to retrieve the data.
-   * @returns {T | undefined} - The requested data or undefined if not found.
-   */
-  getServerRequestData(keysPath) {
-    const props = keysPath.split(".")
-    /** @type {*} */
-    let value = { ...this.serverRequest }
-    for (let i = 0; i < props.length; i++) {
-      value = value[props[i]]
-      if (value === undefined) {
-        return undefined
-      }
-    }
-    return value
-  }
 
   /**
    * @param {Component} app
@@ -69,7 +76,7 @@ export class Cinnabun {
   static getComponentReferences(component) {
     return Cinnabun.isClient
       ? Cinnabun.componentReferences
-      : Cinnabun.getInstanceRef(component).serverComponentReferences
+      : Cinnabun.getInstanceRef(component).getServerComponentReferences()
   }
 
   /** @param {Component} component */
@@ -82,8 +89,10 @@ export class Cinnabun {
       )
     } else {
       const cb = Cinnabun.getInstanceRef(component)
-      cb.serverComponentReferences = cb.serverComponentReferences.filter(
-        (c) => c.component !== component
+      cb.setServerComponentReferences(
+        cb
+          .getServerComponentReferences()
+          .filter((c) => c.component !== component)
       )
     }
   }
@@ -110,7 +119,11 @@ export class Cinnabun {
     if (Cinnabun.isClient) {
       Cinnabun.componentReferences.push(ref)
     } else {
-      Cinnabun.getInstanceRef(ref.component).serverComponentReferences.push(ref)
+      const cb = Cinnabun.getInstanceRef(ref.component)
+      cb.setServerComponentReferences([
+        ...cb.getServerComponentReferences(),
+        ref,
+      ])
     }
 
     if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
@@ -123,7 +136,8 @@ export class Cinnabun {
       "~~ CB REF COUNT",
       Cinnabun.isClient
         ? Cinnabun.componentReferences.length
-        : Cinnabun.getInstanceRef(component).serverComponentReferences.length,
+        : Cinnabun.getInstanceRef(component).getServerComponentReferences()
+            .length,
       performance.now()
     )
   }

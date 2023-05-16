@@ -11,33 +11,34 @@
   "type": "module",
   "exports": {
     ".": {
-      "default": "./src/index.js",
+      "default": "./dist/src/index.js",
       "types": "./dist/src/index.d.ts"
     },
     "./ssr": {
-      "default": "./src/ssr/index.js",
+      "default": "./dist/src/ssr/index.js",
       "types": "./dist/src/ssr/index.js"
     },
     "./router": {
-      "default": "./src/router/index.js",
+      "default": "./dist/src/router/index.js",
       "types": "./dist/src/router/index.d.ts"
     },
     "./utils": {
-      "default": "./src/utils.js",
+      "default": "./dist/src/utils.js",
       "types": "./dist/src/utils.js"
     },
     "./domInterop": {
-      "default": "./src/domInterop.js",
+      "default": "./dist/src/domInterop.js",
       "types": "./dist/src/domInterop.js"
     },
     "./hydration": {
-      "default": "./src/hydration.js",
+      "default": "./dist/src/hydration.js",
       "types": "./dist/src/hydration.js"
     },
     "./types": "./src/types.ts"
   },
   "scripts": {
     "build": "pnpm i && tsc",
+    "build:w": "pnpm i && tsc --watch",
     "mocha": "mocha ./src/tests/*/**.spec.js",
     "cypress": "npx cypress run --spec ./cypress/e2e --env port=3000",
     "cypress-csr": "npx cypress run --spec ./cypress/e2e/csr --env port=5173",

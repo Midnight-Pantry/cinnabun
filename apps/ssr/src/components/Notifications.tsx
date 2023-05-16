@@ -17,6 +17,10 @@ interface INotification {
   type: NotificationType
   duration: number
   component: NotificationComponent
+  hidden: boolean
+  hovered: boolean
+  onHovered: () => void
+  onUnHovered: () => void
 }
 
 export const notificationStore = createSignal<Map<string, INotification>>(
@@ -38,6 +42,10 @@ export const addNotification = ({
     text,
     type,
     duration,
+    hidden: false,
+    hovered: false,
+    onHovered: () => (notification.hovered = true),
+    onUnHovered: () => (notification.hovered = false),
   }
   notification.component = new NotificationComponent(id, type, text)
   notificationStore.value.set(notification.id!, notification as INotification)
@@ -61,25 +69,16 @@ export class NotificationTrayComponent extends Component {
       const child = notification.component
       this.prependChild(child)
       const element: HTMLElement = child.element!
-      element.addEventListener("mouseenter", function handler() {
-        child.props.hovered = true
-      })
 
-      element.addEventListener("mouseleave", function handler() {
-        child.props.hovered = false
-      })
+      element.addEventListener("mouseenter", notification.onHovered)
+      element.addEventListener("mouseleave", notification.onUnHovered)
     }
 
     const removeNotification = (notification: INotification) => {
       const child = notification.component
       const el = child.element!
-      el.removeEventListener("mouseenter", function handler() {
-        child.props.hovered = true
-      })
-
-      el.removeEventListener("mouseleave", function handler() {
-        child.props.hovered = false
-      })
+      el.removeEventListener("mouseenter", notification.onHovered)
+      el.removeEventListener("mouseleave", notification.onUnHovered)
       DomInterop.unRender(child)
       notificationStore.value.delete(notification.id)
     }
@@ -91,20 +90,20 @@ export class NotificationTrayComponent extends Component {
         const children = this.children as NotificationComponent[]
 
         for (const [k, notification] of notificationStore.value.entries()) {
-          const c = children.find((child) => child.props["data-id"] === k)
+          const c = children.find((child) => child.getProps()["data-id"] === k)
           if (!c) {
             addNotification(notification)
           }
         }
         const deleteList: string[] = []
         children.forEach((c) => {
-          if (c.props.hovered) return
-
-          const notifId: string = c.props["data-id"]
+          const props = c.getProps()
+          const notifId: string = props["data-id"]
           const notification: INotification | undefined =
             notificationStore.value.get(notifId)
 
           if (!notification) throw new Error("failed to get notification")
+          if (notification.hovered) return
 
           notification.duration -= tickRateMs
 
@@ -112,16 +111,16 @@ export class NotificationTrayComponent extends Component {
             removeNotification(notification)
             deleteList.push(notifId)
           } else if (notification.duration < this.animationDuration) {
-            if (!c.props.hidden) {
+            if (!notification.hidden) {
               c.element!.classList.add("hide")
-              c.props.hidden = true
+              notification.hidden = true
             }
           }
         })
         if (deleteList.length) {
           const children = this.children as NotificationComponent[]
           this.children = children.filter(
-            (c) => !deleteList.includes(c.props["data-id"])
+            (c) => !deleteList.includes(c.getProps()["data-id"])
           )
         }
       }, tickRateMs)

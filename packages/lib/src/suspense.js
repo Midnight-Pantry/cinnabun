@@ -40,7 +40,7 @@ export class SuspenseComponent extends Component {
         DomInterop.unRender(this)
         DomInterop.reRender(this)
       }
-      if (!this.props.cache) this.promiseCache = undefined
+      if (!this.getProps().cache) this.promiseCache = undefined
     } else if (onrejected) {
       console.error("handlePromise() - unhandle case 'onrejected'")
       debugger //todo
@@ -56,7 +56,7 @@ export class SuspenseComponent extends Component {
       this.promiseFunc = promiseFunc
       this.promiseInstance = this.promiseFunc()
       this.promiseInstance.then(this.handlePromise.bind(this))
-    } else if (this.promiseFunc && !this.props.cache) {
+    } else if (this.promiseFunc && !this.getProps().cache) {
       this.promiseInstance = this.promiseFunc()
       this.promiseInstance.then(this.handlePromise.bind(this))
     }

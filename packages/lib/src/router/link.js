@@ -49,7 +49,7 @@ export const Link = (props, children) => {
     ["bind:className"]: (self) => {
       const curPath = Cinnabun.isClient
         ? store.value
-        : self.cbInstance?.getServerRequestData("path")
+        : Cinnabun.getInstanceRef(self).getServerRequestData("path")
 
       const pathMatches = !!matchPath(curPath ?? "/", to).routeMatch
 

@@ -63,11 +63,11 @@ export class Hydration {
       return
     }
     if (typeof c === "function") {
-      const usePromiseCache =
-        "promiseCache" in parent.props && parent.props.prefetch
+      const props = parent.getProps()
+      const usePromiseCache = "promiseCache" in props && props.prefetch
 
       const val = usePromiseCache
-        ? c(...[false, parent.props.promiseCache])
+        ? c(...[false, props.promiseCache])
         : c(...parent.childArgs)
 
       if (Component.isComponent(val)) {
@@ -82,13 +82,16 @@ export class Hydration {
 
     c.parent = parent
 
+    const props = c.getProps()
+
     if (sc.props && Object.keys(sc.props).length) {
       for (const [k, v] of Object.entries(sc.props)) {
-        const curProp = c.props[k]
+        const curProp = props[k]
         if (Signal.isSignal(curProp)) continue
-        c.props[k] = v
+        props[k] = v
       }
     }
+    c.setPropsQuietly(props)
 
     if (!c.shouldRender()) return
 
@@ -99,16 +102,16 @@ export class Hydration {
       DomInterop.updateElement(c)
     }
 
-    if (c.props.subscription) c.subscribeTo(c.props.subscription)
+    if (props.subscription) c.subscribeTo(props.subscription)
     if (
-      c.props.promise &&
+      props.promise &&
       "setPromise" in c &&
       typeof c.setPromise === "function" &&
-      !c.props.prefetch
+      !props.prefetch
     )
-      c.setPromise(c.props.promise)
+      c.setPromise(props.promise)
 
-    c.bindEvents(c.props)
+    c.bindEvents(props)
 
     c.mounted = true
 
