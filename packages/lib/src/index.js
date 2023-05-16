@@ -1,11 +1,10 @@
-import { Component } from "./component"
-import { FragmentComponent } from "./component"
+import { Component, FragmentComponent } from "./component.js"
 
-export * from "./cinnabun"
-export * from "./component"
-export * from "./domInterop"
-export * from "./signal"
-export * from "./suspense"
+export * from "./cinnabun.js"
+export { Component, FragmentComponent } from "./component.js"
+export * from "./domInterop.js"
+export * from "./signal.js"
+export * from "./suspense.js"
 
 /**
  * @param {import("./types").Tag} tag

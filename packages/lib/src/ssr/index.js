@@ -1,16 +1,10 @@
-import { Cinnabun } from "../cinnabun"
-import { Component } from "../component"
-import { Signal } from "../signal"
-
-/**
- * @typedef {import('../types').SerializedComponent} SerializedComponent
- * @typedef {import('../types').ComponentProps} ComponentProps
- * @typedef {import("stream").Writable} Writable
- */
+import { Cinnabun } from "../cinnabun.js"
+import { Component } from "../component.js"
+import { Signal } from "../signal.js"
 
 /**
  * @typedef {Object} ServerBakeResult
- * @property {SerializedComponent} componentTree
+ * @property {import('../types').SerializedComponent} componentTree
  * @property {string} html
  */
 
@@ -23,7 +17,7 @@ import { Signal } from "../signal"
 /**
  * @typedef SSRConfig
  * @property {Cinnabun} cinnabunInstance
- * @property {Writable} [stream]
+ * @property {import("stream").Writable} [stream]
  */
 
 export class SSR {
@@ -64,7 +58,7 @@ export class SSR {
   /**
    *
    * @param {Component} component
-   * @returns {Partial<ComponentProps>}
+   * @returns {Partial<import('../types').ComponentProps>}
    */
   static serializeProps(component) {
     const res = {}
@@ -86,13 +80,13 @@ export class SSR {
    * @param {Accumulator} accumulator
    * @param {Component} component
    * @param {SSRConfig} config
-   * @returns {Promise<SerializedComponent>}
+   * @returns {Promise<import("../types").SerializedComponent>}
    */
   static async serialize(accumulator, component, config) {
     component.cbInstance = config.cinnabunInstance
     component.applyBindProps()
 
-    /** @type {SerializedComponent} */
+    /** @type {import("../types").SerializedComponent} */
     const res = {
       props: SSR.serializeProps(component),
       children: [],
@@ -181,7 +175,7 @@ export class SSR {
    * @param {Component} component
    * @param {boolean} shouldRender
    * @param {SSRConfig} config
-   * @returns {Promise<SerializedComponent[]>}
+   * @returns {Promise<import("../types").SerializedComponent[]>}
    */
   static async serializeChildren(accumulator, component, shouldRender, config) {
     const res = []
@@ -237,7 +231,7 @@ export class SSR {
   /**
    *
    * @param {Component} _
-   * @returns {SerializedComponent}
+   * @returns {import("../types").SerializedComponent}
    */
   static serializeSvg(_) {
     throw new Error("not implemented yet")

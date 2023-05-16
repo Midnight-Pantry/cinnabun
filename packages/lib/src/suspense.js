@@ -1,6 +1,6 @@
-import { Component } from "./component"
-import { Cinnabun } from "./cinnabun"
-import { DomInterop } from "./domInterop"
+import { Component } from "./component.js"
+import { Cinnabun } from "./cinnabun.js"
+import { DomInterop } from "./domInterop.js"
 
 export class SuspenseComponent extends Component {
   /** @type { { (): Promise<any> } | undefined } */
@@ -30,8 +30,8 @@ export class SuspenseComponent extends Component {
   }
 
   /**
-   * @param {((value: any) => void | PromiseLike<void>) | null | undefined} onfulfilled
-   * @param {((reason: any) => PromiseLike<never>) | null | undefined} onrejected
+   * @param {{(value: any): void | PromiseLike<void>} | null | undefined} onfulfilled
+   * @param {{(reason: any): PromiseLike<never>} | null | undefined} onrejected
    */
   handlePromise(onfulfilled, onrejected) {
     if (onfulfilled) {

@@ -1,5 +1,5 @@
-import { Component, FragmentComponent } from "./component"
-import { SuspenseComponent } from "./suspense"
+import { Component, FragmentComponent } from "./component.js"
+import { SuspenseComponent } from "./suspense.js"
 
 /**
  * Creates a lazy-loaded component.

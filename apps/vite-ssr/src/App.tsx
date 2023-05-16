@@ -1,6 +1,7 @@
+import { createSignal, Cinnabun as cb } from "cinnabun"
 import { Link, Route, Router } from "cinnabun/router"
-import { pathStore } from "./state"
-import { createSignal } from "cinnabun"
+
+const pathStore = createSignal(cb.isClient ? window.location.pathname : "/")
 
 const count = createSignal(0)
 

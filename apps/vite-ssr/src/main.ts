@@ -1,7 +1,7 @@
 import "./style.css"
 import { Hydration } from "cinnabun/hydration"
 import { SSRProps } from "cinnabun/types"
-import App from "./App"
+import App from "./App.jsx"
 
 if ("__cbData" in window) {
   // streaming

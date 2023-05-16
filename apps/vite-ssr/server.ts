@@ -29,6 +29,7 @@ async function createServer() {
       jsxFactory: "Cinnabun.h",
       jsxFragment: "Cinnabun.fragment",
       jsxImportSource: "Cinnabun",
+      ignoreAnnotations: true,
     },
   })
 

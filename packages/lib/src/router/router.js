@@ -1,9 +1,9 @@
 import { useRequestData } from "../ssr/index.js"
-import { matchPath } from "./"
-import { Signal } from "../signal"
-import { Component } from "../component"
-import { Cinnabun } from "../cinnabun"
-import { DomInterop } from "../domInterop"
+import { matchPath } from "./index.js"
+import { Signal } from "../signal.js"
+import { Component } from "../component.js"
+import { Cinnabun } from "../cinnabun.js"
+import { DomInterop } from "../domInterop.js"
 
 /**
  * @typedef {import('../types').ComponentChild} ComponentChild

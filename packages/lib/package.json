@@ -7,6 +7,7 @@
     "url": "https://github.com/Robby6Strings/cinnabun"
   },
   "type": "module",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": ".",
   "scripts": {
@@ -18,6 +19,13 @@
     "cypress-ssr": "npx cypress run --spec ./cypress/e2e/ssr --env port=3000",
     "cypress-open": "npx cypress open",
     "test": "pnpm build && pnpm mocha && pnpm cypress"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./ssr": "./dist/ssr/index.js",
+    "./hydration": "./dist/ssr/hydration.js",
+    "./router": "./dist/router/index.js",
+    "./types": "./dist/types.js"
   },
   "keywords": [],
   "author": "Robby6Strings",

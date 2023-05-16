@@ -1,1 +1,1 @@
-export * from "./fileRouter"
+export * from "./fileRouter.js"

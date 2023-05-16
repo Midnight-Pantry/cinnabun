@@ -1,7 +1,6 @@
 "use strict"
-import { Component } from "./component"
-import { DomInterop } from "./domInterop"
-export { h, fragment } from "./"
+import { Component } from "./component.js"
+import { DomInterop } from "./domInterop.js"
 
 export class Cinnabun {
   constructor() {

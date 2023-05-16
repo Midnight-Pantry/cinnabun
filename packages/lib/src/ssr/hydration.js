@@ -1,7 +1,7 @@
-import { Cinnabun } from "../cinnabun"
-import { Component } from "../component"
-import { DomInterop } from "../domInterop"
-import { Signal } from "../signal"
+import { Component } from "../component.js"
+import { Cinnabun } from "../cinnabun.js"
+import { DomInterop } from "../domInterop.js"
+import { Signal } from "../signal.js"
 
 export class Hydration {
   /** @param {Component} component */

@@ -1,6 +1,6 @@
-import { Component } from "./component"
-import { Signal } from "./signal"
-import { Cinnabun } from "./cinnabun"
+import { Component } from "./component.js"
+import { Signal } from "./signal.js"
+import { Cinnabun } from "./cinnabun.js"
 
 export class DomInterop {
   /** @param {Component} component */

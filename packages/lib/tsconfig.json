@@ -3,10 +3,10 @@
     "declaration": true,
     "baseUrl": "./src",
     "paths": {
-      "ssr": ["./src/ssr/index.js"],
-      "router": ["./src/router/index.js"],
-      "signal": ["./src/signal.js"],
-      "types": ["./src/types/ts"]
+      "ssr": ["./dist/ssr/index.js"],
+      "hydration": ["./dist/ssr/hydration.js"],
+      "router": ["./dist/router/index.js"],
+      "types": ["./src/types/index.ts"]
     },
     "outDir": "./dist",
     "allowJs": true,
