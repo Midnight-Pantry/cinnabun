@@ -1,39 +1,6 @@
 /**
- * @typedef {function} ComputeFunction
+ * @typedef {{(): *}} ComputeFunction
  * @returns {*} - The computed value.
- */
-
-/**
- * @typedef {function} SubscribeFunction
- * @param {*} val - The value being subscribed to.
- * @returns {*} - Result of the subscription function.
- */
-
-/**
- * @typedef {Object} Signal
- * @property {*} _val - The value of the signal.
- * @property {Set.<SubscribeFunction>} _subscribers - Set of subscriber functions.
- * @property {string} [_name] - The name of the signal.
- * @property {*} value - Getter for the signal value.
- * @property {*} value - Setter for the signal value.
- * @property {function} notify - Notifies all subscribers of a value change.
- * @property {function} subscribe - Subscribes a function to the signal.
- * @property {function} unsubscribe - Unsubscribes a function from the signal.
- * @property {function} serialize - Serializes the signal value to a string.
- * @property {function} logSubscriberCount - Logs the number of subscribers.
- * @property {function} isSignal - Checks if a value is a Signal.
- */
-
-/**
- * @typedef {function} ComputedFunction
- * @returns {Signal} - The computed signal.
- */
-
-/**
- * @typedef {function} CreateSignalFunction
- * @template T
- * @param {T} initialValue - The initial value of the signal.
- * @returns {Signal.<T>} - The created signal.
  */
 
 /** @type {ComputeFunction | null} */
@@ -44,7 +11,7 @@ const LOG_NUM_SUBS = false
 
 /**
  * @class
- * @template T
+ * @template {*} T
  */
 export class Signal {
   /**
@@ -59,12 +26,12 @@ export class Signal {
     this._val = value
     /**
      * @private
-     * @type {Set<SubscribeFunction>}
+     * @type {Set<{(val:T): void}>}
      */
     this._subscribers = new Set()
     /**
      * @private
-     * @type {string}
+     * @type {string | undefined}
      */
     this._name = name
   }
@@ -102,8 +69,8 @@ export class Signal {
 
   /**
    * Subscribes a function to the signal.
-   * @param {SubscribeFunction} func - The function to subscribe.
-   * @returns {function} - The unsubscribe function.
+   * @param {{(val:T): void}} func - The function to subscribe.
+   * @returns {{(): void}} - The unsubscribe function.
    */
   subscribe(func) {
     this._subscribers.add(func)
@@ -114,7 +81,7 @@ export class Signal {
 
   /**
    * Unsubscribes a function from the signal.
-   * @param {SubscribeFunction} func - The function to unsubscribe.
+   * @param {{(val:T): void}} func - The function to unsubscribe.
    */
   unsubscribe(func) {
     this._subscribers.delete(func)
@@ -140,7 +107,7 @@ export class Signal {
   /**
    * Checks if a value is a Signal.
    * @param {*} data - The value to check.
-   * @returns {boolean} - True if the value is a Signal, false otherwise.
+   * @returns {data is Signal} - True if the value is a Signal, false otherwise.
    */
   static isSignal(data) {
     return (
@@ -174,9 +141,9 @@ export function computed(func, name) {
 
 /**
  * Creates a new signal.
- * @template T
+ * @template {*} T
  * @param {T} initialValue - The initial value of the signal.
- * @returns {Signal} - The created signal.
+ * @returns {Signal<T>} - The created signal.
  */
 export function createSignal(initialValue) {
   return new Signal(initialValue)

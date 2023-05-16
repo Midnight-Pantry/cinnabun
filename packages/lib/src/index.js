@@ -9,25 +9,9 @@ export { lazy } from "./lazy.js"
 export * from "./router/index.js"
 
 /**
- * @namespace JSX
- */
-
-/**
- * @typedef {Object} IntrinsicElements
- * @property {Object} [key]
- * @property {Partial.<import('./types').ComponentProps>} [key]
- */
-
-/**
- * @global
- * @namespace JSX
- * @property {IntrinsicElements} IntrinsicElements
- */
-
-/**
- * @param {import('./types').Tag} tag
- * @param {import('./types').JSXProps} props
- * @param {import('./types').NodeChildren} children
+ * @param {import("./types.js").Tag} tag
+ * @param {import("./types.js").JSXProps} props
+ * @param {import("./types.js").NodeChildren} children
  * @returns {Component}
  */
 export const h = (tag, props, ...children) => {
@@ -37,6 +21,7 @@ export const h = (tag, props, ...children) => {
 
   let p = props ? props : {}
 
+  // @ts-ignore
   p.children = [...children]
 
   return new Component(tag, p)
@@ -45,7 +30,7 @@ export const h = (tag, props, ...children) => {
 /**
  *
  * @param {*} _ - unused
- * @param {import('./types').ComponentChild[]} children
+ * @param {import("./types.js").ComponentChild[]} children
  * @returns {FragmentComponent}
  */
 export function fragment(_, children) {

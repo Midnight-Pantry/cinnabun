@@ -1,24 +1,7 @@
+"use strict"
 import { Component } from "./component.js"
 import { DomInterop } from "./domInterop.js"
 export { h, fragment } from "./index.js"
-
-/**
- * @template InstanceType
- * @typedef {Object} ClassConstructor
- * @property {new (...args: any[]) => InstanceType} new - The constructor function for the class.
- */
-
-/**
- * @template Class
- * @typedef {InstanceType<ClassConstructor<Class>>} RuntimeService
- */
-
-/**
- * Represents the data for a server request.
- * @typedef {Object} ServerRequestData
- * @property {string} path - The path of the server request.
- * @property {Object.<string, *>} data - The data associated with the server request.
- */
 
 export class Cinnabun {
   /** @readonly */
@@ -30,23 +13,23 @@ export class Cinnabun {
   /** @type {Map<Element | ChildNode, number>} */
   static rootMap = new Map()
 
-  /** @type {import('./types.js').WatchedElementRef[]} */
+  /** @type {import("./types.js").WatchedElementRef[]} */
   static componentReferences = []
 
-  /** @type {RuntimeService<any>[]} */
+  /** @type {import("./types.js").ClassInstance<any>[]} */
   static runtimeServices = []
 
   // ~~~~~ SSR INSTANCE
-  /** @private @type {import('./types.js').WatchedElementRef[]} */
+  /** @private @type {import("./types.js").WatchedElementRef[]} */
   serverComponentReferences = []
 
-  /** @private @type {ServerRequestData} */
+  /** @private @type {import("./types.js").ServerRequestData} */
   serverRequest = {
     path: "/",
     data: {},
   }
 
-  /** @param {ServerRequestData} data */
+  /** @param {import("./types.js").ServerRequestData} data */
   setServerRequestData(data) {
     this.serverRequest = data
   }
@@ -59,6 +42,7 @@ export class Cinnabun {
    */
   getServerRequestData(keysPath) {
     const props = keysPath.split(".")
+    /** @type {*} */
     let value = { ...this.serverRequest }
     for (let i = 0; i < props.length; i++) {
       value = value[props[i]]
@@ -85,7 +69,7 @@ export class Cinnabun {
   static getComponentReferences(component) {
     return Cinnabun.isClient
       ? Cinnabun.componentReferences
-      : component.cbInstance.serverComponentReferences
+      : Cinnabun.getInstanceRef(component).serverComponentReferences
   }
 
   /** @param {Component} component */
@@ -97,11 +81,21 @@ export class Cinnabun {
         (c) => c.component !== component
       )
     } else {
-      component.cbInstance.serverComponentReferences =
-        component.cbInstance.serverComponentReferences.filter(
-          (c) => c.component !== component
-        )
+      const cb = Cinnabun.getInstanceRef(component)
+      cb.serverComponentReferences = cb.serverComponentReferences.filter(
+        (c) => c.component !== component
+      )
     }
+  }
+
+  /**
+   * @param {Component} component
+   * @returns {Cinnabun}
+   */
+  static getInstanceRef(component) {
+    const cb = component.cbInstance
+    if (!cb) throw new Error("Failed to get Cinnabun instance ref")
+    return cb
   }
 
   /** @param {Component} component */
@@ -111,12 +105,12 @@ export class Cinnabun {
     }
   }
 
-  /** @param {import('./types.js').WatchedElementRef} ref */
+  /** @param {import("./types.js").WatchedElementRef} ref */
   static addComponentReference = (ref) => {
     if (Cinnabun.isClient) {
       Cinnabun.componentReferences.push(ref)
     } else {
-      ref.component.cbInstance.serverComponentReferences.push(ref)
+      Cinnabun.getInstanceRef(ref.component).serverComponentReferences.push(ref)
     }
 
     if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
@@ -129,15 +123,14 @@ export class Cinnabun {
       "~~ CB REF COUNT",
       Cinnabun.isClient
         ? Cinnabun.componentReferences.length
-        : component.cbInstance.serverComponentReferences.length,
+        : Cinnabun.getInstanceRef(component).serverComponentReferences.length,
       performance.now()
     )
   }
 
   /**
    * Registers runtime services.
-   * @template Class
-   * @param {...RuntimeService<Class>} services - The runtime services to register.
+   * @param {import("./types.js").ClassInstance<any>[]} services - The runtime services to register.
    */
   static registerRuntimeServices(...services) {
     Cinnabun.runtimeServices.push(...services)
@@ -145,8 +138,8 @@ export class Cinnabun {
 
   /**
    * Retrieves the runtime service for the specified class.
-   * @template Class
-   * @param {ClassConstructor<any>} classRef - The reference to the class.
+   * @template {import("./types.js").ClassConstructor} Class
+   * @param {import("./types.js").ClassConstructor<Class>} classRef - The reference to the class.
    * @returns {InstanceType<Class>} The runtime service instance.
    */
   static getRuntimeService(classRef) {

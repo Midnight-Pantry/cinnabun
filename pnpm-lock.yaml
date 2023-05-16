@@ -84,7 +84,7 @@ importers:
         version: link:../../packages/lib
       cinnabun-cli:
         specifier: workspace:^
-        version: link:../../packages/cli
+        version: link:../../packages/cinnabun-cli
 
   apps/vite-ssr:
     dependencies:
@@ -105,7 +105,7 @@ importers:
         specifier: ^4.3.2
         version: 4.3.3(@types/node@18.16.3)
 
-  packages/cli:
+  packages/cinnabun-cli:
     dependencies:
       '@chialab/esbuild-plugin-virtual':
         specifier: ^0.17.1

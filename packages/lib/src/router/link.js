@@ -36,6 +36,7 @@ export const setPath = (store, newPath) => {
 export const Link = (props, children) => {
   const { to, store, className, activeClass, useHash, ...rest } = props
 
+  /** @param {MouseEvent} e  */
   const onclick = (e) => {
     e.preventDefault()
     if (useHash) return setHash(store, to)

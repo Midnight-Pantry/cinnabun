@@ -3,8 +3,8 @@ import { Component } from "../component.js"
 import { Signal } from "../signal.js"
 
 /**
- * @typedef {import('../types.js').SerializedComponent} SerializedComponent
- * @typedef {import('../types.js').ComponentProps} ComponentProps
+ * @typedef {import('../types.d.ts').SerializedComponent} SerializedComponent
+ * @typedef {import('../types.d.ts').ComponentProps} ComponentProps
  * @typedef {import("stream").Writable} Writable
  */
 
@@ -94,6 +94,7 @@ export class SSR {
     component.cbInstance = config.cinnabunInstance
     component.applyBindProps()
 
+    /** @type {SerializedComponent} */
     const res = {
       props: SSR.serializeProps(component),
       children: [],
@@ -165,7 +166,6 @@ export class SSR {
   }
 
   /**
-   *
    * @param {string} content
    * @param {SSRConfig} config
    * @param {Accumulator} accumulator
@@ -248,10 +248,10 @@ export class SSR {
  * @param {Component} self - The component instance.
  * @param {string} requestDataPath - The path for the request data.
  * @param {T} fallback - The fallback value.
- * @returns {T} - The requested data or the fallback value.
+ * @returns {T | undefined} - The requested data or the fallback value.
  */
 export function useRequestData(self, requestDataPath, fallback) {
   return Cinnabun.isClient
     ? fallback
-    : self.cbInstance?.getServerRequestData(requestDataPath)
+    : Cinnabun.getInstanceRef(self).getServerRequestData(requestDataPath)
 }

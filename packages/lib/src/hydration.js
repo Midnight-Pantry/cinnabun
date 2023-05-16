@@ -3,22 +3,13 @@ import { Component } from "./component.js"
 import { DomInterop } from "./domInterop.js"
 import { Signal } from "./signal.js"
 
-/**
- * @typedef {import('./types.js').SSRProps} SSRProps
- * @typedef {import('./types.js').ComponentChild} ComponentChild
- * @typedef {import('./types.js').SerializedComponent} SerializedComponent
- */
-
 export class Hydration {
   /** @param {Component} component */
   static validate(component) {
     if (component.tag && component.shouldRender()) {
-      const hasElement = component.element
-      const elementMatchesTag =
-        hasElement &&
-        component.element.tagName.toLowerCase() === component.tag.toLowerCase()
-
-      if (!elementMatchesTag)
+      if (
+        component.element?.tagName.toLowerCase() !== component.tag.toLowerCase()
+      )
         console.error("component hydration failed", component)
     }
     for (const c of component.children) {
@@ -29,7 +20,7 @@ export class Hydration {
   /**
    *
    * @param {Component} app
-   * @param {SSRProps} ssrProps
+   * @param {import("./types.js").SSRProps} ssrProps
    */
   static hydrate(app, ssrProps) {
     console.log("hydrating", ssrProps)
@@ -58,8 +49,8 @@ export class Hydration {
   /**
    *
    * @param {Component} parent
-   * @param {ComponentChild} c
-   * @param {SerializedComponent} sc
+   * @param {import("./types.js").ComponentChild} c
+   * @param {import("./types.js").SerializedComponent} sc
    * @param {Element | ChildNode} parentElement
    * @returns
    */
@@ -102,6 +93,7 @@ export class Hydration {
     if (!c.shouldRender()) return
 
     if (c.tag) {
+      //@ts-expect-error ts(2740)
       c.element = parentElement.childNodes[childOffset]
       Cinnabun.rootMap.set(parentElement, childOffset + 1)
       DomInterop.updateElement(c)

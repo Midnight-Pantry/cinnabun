@@ -2,25 +2,20 @@ import { Cinnabun } from "./cinnabun.js"
 import { DomInterop } from "./domInterop.js"
 import { Signal } from "./signal.js"
 
-/**
- * @typedef {import('./types.js').ComponentProps} ComponentProps
- * @typedef {import('./types.js').ComponentSubscription} ComponentSubscription
- * @typedef {import('./types.js').ComponentChild} ComponentChild
- * @typedef {import('./types.js').ComponentEventProps} ComponentEventProps
- * @typedef {import('./types.js').ClassConstructor} ClassConstructor
- */
-
 export class Component {
-  /** @private @type {ComponentProps} */
+  /** @private @type {import("./types.js").ComponentProps} */
   _props = {}
 
-  /** @private @type {ComponentSubscription | undefined} */
+  /**
+   * @protected
+   * @type {undefined | import("./types.js").ComponentSubscription<any>}
+   */
   subscription = undefined
 
   /** @type {Component|null} */
   parent = null
 
-  /** @type {ComponentChild[]} */
+  /** @type {import("./types.js").ComponentChild[]} */
   children = []
 
   /** @type {Component[]}  */
@@ -37,7 +32,7 @@ export class Component {
 
   /**
    * @param {string} tag
-   * @param {ComponentProps} props
+   * @param {import("./types.js").ComponentProps} props
    */
   constructor(tag, props = {}) {
     this.tag = tag
@@ -49,7 +44,7 @@ export class Component {
     return this._props
   }
 
-  /** @param {ComponentProps} props */
+  /** @param {import("./types.js").ComponentProps} props */
   set props(props) {
     const { children, watch, ...rest } = props
 
@@ -79,7 +74,7 @@ export class Component {
   }
 
   /**
-   * @param {ComponentChild[]} children
+   * @param {import("./types.js").ComponentChild[]} children
    * @returns {boolean}
    */
   validateChildren(children = []) {
@@ -121,9 +116,8 @@ export class Component {
   }
 
   /**
-   *
    * @param {*} prop
-   * @param {{ (): void } | undefined} signalCallback
+   * @param {{ (val:*): void }} [signalCallback]
    * @returns {*}
    */
   getPrimitive(prop, signalCallback) {
@@ -137,12 +131,12 @@ export class Component {
     return prop
   }
 
-  /** @param {ComponentSubscription} subscription */
+  /** @param {import("./types.js").ComponentSubscription<any>} subscription */
   subscribeTo(subscription) {
     if (this.subscription) return
     this.subscription = subscription
 
-    /** @param {ComponentProps} props */
+    /** @param {import("./types.js").ComponentProps} props */
     const setProps = (props) => {
       this.props = Object.assign(this.props, props)
     }
@@ -155,7 +149,7 @@ export class Component {
 
   /**
    * Binds events to the component.
-   * @param {ComponentEventProps} options - The event options.
+   * @param {import("./types.js").ComponentEventProps} options - The event options.
    * @returns {void}
    */
   bindEvents({ onDestroyed }) {
@@ -181,7 +175,7 @@ export class Component {
     DomInterop.reRender(child)
   }
 
-  /** @param {ComponentChild[]} newChildren */
+  /** @param {import("./types.js").ComponentChild[]} newChildren */
   replaceChildren(newChildren) {
     this.destroyChildComponentRefs(this)
     this.children = newChildren
@@ -215,7 +209,7 @@ export class Component {
       (s) => s.component === el
     )
     while (subs.length) {
-      subs.pop().onDestroyed()
+      subs.pop()?.onDestroyed()
     }
     Cinnabun.removeComponentReferences(el)
   }
@@ -226,8 +220,8 @@ export class Component {
 
   /**
    * Get the parent component of a specific type.
-   * @template {ClassConstructor<Component>} Class - The class constructor of the component type.
-   * @param {function(Component): boolean} predicate - The predicate function to match the component.
+   * @template {import("./types.js").ClassConstructor} Class - The class constructor of the component type.
+   * @param {{(c:Component): boolean}} predicate - The predicate function to match the component.
    * @returns {InstanceType<Class> | undefined} - The parent component of the specified type, or undefined if not found.
    */
   getParentOfType(predicate) {
@@ -242,7 +236,7 @@ export class Component {
   /**
    * Check if the given data is an instance of a Component.
    * @param {*} data - The data to check.
-   * @returns {boolean} - True if the data is a Component instance, false otherwise.
+   * @returns {data is Component} - True if the data is a Component instance, false otherwise.
    */
   static isComponent(data) {
     if (!(typeof data === "object")) return false
@@ -251,7 +245,7 @@ export class Component {
 }
 
 export class FragmentComponent extends Component {
-  /** @param {ComponentChild[]} children */
+  /** @param {import("./types.js").ComponentChild[]} children */
   constructor(children = []) {
     super("", { children })
   }

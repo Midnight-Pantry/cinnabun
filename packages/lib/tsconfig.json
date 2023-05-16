@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
     "declaration": true,
+    "emitDeclarationOnly": true,
     "outDir": "./dist",
     "allowJs": true,
+    "checkJs": true,
     "module": "ESNext",
     "target": "ESNext",
     "moduleResolution": "nodenext"
   },
   "include": ["src/**/*.js", "src/types.ts"],
-  "exclude": ["node_modules","./cypress/*", "cypress.config.js", "./src/tests/*"]
+  "exclude": ["node_modules","./cypress/*", "cypress.config.js", "./src/tests/*", "dist"]
 }

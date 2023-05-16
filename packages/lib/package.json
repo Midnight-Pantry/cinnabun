@@ -6,16 +6,34 @@
     "type": "git",
     "url": "https://github.com/Robby6Strings/cinnabun"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.js",
+  "types": "dist/src/index.d.ts",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./ssr": "./dist/ssr/index.js",
-    "./router": "./dist/router/index.js",
-    "./utils": "./dist/utils.js",
-    "./domInterop": "./dist/domInterop.js",
-    "./hydration": "./dist/hydration.js",
+    ".": {
+      "default": "./src/index.js",
+      "types": "./dist/src/index.d.ts"
+    },
+    "./ssr": {
+      "default": "./src/ssr/index.js",
+      "types": "./dist/src/ssr/index.js"
+    },
+    "./router": {
+      "default": "./src/router/index.js",
+      "types": "./dist/src/router/index.d.ts"
+    },
+    "./utils": {
+      "default": "./src/utils.js",
+      "types": "./dist/src/utils.js"
+    },
+    "./domInterop": {
+      "default": "./src/domInterop.js",
+      "types": "./dist/src/domInterop.js"
+    },
+    "./hydration": {
+      "default": "./src/hydration.js",
+      "types": "./dist/src/hydration.js"
+    },
     "./types": "./src/types.ts"
   },
   "scripts": {

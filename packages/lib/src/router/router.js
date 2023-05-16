@@ -31,7 +31,7 @@ export class RouteComponent extends Component {
 
   /**
    * @param {*} data
-   * @returns {boolean} - True if the data is a RouteComponent instance, false otherwise.
+   * @returns {data is RouteComponent} - True if the data is a RouteComponent instance, false otherwise.
    */
   static isRouteComponent(data) {
     if (!(typeof data === "object")) return false
@@ -39,15 +39,13 @@ export class RouteComponent extends Component {
   }
 }
 
+/** @implements {Component} */
 export class RouterComponent extends Component {
   /**
    * @param {Signal<string>} store
    * @param {RouteComponent[]} children
    */
   constructor(store, children) {
-    if (children.some((c) => !RouteComponent.isRouteComponent(c)))
-      throw new Error("Must provide Route as child of Router")
-
     children.sort((a, b) => {
       return b.props.pathDepth - a.props.pathDepth
     })
@@ -61,14 +59,18 @@ export class RouterComponent extends Component {
         let len = self.children.length
         while (len--) {
           const rc = self.children[len]
+          if (!RouteComponent.isRouteComponent(rc)) continue
           rc.props.render = false
           rc.props.params = {}
         }
         if (Cinnabun.isClient) DomInterop.unRender(self)
 
+        const route = useRequestData(self, "path", val) ?? "/"
+
         for (let i = 0; i < self.children.length; i++) {
           const c = self.children[i]
-          const matchRes = self.matchRoute(c, useRequestData(self, "path", val))
+          if (!RouteComponent.isRouteComponent(c)) continue
+          const matchRes = self.matchRoute(c, route)
           if (matchRes.routeMatch) {
             c.props.render = !!matchRes.routeMatch
             c.props.params = matchRes.params ?? {}
@@ -117,7 +119,8 @@ export const Route = ({ path, component }) => {
 }
 
 /**
- * @param {{ store: Signal<string> }} param0
+ * @template {string} T
+ * @param {{ store: Signal<T> }} param0
  * @param {RouteComponent[]} children
  * @returns {RouterComponent}
  */

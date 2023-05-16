@@ -1,6 +1,5 @@
 import * as Cinnabun from "cinnabun"
 import { Cinnabun as cb } from "cinnabun"
-import { GenericComponent } from "cinnabun/types"
 import { IChatMessage } from "../../types/chat.js"
 import { LiveSocket } from "../../client/liveSocket.js"
 import { prefetchChatMessages } from "../../server/actions/chat.js"
@@ -46,7 +45,7 @@ const ChatMessageItem = ({ message }: { message: IChatMessage }) => {
   return (
     <div
       watch={userStore}
-      bind:className={(self: GenericComponent) =>
+      bind:className={(self: Cinnabun.Component) =>
         `chat-message ${isOwnMessage(getUser(self)) ? "is-owner" : ""}`
       }
     >

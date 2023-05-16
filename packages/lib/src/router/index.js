@@ -5,7 +5,7 @@ export * from "./generated/index.js"
 /**
  * @param {string} path
  * @param {string} location
- * @returns {{ params: any routeMatch: RegExpMatchArray | null }}
+ * @returns {{ params: any, routeMatch: RegExpMatchArray | null }}
  */
 export function matchPath(path, location) {
   let paramNames = []

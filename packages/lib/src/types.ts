@@ -9,11 +9,19 @@ declare global {
   }
 }
 
+export type ServerRequestData = {
+  path: string
+  data: {
+    [key: string]: any
+  }
+}
+
 export type ServerPromise<T> = Promise<T>
 
 export type ClassConstructor<InstanceType = any> = {
   new (...args: any[]): InstanceType
 }
+export type ClassInstance<Class> = InstanceType<ClassConstructor<Class>>
 
 type Only<T, U> = {
   [P in keyof T]: T[P]
@@ -26,19 +34,17 @@ export type Tag = string | ((props: any, children: any[]) => Component)
 export type JSXProps = Record<string, string | number | null | undefined> | null
 export type NodeChildren = (Node | string)[]
 
-export type GenericComponent = Component
-export type ComponentFunc = { (...args: any[]): GenericComponent }
-//Type '(loading: boolean, data: number) => Component<any>' is not assignable to type 'ComponentFunc'
+export type ComponentFunc = { (...args: any[]): Component }
 export type ComponentChild =
-  | GenericComponent
+  | Component
   | ComponentFunc
   | string
   | number
   | { (): string | number }
 
 export type PropsSetter = { (props: ComponentProps): void }
-export type ComponentSubscription = {
-  (fn: PropsSetter, self: Component): { (): void }
+export type ComponentSubscription<T extends Component> = {
+  (fn: PropsSetter, self: T): { (): void }
 }
 
 export type SuspenseProps = {
@@ -51,7 +57,7 @@ export type SuspenseChild =
   | { (loading: boolean, data: any): ComponentChild }
 
 export type WatchedElementRef = {
-  component: GenericComponent
+  component: Component
   onDestroyed: { (): void }
 }
 
@@ -60,7 +66,7 @@ export type ComponentEventProps = {
   onDestroyed?: { (c: Component): void }
 }
 export type ReactivityProps = {
-  subscription?: ComponentSubscription
+  subscription?: ComponentSubscription<any>
   watch?: Signal<any> | Signal<any>[]
 }
 

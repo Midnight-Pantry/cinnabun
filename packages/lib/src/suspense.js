@@ -2,13 +2,6 @@ import { Component } from "./component.js"
 import { Cinnabun } from "./cinnabun.js"
 import { DomInterop } from "./domInterop.js"
 
-/**
- * @typedef {Object} SuspenseProps
- * @property {Function} promise - A function that returns a Promise.
- * @property {boolean} [cache] - Optional boolean indicating if the promise should be cached.
- * @property {boolean} [prefetch] - Optional boolean indicating if the promise should be prefetched.
- */
-
 export class SuspenseComponent extends Component {
   /** @type { { (): Promise<any> } | undefined } */
   promiseFunc
@@ -21,7 +14,7 @@ export class SuspenseComponent extends Component {
 
   /**
    * @param {string} tag
-   * @param {SuspenseProps & { children: [{(): Component}] }} props
+   * @param {import("./types.js").SuspenseProps & { children: [{(...args: any[]): Component}] }} props
    */
   constructor(tag, props) {
     super(tag, props)
@@ -57,7 +50,7 @@ export class SuspenseComponent extends Component {
     }
   }
 
-  /** @param {{ (): Promise<any> } | undefined} promiseFunc */
+  /** @param {{ (): Promise<any> }} [promiseFunc] */
   setPromise(promiseFunc) {
     if (!this.promiseFunc && promiseFunc) {
       this.promiseFunc = promiseFunc
@@ -71,8 +64,8 @@ export class SuspenseComponent extends Component {
 }
 
 /**
- * @param {SuspenseProps} param0
- * @param {[{():Component}]} children
+ * @param {import("./types.js").SuspenseProps} param0
+ * @param {[{(loading: boolean, res:*):Component}]} children
  * @returns {SuspenseComponent}
  */
 export const Suspense = ({ prefetch, promise, cache }, children) => {

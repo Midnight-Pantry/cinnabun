@@ -71,7 +71,7 @@ export class DomInterop {
   /**
    *
    * @param {Component} component
-   * @param {import('./types.js').ComponentChild} child
+   * @param {import("./types.js").ComponentChild} child
    * @returns {string | Node}
    */
   static renderChild(component, child) {
