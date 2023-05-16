@@ -20,11 +20,11 @@ declare module "fastify" {
 import { Cinnabun } from "cinnabun"
 import { SSR, SSRConfig } from "cinnabun/ssr"
 
-import { App } from "../App.jsx"
-import { configureAuthRoutes } from "./auth.js"
-import { configureChatRoutes } from "./chat.js"
-import { Template } from "../Template.jsx"
-import { socketHandler } from "./socket.js"
+import { App } from "../App"
+import { configureAuthRoutes } from "./auth"
+import { configureChatRoutes } from "./chat"
+import { Template } from "../Template"
+import { socketHandler } from "./socket"
 
 const port: number = parseInt(process.env.PORT ?? "3000")
 const staticFilesDir = path.join(__dirname, "..", "static")

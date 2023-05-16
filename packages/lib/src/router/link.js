@@ -1,10 +1,10 @@
-import { Signal } from "../signal.js"
-import { Component } from "../component.js"
-import { Cinnabun } from "../cinnabun.js"
-import { matchPath } from "./index.js"
+import { Signal } from "../signal"
+import { Component } from "../component"
+import { Cinnabun } from "../cinnabun"
+import { matchPath } from "./"
 
 /**
- * @typedef {import('../types.js').LinkProps} LinkProps
+ * @typedef {import('../types').LinkProps} LinkProps
  */
 
 /**

@@ -1,14 +1,14 @@
 import { useRequestData } from "../ssr/index.js"
-import { matchPath } from "./index.js"
-import { Signal } from "../signal.js"
-import { Component } from "../component.js"
-import { Cinnabun } from "../cinnabun.js"
-import { DomInterop } from "../domInterop.js"
+import { matchPath } from "./"
+import { Signal } from "../signal"
+import { Component } from "../component"
+import { Cinnabun } from "../cinnabun"
+import { DomInterop } from "../domInterop"
 
 /**
- * @typedef {import('../types.js').ComponentChild} ComponentChild
- * @typedef {import('../types.js').PropsSetter} PropsSetter
- * @typedef {import('../types.js').RouteProps} RouteProps
+ * @typedef {import('../types').ComponentChild} ComponentChild
+ * @typedef {import('../types').PropsSetter} PropsSetter
+ * @typedef {import('../types').RouteProps} RouteProps
  */
 
 export class RouteComponent extends Component {

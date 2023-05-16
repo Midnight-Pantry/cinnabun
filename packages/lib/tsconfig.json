@@ -1,14 +1,19 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
     "declaration": true,
-    //"emitDeclarationOnly": true,
+    "baseUrl": "./src",
+    "paths": {
+      "ssr": ["./src/ssr/index.js"],
+      "router": ["./src/router/index.js"],
+      "signal": ["./src/signal.js"],
+      "types": ["./src/types/ts"]
+    },
     "outDir": "./dist",
     "allowJs": true,
     "checkJs": true,
-    "module": "ESNext",
     "target": "ES2020",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "node",
+    "esModuleInterop": true
   },
   "include": ["src/**/*.js", "src/types.ts"],
   "exclude": ["node_modules","./cypress/*", "cypress.config.js", "./src/tests/*", "dist"]

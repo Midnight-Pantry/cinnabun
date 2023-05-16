@@ -1,7 +1,6 @@
-import { Cinnabun, createSignal } from "cinnabun"
+import { Cinnabun, createSignal, Component } from "cinnabun"
 import { useRequestData } from "cinnabun/ssr"
-import { Component } from "cinnabun"
-import { parseJwt } from "./client/jwt.js"
+import { parseJwt } from "./client/jwt"
 
 const isClient = Cinnabun.isClient
 

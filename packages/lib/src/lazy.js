@@ -1,10 +1,10 @@
-import { Component, FragmentComponent } from "./component.js"
-import { SuspenseComponent } from "./suspense.js"
+import { Component, FragmentComponent } from "./component"
+import { SuspenseComponent } from "./suspense"
 
 /**
  * Creates a lazy-loaded component.
  * @param {Promise.<{ default: any }>} func - The promise that resolves to the lazy-loaded component.
- * @param {Partial.<import("./types.js").ComponentProps>} props - The partial props for the lazy-loaded component.
+ * @param {Partial.<import("./types").ComponentProps>} props - The partial props for the lazy-loaded component.
  * @param {boolean} [prefetch=true] - Whether to prefetch the lazy-loaded component.
  * @returns {SuspenseComponent} - The suspense component.
  */

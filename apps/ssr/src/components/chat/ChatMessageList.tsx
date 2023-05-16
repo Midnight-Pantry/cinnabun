@@ -1,9 +1,9 @@
 import * as Cinnabun from "cinnabun"
 import { Cinnabun as cb } from "cinnabun"
-import { IChatMessage } from "../../types/chat.js"
-import { LiveSocket } from "../../client/liveSocket.js"
-import { prefetchChatMessages } from "../../server/actions/chat.js"
-import { getUser, userStore } from "../../state.js"
+import { IChatMessage } from "../../types/chat"
+import { LiveSocket } from "../../client/liveSocket"
+import { prefetchChatMessages } from "../../server/actions/chat"
+import { getUser, userStore } from "../../state"
 
 let serverData = Cinnabun.createSignal<IChatMessage[]>([])
 

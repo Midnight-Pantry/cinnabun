@@ -1,17 +1,16 @@
-import { Component } from "./component.js"
-import { FragmentComponent } from "./component.js"
+import { Component } from "./component"
+import { FragmentComponent } from "./component"
 
-export { Cinnabun } from "./cinnabun.js"
-export { Component } from "./component.js"
-export { Signal, createSignal } from "./signal.js"
-export { Suspense } from "./suspense.js"
-export { lazy } from "./lazy.js"
-export * from "./router/index.js"
+export * from "./cinnabun"
+export * from "./component"
+export * from "./domInterop"
+export * from "./signal"
+export * from "./suspense"
 
 /**
- * @param {import("./types.js").Tag} tag
- * @param {import("./types.js").JSXProps} props
- * @param {import("./types.js").NodeChildren} children
+ * @param {import("./types").Tag} tag
+ * @param {import("./types").JSXProps} props
+ * @param {import("./types").NodeChildren} children
  * @returns {Component}
  */
 export const h = (tag, props, ...children) => {

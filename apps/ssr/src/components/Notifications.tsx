@@ -1,8 +1,7 @@
 import "./notifications.css"
 import * as Cinnabun from "cinnabun"
-import { createSignal, Component } from "cinnabun"
-import { generateUUID } from "../utils.js"
-import { DomInterop } from "cinnabun/domInterop"
+import { createSignal, Component, DomInterop } from "cinnabun"
+import { generateUUID } from "../utils"
 
 export enum NotificationType {
   INFO = "info",

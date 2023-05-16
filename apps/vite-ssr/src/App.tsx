@@ -1,5 +1,5 @@
 import { Link, Route, Router } from "cinnabun/router"
-import { pathStore } from "./state.js"
+import { pathStore } from "./state"
 import { createSignal } from "cinnabun"
 
 const count = createSignal(0)

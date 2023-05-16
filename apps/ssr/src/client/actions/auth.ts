@@ -1,5 +1,5 @@
-import { userStore } from "../../state.js"
-import { parseJwt } from "../jwt.js"
+import { userStore } from "../../state"
+import { parseJwt } from "../jwt"
 
 export interface LoginDTO {
   username: string

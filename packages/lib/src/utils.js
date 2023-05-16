@@ -1,5 +1,4 @@
 /**
- *
  * @param {number} ms
  * @returns {Promise<void>}
  */

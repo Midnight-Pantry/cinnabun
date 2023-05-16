@@ -1,7 +1,7 @@
-import { Cinnabun } from "./cinnabun.js"
-import { Component } from "./component.js"
-import { DomInterop } from "./domInterop.js"
-import { Signal } from "./signal.js"
+import { Cinnabun } from "../cinnabun"
+import { Component } from "../component"
+import { DomInterop } from "../domInterop"
+import { Signal } from "../signal"
 
 export class Hydration {
   /** @param {Component} component */
@@ -20,7 +20,7 @@ export class Hydration {
   /**
    *
    * @param {Component} app
-   * @param {import("./types.js").SSRProps} ssrProps
+   * @param {import("../types").SSRProps} ssrProps
    */
   static hydrate(app, ssrProps) {
     console.log("hydrating", ssrProps)
@@ -49,8 +49,8 @@ export class Hydration {
   /**
    *
    * @param {Component} parent
-   * @param {import("./types.js").ComponentChild} c
-   * @param {import("./types.js").SerializedComponent} sc
+   * @param {import("../types").ComponentChild} c
+   * @param {import("../types").SerializedComponent} sc
    * @param {Element | ChildNode} parentElement
    * @returns
    */

@@ -1,4 +1,4 @@
-cypress
+/cypress
 dist
 node_modules
 cypress.config.js

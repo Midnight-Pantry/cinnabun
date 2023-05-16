@@ -1,6 +1,6 @@
 import * as Cinnabun from "cinnabun"
-import { ChatMessageList } from "./ChatMessageList.jsx"
-import { ChatForm } from "./ChatForm.jsx"
+import { ChatMessageList } from "./ChatMessageList"
+import { ChatForm } from "./ChatForm"
 import "./chat.css"
 //import { ChatMessageList_REST } from "./ChatMessageList_REST"
 

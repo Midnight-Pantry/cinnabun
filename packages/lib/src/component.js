@@ -1,18 +1,18 @@
-import { Cinnabun } from "./cinnabun.js"
-import { DomInterop } from "./domInterop.js"
-import { Signal } from "./signal.js"
+import { Cinnabun } from "./cinnabun"
+import { DomInterop } from "./domInterop"
+import { Signal } from "./signal"
 
 export class Component {
   /**
    * @protected
-   * @type {undefined | import("./types.js").ComponentSubscription<any>}
+   * @type {undefined | import("./types").ComponentSubscription<any>}
    */
   subscription = undefined
 
   /** @type {Component|null} */
   parent = null
 
-  /** @type {import("./types.js").ComponentChild[]} */
+  /** @type {import("./types").ComponentChild[]} */
   children = []
 
   /** @type {Component[]}  */
@@ -32,12 +32,12 @@ export class Component {
 
   /**
    * @param {string} tag
-   * @param {import("./types.js").ComponentProps} props
+   * @param {import("./types").ComponentProps} props
    */
   constructor(tag, props = {}) {
     this.tag = tag
 
-    /** @private @type {import("./types.js").ComponentProps} */
+    /** @private @type {import("./types").ComponentProps} */
     let _props = {
       render: true,
     }
@@ -45,7 +45,7 @@ export class Component {
       return { ..._props }
     }
 
-    /** @param {import("./types.js").ComponentProps} newProps */
+    /** @param {import("./types").ComponentProps} newProps */
     this.setProps = (newProps) => {
       const { children, watch, ...rest } = newProps
       Object.assign(_props, rest)
@@ -66,14 +66,14 @@ export class Component {
       }
     }
 
-    /** @param {import("./types.js").ComponentProps} newProps */
+    /** @param {import("./types").ComponentProps} newProps */
     this.setPropsQuietly = (newProps) => {
       _props = newProps
     }
 
     /**
      * @private
-     * @param {keyof import("./types.js").ComponentProps} key
+     * @param {keyof import("./types").ComponentProps} key
      * @param {*} val
      */
     this._setProp = (key, val) => {
@@ -89,7 +89,7 @@ export class Component {
   }
 
   /**
-   * @param {import("./types.js").ComponentChild[]} children
+   * @param {import("./types").ComponentChild[]} children
    * @returns {boolean}
    */
   validateChildren(children = []) {
@@ -145,7 +145,7 @@ export class Component {
     return prop
   }
 
-  /** @param {import("./types.js").ComponentSubscription<any>} subscription */
+  /** @param {import("./types").ComponentSubscription<any>} subscription */
   subscribeTo(subscription) {
     if (this.subscription) return
     this.subscription = subscription
@@ -159,7 +159,7 @@ export class Component {
 
   /**
    * Binds events to the component.
-   * @param {import("./types.js").ComponentEventProps} options - The event options.
+   * @param {import("./types").ComponentEventProps} options - The event options.
    * @returns {void}
    */
   bindEvents({ onDestroyed }) {
@@ -185,7 +185,7 @@ export class Component {
     DomInterop.reRender(child)
   }
 
-  /** @param {import("./types.js").ComponentChild[]} newChildren */
+  /** @param {import("./types").ComponentChild[]} newChildren */
   replaceChildren(newChildren) {
     this.destroyChildComponentRefs(this)
     this.children = newChildren
@@ -254,7 +254,7 @@ export class Component {
 }
 
 export class FragmentComponent extends Component {
-  /** @param {import("./types.js").ComponentChild[]} children */
+  /** @param {import("./types").ComponentChild[]} children */
   constructor(children = []) {
     super("", { children })
   }

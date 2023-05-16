@@ -1,6 +1,6 @@
-import { Component } from "./component.js"
-import { Cinnabun } from "./cinnabun.js"
-import { DomInterop } from "./domInterop.js"
+import { Component } from "./component"
+import { Cinnabun } from "./cinnabun"
+import { DomInterop } from "./domInterop"
 
 export class SuspenseComponent extends Component {
   /** @type { { (): Promise<any> } | undefined } */
@@ -14,7 +14,7 @@ export class SuspenseComponent extends Component {
 
   /**
    * @param {string} tag
-   * @param {import("./types.js").SuspenseProps & { children: [{(...args: any[]): Component}] }} props
+   * @param {import("./types").SuspenseProps & { children: [{(...args: any[]): Component}] }} props
    */
   constructor(tag, props) {
     super(tag, props)
@@ -64,7 +64,7 @@ export class SuspenseComponent extends Component {
 }
 
 /**
- * @param {import("./types.js").SuspenseProps} param0
+ * @param {import("./types").SuspenseProps} param0
  * @param {[{(loading: boolean, res:*):Component}]} children
  * @returns {SuspenseComponent}
  */

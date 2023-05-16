@@ -1,8 +1,8 @@
-import { Cinnabun } from "../../cinnabun.js"
-import { Component } from "../../component.js"
-import { SuspenseComponent } from "../../suspense.js"
-import { SSR } from "../../ssr/index.js"
-import { sleep } from "../../utils.js"
+import { Cinnabun } from "../../cinnabun"
+import { Component } from "../../component"
+import { SuspenseComponent } from "../../suspense"
+import { SSR } from "../../ssr"
+import { sleep } from "../../utils"
 import { expect } from "chai"
 import "mocha"
 

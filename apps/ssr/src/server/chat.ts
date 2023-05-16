@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify"
-import { IChatMessage } from "../types/chat.js"
-import { generateUUID } from "../utils.js"
+import { IChatMessage } from "../types/chat"
+import { generateUUID } from "../utils"
 
 export abstract class ChatMessages {
   static messages: Map<string, IChatMessage> = new Map([

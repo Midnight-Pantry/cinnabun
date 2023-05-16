@@ -1,8 +1,8 @@
 import * as Cinnabun from "cinnabun"
-import { handleLogout } from "../client/actions/auth.js"
-import { isAuthenticated, isNotAuthenticated, userStore } from "../state.js"
-import { toggleAuthModal, AuthModal } from "./AuthModal.jsx"
-import { addNotification } from "./Notifications.jsx"
+import { handleLogout } from "../client/actions/auth"
+import { isAuthenticated, isNotAuthenticated, userStore } from "../state"
+import { toggleAuthModal, AuthModal } from "./AuthModal"
+import { addNotification } from "./Notifications"
 
 export const AuthButtons = () => {
   const onLogout = async () => {

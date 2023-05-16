@@ -1,5 +1,5 @@
 import { Link, RouterComponent } from "cinnabun/router"
-import { pathStore } from "./state.js"
+import { pathStore } from "./state"
 
 type FileRouter = { (): RouterComponent }
 

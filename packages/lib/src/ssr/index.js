@@ -1,10 +1,10 @@
-import { Cinnabun } from "../cinnabun.js"
-import { Component } from "../component.js"
-import { Signal } from "../signal.js"
+import { Cinnabun } from "../cinnabun"
+import { Component } from "../component"
+import { Signal } from "../signal"
 
 /**
- * @typedef {import('../types.d.ts').SerializedComponent} SerializedComponent
- * @typedef {import('../types.d.ts').ComponentProps} ComponentProps
+ * @typedef {import('../types').SerializedComponent} SerializedComponent
+ * @typedef {import('../types').ComponentProps} ComponentProps
  * @typedef {import("stream").Writable} Writable
  */
 
@@ -201,8 +201,10 @@ export class SSR {
         //just a safety thing, so we see '[Object object]' in the frontend
         //instead of crashing from trying to serialize the object as a component
 
-        //@ts-ignore
-        if (shouldRender) SSR.render(c.toString(), config, accumulator)
+        if (shouldRender) {
+          //@ts-ignore
+          SSR.render(c.toString(), config, accumulator)
+        }
         res.push({ children: [], props: {} })
         continue
       }

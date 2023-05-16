@@ -1,25 +1,25 @@
 "use strict"
-import { Component } from "./component.js"
-import { DomInterop } from "./domInterop.js"
-export { h, fragment } from "./index.js"
+import { Component } from "./component"
+import { DomInterop } from "./domInterop"
+export { h, fragment } from "./"
 
 export class Cinnabun {
   constructor() {
-    /** @type {import("./types.js").WatchedElementRef[]} */
+    /** @type {import("./types").WatchedElementRef[]} */
     let serverComponentReferences = []
     this.getServerComponentReferences = () => serverComponentReferences
 
-    /** @param {import("./types.js").WatchedElementRef[]} newVal  */
+    /** @param {import("./types").WatchedElementRef[]} newVal  */
     this.setServerComponentReferences = (newVal) =>
       (serverComponentReferences = newVal)
 
-    /** @private @type {import("./types.js").ServerRequestData} */
+    /** @private @type {import("./types").ServerRequestData} */
     let serverRequest = {
       path: "/",
       data: {},
     }
 
-    /** @param {import("./types.js").ServerRequestData} data */
+    /** @param {import("./types").ServerRequestData} data */
     this.setServerRequestData = (data) => {
       serverRequest = data
     }
@@ -54,10 +54,10 @@ export class Cinnabun {
   /** @type {Map<Element | ChildNode, number>} */
   static rootMap = new Map()
 
-  /** @type {import("./types.js").WatchedElementRef[]} */
+  /** @type {import("./types").WatchedElementRef[]} */
   static componentReferences = []
 
-  /** @type {import("./types.js").ClassInstance<any>[]} */
+  /** @type {import("./types").ClassInstance<any>[]} */
   static runtimeServices = []
 
   /**
@@ -114,7 +114,7 @@ export class Cinnabun {
     }
   }
 
-  /** @param {import("./types.js").WatchedElementRef} ref */
+  /** @param {import("./types").WatchedElementRef} ref */
   static addComponentReference = (ref) => {
     if (Cinnabun.isClient) {
       Cinnabun.componentReferences.push(ref)
@@ -144,7 +144,7 @@ export class Cinnabun {
 
   /**
    * Registers runtime services.
-   * @param {import("./types.js").ClassInstance<any>[]} services - The runtime services to register.
+   * @param {import("./types").ClassInstance<any>[]} services - The runtime services to register.
    */
   static registerRuntimeServices(...services) {
     Cinnabun.runtimeServices.push(...services)
@@ -152,8 +152,8 @@ export class Cinnabun {
 
   /**
    * Retrieves the runtime service for the specified class.
-   * @template {import("./types.js").ClassConstructor} Class
-   * @param {import("./types.js").ClassConstructor<Class>} classRef - The reference to the class.
+   * @template {any} Class
+   * @param {import("./types").ClassConstructor<Class>} classRef - The reference to the class.
    * @returns {InstanceType<Class>} The runtime service instance.
    */
   static getRuntimeService(classRef) {

@@ -6,36 +6,9 @@
     "type": "git",
     "url": "https://github.com/Robby6Strings/cinnabun"
   },
-  "main": "src/index.js",
-  "types": "dist/src/index.d.ts",
   "type": "module",
-  "exports": {
-    ".": {
-      "default": "./dist/src/index.js",
-      "types": "./dist/src/index.d.ts"
-    },
-    "./ssr": {
-      "default": "./dist/src/ssr/index.js",
-      "types": "./dist/src/ssr/index.js"
-    },
-    "./router": {
-      "default": "./dist/src/router/index.js",
-      "types": "./dist/src/router/index.d.ts"
-    },
-    "./utils": {
-      "default": "./dist/src/utils.js",
-      "types": "./dist/src/utils.js"
-    },
-    "./domInterop": {
-      "default": "./dist/src/domInterop.js",
-      "types": "./dist/src/domInterop.js"
-    },
-    "./hydration": {
-      "default": "./dist/src/hydration.js",
-      "types": "./dist/src/hydration.js"
-    },
-    "./types": "./src/types.ts"
-  },
+  "module": "./dist/index.js",
+  "types": ".",
   "scripts": {
     "build": "pnpm i && tsc",
     "build:w": "pnpm i && tsc --watch",

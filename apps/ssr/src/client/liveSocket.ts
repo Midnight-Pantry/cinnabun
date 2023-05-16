@@ -1,6 +1,6 @@
 import { Signal, createSignal } from "cinnabun"
-import { IChatMessage } from "../types/chat.js"
-import { getChatMessages } from "./actions/chat.js"
+import { IChatMessage } from "../types/chat"
+import { getChatMessages } from "./actions/chat"
 
 type TypedMessage = {
   type: string

@@ -1,6 +1,6 @@
-import { Component } from "./component.js"
-import { Signal } from "./signal.js"
-import { Cinnabun } from "./cinnabun.js"
+import { Component } from "./component"
+import { Signal } from "./signal"
+import { Cinnabun } from "./cinnabun"
 
 export class DomInterop {
   /** @param {Component} component */
@@ -71,7 +71,7 @@ export class DomInterop {
   /**
    *
    * @param {Component} component
-   * @param {import("./types.js").ComponentChild} child
+   * @param {import("./types").ComponentChild} child
    * @returns {string | Node}
    */
   static renderChild(component, child) {

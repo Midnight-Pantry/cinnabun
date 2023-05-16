@@ -1,5 +1,5 @@
-import type { Component } from "./component.js"
-import type { Signal } from "./signal.js"
+import type { Component } from "./component"
+import type { Signal } from "./signal"
 
 declare global {
   namespace JSX {

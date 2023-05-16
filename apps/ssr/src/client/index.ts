@@ -2,9 +2,9 @@ import "./index.css"
 import { Cinnabun } from "cinnabun"
 import { Hydration } from "cinnabun/hydration"
 import { SSRProps } from "cinnabun/types"
-import { App } from "../App.jsx"
-import { Template } from "../Template.jsx"
-import { createLiveSocket } from "./liveSocket.js"
+import { App } from "../App"
+import { Template } from "../Template"
+import { createLiveSocket } from "./liveSocket"
 import { SSR } from "cinnabun/ssr"
 
 if ("__cbData" in window) {

@@ -1,9 +1,9 @@
 import * as Cinnabun from "cinnabun"
-import { createChatMessage } from "../../client/actions/chat.js"
-import { userStore } from "../../state.js"
-import { toggleAuthModal } from "../AuthModal.jsx"
-import { isAuthenticated } from "../../state.js"
-import { isNotAuthenticated } from "../../state.js"
+import { createChatMessage } from "../../client/actions/chat"
+import { userStore } from "../../state"
+import { toggleAuthModal } from "../AuthModal"
+import { isAuthenticated } from "../../state"
+import { isNotAuthenticated } from "../../state"
 
 export const ChatForm = () => {
   const inputState = Cinnabun.createSignal("")
