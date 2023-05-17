@@ -95,3 +95,10 @@ export const App = () => {
 <br />
 
 ## View more examples and comprehensive usage at https://github.com/Robby6Strings/cinnabun/tree/main/apps
+
+
+# Contributors
+
+---
+
+- CallumAS (cinnabunjs.com domain)
