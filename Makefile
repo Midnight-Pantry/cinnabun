@@ -2,7 +2,7 @@ build:
 	pnpm run -r build
 
 start_ssr:
-	cd apps/ssr && node build.js && node dist/server
+	cd apps/ssr && pnpm run dev
 
 test:
 	make start_ssr & pnpm run -r --parallel test
