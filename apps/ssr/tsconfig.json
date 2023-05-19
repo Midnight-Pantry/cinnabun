@@ -2,10 +2,12 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "CommonJS",
+    "module": "Node16",
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",
     "strict": true,
+    "checkJs": true,
+    "allowJs": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,

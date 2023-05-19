@@ -66,6 +66,9 @@ importers:
       fastify-plugin:
         specifier: ^4.5.0
         version: 4.5.0
+      tree-kill:
+        specifier: ^1.2.2
+        version: 1.2.2
     devDependencies:
       '@types/node':
         specifier: ^18.16.2
@@ -3794,6 +3797,11 @@ packages:
     dependencies:
       punycode: 2.3.0
     dev: true
+
+  /tree-kill@1.2.2:
+    resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
+    hasBin: true
+    dev: false
 
   /trim-repeated@1.0.0:
     resolution: {integrity: sha512-pkonvlKk8/ZuR0D5tLW8ljt5I8kmxp2XKymhepUeOdCEfKpZaktSArkLHZt76OB1ZvO9bssUsDty4SWhLvZpLg==}

@@ -25,24 +25,7 @@ declare module "fastify" {
     }
   }
 }
-const rootId = "app"
-
 const port: number = parseInt(process.env.PORT ?? "3000")
-let baseHtml = ""
-
-// load base html template
-{
-  fs.readFile(
-    path.resolve(path.resolve(__dirname, ".", "../../dist/public/index.html")),
-    "utf8",
-    (err: any, indexHtml) => {
-      if (err) {
-        throw new Error(err)
-      }
-      baseHtml = indexHtml
-    }
-  )
-}
 
 const app = fastify()
 
@@ -113,19 +96,13 @@ app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
     stream: res.raw,
   }
 
-  if (config.stream) {
-    res.header("Content-Type", "text/html").status(200)
-    res.header("Transfer-Encoding", "chunked")
-    res.raw.write("<!DOCTYPE html><html>")
-  }
+  res.header("Content-Type", "text/html").status(200)
+  res.header("Transfer-Encoding", "chunked")
+  res.raw.write("<!DOCTYPE html><html>")
 
-  const { html, componentTree } = await SSR.serverBake(
-    config.stream ? Template(App) : App(),
-    config
-  )
+  const { componentTree } = await SSR.serverBake(Template(App), config)
 
-  if (config.stream) {
-    res.raw.write(`
+  res.raw.write(`
       <script id="server-props">
         window.__cbData = {
           root: document.documentElement,
@@ -134,30 +111,8 @@ app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
       </script>
       <script src="/static/index.js"></script>
     `)
-    res.raw.write("</html>")
-    res.raw.end()
-    return
-  }
-
-  res
-    .code(200)
-    .header("Content-Type", "text/html; charset=utf-8")
-    .send(
-      baseHtml
-        .replace(
-          `<div id="${rootId}"></div>`,
-          `<div id="${rootId}">${html}</div>`
-        )
-        .replace(
-          `<script id="server-props"></script>`,
-          `<script id="server-props">
-            window.__cbData = {
-              root: document.getElementById('${rootId}'),
-              component: ${JSON.stringify(componentTree)}
-            }
-          </script>`
-        )
-    )
+  res.raw.write("</html>")
+  res.raw.end()
 })
 
 app.listen({ port }, function (err) {
