@@ -62,7 +62,7 @@ export class SSR {
    */
   static serializeProps(component) {
     const res = {}
-    const props = component.getProps()
+    const props = component.props
     for (const k of Object.keys(props)) {
       const p = props[k]
       if (Signal.isSignal(p)) {
@@ -102,7 +102,7 @@ export class SSR {
       render,
       watch,
       ...rest
-    } = component.getProps()
+    } = component.props
 
     const shouldRender = component.shouldRender()
 
@@ -203,10 +203,10 @@ export class SSR {
         continue
       }
       if (typeof c === "function") {
-        const props = component.getProps()
+        const props = component.props
         if ("promiseCache" in component && props.prefetch) {
           component.promiseCache = await props.promise()
-          component.setProps({ ...props, promiseCache: component.promiseCache })
+          component.props.promiseCache = component.promiseCache
         }
 
         const val = c(...component.childArgs)

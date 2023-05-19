@@ -1,7 +1,7 @@
-import { Cinnabun } from "../../cinnabun"
-import { Component } from "../../component"
-import { Signal } from "../../signal"
-import { SSR } from "../../ssr"
+import { Cinnabun } from "../../cinnabun.js"
+import { Component } from "../../component.js"
+import { Signal } from "../../signal.js"
+import { SSR } from "../../ssr/index.js"
 import { expect } from "chai"
 import "mocha"
 

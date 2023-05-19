@@ -89,15 +89,14 @@ export class NotificationTrayComponent extends Component {
         const children = this.children as NotificationComponent[]
 
         for (const [k, notification] of notificationStore.value.entries()) {
-          const c = children.find((child) => child.getProps()["data-id"] === k)
+          const c = children.find((child) => child.props["data-id"] === k)
           if (!c) {
             addNotification(notification)
           }
         }
         const deleteList: string[] = []
         children.forEach((c) => {
-          const props = c.getProps()
-          const notifId: string = props["data-id"]
+          const notifId: string = c.props["data-id"]
           const notification: INotification | undefined =
             notificationStore.value.get(notifId)
 
@@ -119,7 +118,7 @@ export class NotificationTrayComponent extends Component {
         if (deleteList.length) {
           const children = this.children as NotificationComponent[]
           this.children = children.filter(
-            (c) => !deleteList.includes(c.getProps()["data-id"])
+            (c) => !deleteList.includes(c.props["data-id"])
           )
         }
       }, tickRateMs)

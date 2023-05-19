@@ -3,45 +3,42 @@ import { Component } from "./component.js"
 import { DomInterop } from "./domInterop.js"
 
 export class Cinnabun {
-  constructor() {
-    /** @type {import("./types").WatchedElementRef[]} */
-    let serverComponentReferences = []
-    this.getServerComponentReferences = () => serverComponentReferences
+  /** @type {import("./types").WatchedElementRef[]} */
+  #serverComponentReferences = []
+  getServerComponentReferences = () => this.#serverComponentReferences
+  /** @param {import("./types").WatchedElementRef[]} newVal  */
+  setServerComponentReferences = (newVal) =>
+    (this.#serverComponentReferences = newVal)
 
-    /** @param {import("./types").WatchedElementRef[]} newVal  */
-    this.setServerComponentReferences = (newVal) =>
-      (serverComponentReferences = newVal)
-
-    /** @private @type {import("./types").ServerRequestData} */
-    let serverRequest = {
-      path: "/",
-      data: {},
-    }
-
-    /** @param {import("./types").ServerRequestData} data */
-    this.setServerRequestData = (data) => {
-      serverRequest = data
-    }
-
-    /**
-     * Retrieve server request data based on the provided keys path.
-     * @template T - The type of the requested data.
-     * @param {string} keysPath - The dot-separated keys path to retrieve the data.
-     * @returns {T | undefined} - The requested data or undefined if not found.
-     */
-    this.getServerRequestData = (keysPath) => {
-      const props = keysPath.split(".")
-      /** @type {*} */
-      let value = { ...serverRequest }
-      for (let i = 0; i < props.length; i++) {
-        value = value[props[i]]
-        if (value === undefined) {
-          return undefined
-        }
-      }
-      return value
-    }
+  /** @type {import("./types").ServerRequestData} */
+  #serverRequest = {
+    path: "/",
+    data: {},
   }
+  /** @param {import("./types").ServerRequestData} data */
+  setServerRequestData = (data) => {
+    this.#serverRequest = data
+  }
+
+  /**
+   * Retrieve server request data based on the provided keys path.
+   * @template T - The type of the requested data.
+   * @param {string} keysPath - The dot-separated keys path to retrieve the data.
+   * @returns {T | undefined} - The requested data or undefined if not found.
+   */
+  getServerRequestData = (keysPath) => {
+    const props = keysPath.split(".")
+    /** @type {*} */
+    let value = { ...this.#serverRequest }
+    for (let i = 0; i < props.length; i++) {
+      value = value[props[i]]
+      if (value === undefined) {
+        return undefined
+      }
+    }
+    return value
+  }
+
   /** @readonly @type {boolean} */
   // @ts-ignore
   static DEBUG_COMPONENT_REFCOUNT = false

@@ -27,7 +27,7 @@ export default function () {
       </nav>
       <Router store={pathStore}>
         <Route path="/" component={<Home />} />
-        <Route path="/test" component={<h1>Test</h1>} />
+        <Route path="/test" component={<Test />} />
       </Router>
     </div>
   )
@@ -39,6 +39,20 @@ const Home = () => {
       <h1>Home</h1>
       <h4>{count}</h4>
       <button onclick={() => count.value++}>Click me!</button>
+    </>
+  )
+}
+
+const Test = () => {
+  return (
+    <>
+      <h1>Test</h1>
+      <Router store={pathStore}>
+        <Route
+          path="/:test"
+          component={(props) => <h1>{props.params.test}</h1>}
+        />
+      </Router>
     </>
   )
 }

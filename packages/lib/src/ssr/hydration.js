@@ -63,7 +63,7 @@ export class Hydration {
       return
     }
     if (typeof c === "function") {
-      const props = parent.getProps()
+      const props = parent.props
       const usePromiseCache = "promiseCache" in props && props.prefetch
 
       const val = usePromiseCache
@@ -82,7 +82,7 @@ export class Hydration {
 
     c.parent = parent
 
-    const props = c.getProps()
+    const props = c.props
 
     if (sc.props && Object.keys(sc.props).length) {
       for (const [k, v] of Object.entries(sc.props)) {

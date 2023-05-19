@@ -26,7 +26,7 @@ export class RouteComponent extends Component {
   }
 
   get childArgs() {
-    return [{ params: this.getProps().params }]
+    return [{ params: this.props.params }]
   }
 
   /**
@@ -35,7 +35,7 @@ export class RouteComponent extends Component {
    */
   static isRouteComponent(data) {
     if (!(typeof data === "object")) return false
-    return "getProps" in data && "path" in data.getProps()
+    return "props" in data && "path" in data.props
   }
 }
 
@@ -47,7 +47,7 @@ export class RouterComponent extends Component {
    */
   constructor(store, children) {
     children.sort((a, b) => {
-      return b.getProps().pathDepth - a.getProps().pathDepth
+      return b.props.pathDepth - a.props.pathDepth
     })
 
     /**
@@ -60,7 +60,8 @@ export class RouterComponent extends Component {
         while (len--) {
           const rc = self.children[len]
           if (!RouteComponent.isRouteComponent(rc)) continue
-          rc.setProps({ ...rc.getProps(), render: false, params: {} })
+          rc.props.render = false
+          rc.props.params = {}
         }
         if (Cinnabun.isClient) DomInterop.unRender(self)
 
@@ -71,11 +72,8 @@ export class RouterComponent extends Component {
           if (!RouteComponent.isRouteComponent(c)) continue
           const matchRes = self.matchRoute(c, route)
           if (matchRes.routeMatch) {
-            c.setProps({
-              ...c.getProps(),
-              render: !!matchRes.routeMatch,
-              params: matchRes.params ?? {},
-            })
+            c.props.render = !!matchRes.routeMatch
+            c.props.params = matchRes.params ?? {}
             break
           }
         }
@@ -93,7 +91,7 @@ export class RouterComponent extends Component {
     )
 
     while (parentRoute) {
-      parentPath = parentRoute.getProps().path + parentPath
+      parentPath = parentRoute.props.path + parentPath
       parentRoute = parentRoute.getParentOfType((parent) =>
         RouteComponent.isRouteComponent(parent)
       )
@@ -107,7 +105,7 @@ export class RouterComponent extends Component {
    * @returns {{params: any, routeMatch: RegExpMatchArray | null }}
    */
   matchRoute(c, path) {
-    const cPath = this.getParentPath() + c.getProps().path
+    const cPath = this.getParentPath() + c.props.path
     return matchPath(path, cPath)
   }
 }

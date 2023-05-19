@@ -3,6 +3,34 @@ import { DomInterop } from "./domInterop.js"
 import { Signal } from "./signal.js"
 
 export class Component {
+  /** @type {import("./types").ComponentProps} */
+  #props = { render: true }
+
+  get props() {
+    return this.#props
+  }
+  /** @param {import("./types").ComponentProps} newProps */
+  set props(newProps) {
+    const { children, watch, render, ...rest } = newProps
+    Object.assign(this.#props, rest)
+    if (typeof render !== "undefined") this.#props.render = render
+
+    if (children) {
+      if (this.validateChildren(children)) this.replaceChildren(children)
+    }
+    if (Cinnabun.isClient && watch) {
+      this.#props.watch = watch
+      const signals = "length" in watch ? watch : [watch]
+      for (const s of signals) {
+        const unsub = s.subscribe(this.applyBindProps.bind(this))
+        Cinnabun.addComponentReference({
+          component: this,
+          onDestroyed: () => unsub(),
+        })
+      }
+    }
+  }
+
   /**
    * @protected
    * @type {undefined | import("./types").ComponentSubscription<any>}
@@ -37,50 +65,9 @@ export class Component {
   constructor(tag, props = {}) {
     this.tag = tag
 
-    /** @private @type {import("./types").ComponentProps} */
-    let _props = {
-      render: true,
-    }
-    this.getProps = () => {
-      return { ..._props }
-    }
-
     /** @param {import("./types").ComponentProps} newProps */
-    this.setProps = (newProps) => {
-      const { children, watch, ...rest } = newProps
-      Object.assign(_props, rest)
-
-      if (children) {
-        if (this.validateChildren(children)) this.replaceChildren(children)
-      }
-      if (Cinnabun.isClient && watch) {
-        _props.watch = watch
-        const signals = "length" in watch ? watch : [watch]
-        for (const s of signals) {
-          const unsub = s.subscribe(this.applyBindProps.bind(this))
-          Cinnabun.addComponentReference({
-            component: this,
-            onDestroyed: () => unsub(),
-          })
-        }
-      }
-    }
-
-    /** @param {import("./types").ComponentProps} newProps */
-    this.setPropsQuietly = (newProps) => {
-      _props = newProps
-    }
-
-    /**
-     * @private
-     * @param {keyof import("./types").ComponentProps} key
-     * @param {*} val
-     */
-    this._setProp = (key, val) => {
-      _props[key] = val
-    }
-
-    this.setProps(props)
+    this.setPropsQuietly = (newProps) => (this.#props = newProps)
+    this.props = props
   }
 
   /** @returns {*[]} */
@@ -101,29 +88,30 @@ export class Component {
   }
 
   applyBindProps() {
-    const props = this.getProps()
-    const bindFns = Object.entries(props).filter(([k]) => k.startsWith("bind:"))
+    const bindFns = Object.entries(this.props).filter(([k]) =>
+      k.startsWith("bind:")
+    )
     if (bindFns.length > 0) {
       for (const [k, v] of bindFns) {
         const propName = k.substring(k.indexOf(":") + 1)
-        this._setProp(
-          propName,
-          this.getPrimitive(v, () => DomInterop.reRender(this))
+
+        // possibly shouldn't be using this.renderChildren?
+        this.#props[propName] = this.getPrimitive(v, () =>
+          DomInterop.reRender(this)
         )
 
-        const props = this.getProps()
-
         if (propName === "render" && Cinnabun.isClient) {
-          if (!props.render || !this.parent?.getProps().render) {
+          //debugger
+          if (!this.#props.render || !this.parent?.props.render) {
             DomInterop.unRender(this)
-          } else if (props.render) {
+          } else if (this.#props.render) {
             DomInterop.reRender(this)
           }
         } else if (propName === "children") {
-          if (props.children) this.replaceChildren(props.children)
+          if (this.#props.children) this.replaceChildren(this.#props.children)
           if (Cinnabun.isClient) DomInterop.renderChildren(this)
         } else if (this.element) {
-          Object.assign(this.element, { [propName]: props[propName] })
+          Object.assign(this.element, { [propName]: this.#props[propName] })
         }
       }
     }
@@ -206,7 +194,7 @@ export class Component {
 
   /** @returns {boolean} */
   shouldRender() {
-    if (!this.getProps().render) return false
+    if (!this.#props.render) return false
     if (this.parent) return this.parent?.shouldRender()
     return true
   }
@@ -225,8 +213,7 @@ export class Component {
   }
 
   onDestroy() {
-    const props = this.getProps()
-    if (props.onDestroyed) props.onDestroyed(this)
+    if (this.#props.onDestroyed) this.#props.onDestroyed(this)
   }
 
   /**
