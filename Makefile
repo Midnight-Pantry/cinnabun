@@ -5,4 +5,4 @@ start_ssr:
 	cd apps/ssr && node dist/server
 
 test:
-	make start_ssr & pnpm run -r --parallel test
+	make start_ssr && pnpm run -r --parallel test
