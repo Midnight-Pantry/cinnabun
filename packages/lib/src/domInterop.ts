@@ -98,8 +98,7 @@ export class DomInterop {
     try {
       DomInterop.removeFuncComponents(component)
       if (component.element) {
-        //Array.from(component.element.children).forEach((c) => c.remove())
-        component.mounted = false
+        component.unMount()
         return component.element.remove()
       }
       for (const c of component.children) {

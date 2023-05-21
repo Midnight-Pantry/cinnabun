@@ -199,6 +199,13 @@ export class Component<T extends HTMLElement> {
     //@ts-ignore (screw typescript, this is correct)
     return this.parent.getParentOfType(classRef)
   }
+
+  unMount() {
+    for (const c of this.children) {
+      if (c instanceof Component<any>) c.unMount()
+    }
+    this.mounted = false
+  }
 }
 
 export class FragmentComponent extends Component<any> {

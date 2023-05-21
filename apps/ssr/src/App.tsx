@@ -68,17 +68,22 @@ const evtstore = Cinnabun.createSignal(true)
 const LifeCycleEventsTest = () => {
   return (
     <div>
-      <article
-        watch={evtstore}
-        bind:render={() => evtstore.value}
-        onMounted={() => console.log("mounted")}
-        onUnmounted={() => console.log("unmounted")}
-      >
-        Events
-      </article>
       <button onclick={() => (evtstore.value = !evtstore.value)}>
         Toggle state
       </button>
+      <div
+        watch={evtstore}
+        bind:render={() => evtstore.value}
+        onMounted={() => console.log("parent mounted")}
+        onUnmounted={() => console.log("parent unmounted")}
+      >
+        <h1
+          onMounted={() => console.log("child mounted")}
+          onUnmounted={() => console.log("child unmounted")}
+        >
+          Child
+        </h1>
+      </div>
     </div>
   )
 }
