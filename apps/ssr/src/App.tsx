@@ -52,12 +52,33 @@ export const App = () => {
           <Route path="/todo" component={<ToDoExample />} />
           <Route path="/perf" component={<PerfTest n={1_000} />} />
           <Route path="/chat" component={<Chat />} />
+          <Route path="/events" component={<LifeCycleEventsTest />} />
         </Router>
       </main>
       <br />
       <AuthButtons />
       <br />
       <NotificationTray />
+    </div>
+  )
+}
+
+const evtstore = Cinnabun.createSignal(true)
+
+const LifeCycleEventsTest = () => {
+  return (
+    <div>
+      <article
+        watch={evtstore}
+        bind:render={() => evtstore.value}
+        onMounted={() => console.log("mounted")}
+        onUnmounted={() => console.log("unmounted")}
+      >
+        Events
+      </article>
+      <button onclick={() => (evtstore.value = !evtstore.value)}>
+        Toggle state
+      </button>
     </div>
   )
 }

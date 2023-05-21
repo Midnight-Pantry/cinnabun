@@ -134,6 +134,7 @@ export class DomInterop {
     } else {
       element.appendChild(el)
     }
+    component.mounted = true
   }
 
   static render<T extends HTMLElement>(

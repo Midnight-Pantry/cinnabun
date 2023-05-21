@@ -18,16 +18,16 @@ export class Component<T extends HTMLElement> {
   element: T | undefined
   cbInstance: Cinnabun | undefined
 
-  _mounted: boolean = false
+  private _mounted: boolean = false
   get mounted() {
     return this._mounted
   }
   set mounted(val: boolean) {
-    const prevVal = this._mounted
+    const changed = this._mounted !== val
     this._mounted = val
-    if (!prevVal && val && this._props.onMounted) {
+    if (changed && val && this._props.onMounted) {
       this._props.onMounted(this)
-    } else if (prevVal && !val && this._props.onUnmounted) {
+    } else if (changed && !val && this._props.onUnmounted) {
       this._props.onUnmounted(this)
     }
   }
@@ -82,7 +82,6 @@ export class Component<T extends HTMLElement> {
       for (const [k, v] of bindFns) {
         const propName = k.substring(k.indexOf(":") + 1)
 
-        // possibly shouldn't be using this.renderChildren?
         this._props[propName] = this.getPrimitive(v, () =>
           DomInterop.reRender(this)
         )
