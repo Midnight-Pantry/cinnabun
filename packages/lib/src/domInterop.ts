@@ -99,6 +99,7 @@ export class DomInterop {
       DomInterop.removeFuncComponents(component)
       if (component.element) {
         //Array.from(component.element.children).forEach((c) => c.remove())
+        component.mounted = false
         return component.element.remove()
       }
       for (const c of component.children) {
@@ -139,8 +140,7 @@ export class DomInterop {
     component: Component<T>,
     isRerender: boolean = false
   ): T | Node {
-    const { children, onMounted, onDestroyed, subscription, promise } =
-      component.props
+    const { children, onDestroyed, subscription, promise } = component.props
 
     Cinnabun.removeComponentReferences(component)
 
@@ -177,7 +177,6 @@ export class DomInterop {
     if (subscription) component.subscribeTo(subscription)
 
     component.mounted = true
-    if (onMounted) onMounted(component)
     return component.element
   }
 

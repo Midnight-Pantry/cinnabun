@@ -103,8 +103,6 @@ export class Hydration {
 
     c.bindEvents(c.props)
 
-    c.mounted = true
-
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
       const sChild = sc.children[i]
@@ -114,5 +112,6 @@ export class Hydration {
       }
       Hydration.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
+    c.mounted = true
   }
 }

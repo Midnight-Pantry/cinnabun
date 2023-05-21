@@ -18,7 +18,19 @@ export class Component<T extends HTMLElement> {
   element: T | undefined
   cbInstance: Cinnabun | undefined
 
-  mounted: boolean = false
+  _mounted: boolean = false
+  get mounted() {
+    return this._mounted
+  }
+  set mounted(val: boolean) {
+    const prevVal = this._mounted
+    this._mounted = val
+    if (!prevVal && val && this._props.onMounted) {
+      this._props.onMounted(this)
+    } else if (prevVal && !val && this._props.onUnmounted) {
+      this._props.onUnmounted(this)
+    }
+  }
 
   private subscription: ComponentSubscription | undefined
   private _props: ComponentProps<T> = {}

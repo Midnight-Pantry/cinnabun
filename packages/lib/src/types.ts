@@ -47,6 +47,7 @@ export type WatchedElementRef = {
 
 export type ComponentEventProps<T extends HTMLElement> = {
   onMounted?: { (c: Component<T>): void }
+  onUnmounted?: { (c: Component<T>): void }
   onDestroyed?: { (c: Component<T>): void }
 }
 export type ReactivityProps = {
