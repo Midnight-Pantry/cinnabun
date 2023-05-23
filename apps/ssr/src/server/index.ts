@@ -4,7 +4,6 @@ import cookie from "@fastify/cookie"
 import compress from "@fastify/compress"
 import fStatic from "@fastify/static"
 import websocket from "@fastify/websocket"
-import fs from "fs"
 import path from "path"
 
 import { SSR, SSRConfig } from "cinnabun/ssr"
