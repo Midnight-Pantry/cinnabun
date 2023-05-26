@@ -1,5 +1,5 @@
 module.exports = {
-  jsxInject: "import * as Cinnabon from 'cinnabun'",
-  jsxFactory: "Cinnabon.h",
-  jsxFragment: "Cinnabon.fragment",
+  jsxInject: "import * as Cinnabun from 'cinnabun'",
+  jsxFactory: "Cinnabun.h",
+  jsxFragment: "Cinnabun.fragment",
 }
