@@ -17,10 +17,18 @@ export class DomInterop {
       ...rest
     } = component.props
 
-    if (style) Object.assign(component.element.style, style)
-    if (htmlFor && "htmlFor" in component.element)
-      component.element.htmlFor = htmlFor
+    const isSVG = component.isSVG()
 
+    if (style) {
+      if (typeof style === "object") {
+        Object.assign(component.element.style, style)
+      } else {
+        component.element.setAttribute("style", style)
+      }
+    }
+    if (htmlFor && "htmlFor" in component.element) {
+      component.element.htmlFor = htmlFor
+    }
     if (Object.keys(rest).length) {
       for (const [k, v] of Object.entries(rest)) {
         if (k.includes("bind:")) continue
@@ -28,11 +36,18 @@ export class DomInterop {
           Object.assign(component.element, { [k]: v })
           continue
         }
-        Object.assign(component.element, {
-          [k]: component.getPrimitive(v, () =>
-            DomInterop.updateElement(component)
-          ),
-        })
+        if (isSVG) {
+          component.element.setAttribute(
+            k,
+            component.getPrimitive(v, () => DomInterop.updateElement(component))
+          )
+        } else {
+          Object.assign(component.element, {
+            [k]: component.getPrimitive(v, () =>
+              DomInterop.updateElement(component)
+            ),
+          })
+        }
       }
     }
   }
@@ -161,7 +176,7 @@ export class DomInterop {
       return f
     }
 
-    if (component.tag === "svg") return DomInterop.svg(component)
+    if (component.tag.toLowerCase() === "svg") return DomInterop.svg(component)
     if (!component.element) {
       component.element = document.createElement(component.tag) as T
     }

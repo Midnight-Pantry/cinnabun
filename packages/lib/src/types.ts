@@ -68,7 +68,7 @@ export type ComponentProps<T extends HTMLElement> = ReactivityProps &
     className?: string
     children?: ComponentChild[]
     render?: boolean
-    style?: Partial<CSSStyleDeclaration>
+    style?: Partial<CSSStyleDeclaration> | string
     [key: string]: any
   }
 

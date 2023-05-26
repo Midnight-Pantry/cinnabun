@@ -14,6 +14,7 @@ import { AuthButtons } from "./components/AuthButtons"
 import { Nav } from "./components/Nav"
 import { Chat } from "./components/chat/Chat"
 import { NotificationTray } from "./components/Notifications"
+import { Logo } from "./Logo"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
@@ -29,8 +30,11 @@ const PerfTest = ({ n }: { n: number }) => {
 
 export const App = () => {
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      <h1>Cinnabun JS - SSR</h1>
+    <div style="display: flex; min-height: 100vh">
+      <div style={{ display: "flex", gap: "1rem" }}>
+        <h1>Cinnabun JS - SSR</h1>
+        <Logo />
+      </div>
       <br />
       <ProductList />
       <Nav />

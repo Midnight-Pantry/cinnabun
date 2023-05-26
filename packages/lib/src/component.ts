@@ -198,6 +198,12 @@ export class Component<T extends HTMLElement> {
     }
     this.mounted = false
   }
+
+  isSVG(): boolean {
+    return (
+      this.tag.toLowerCase() === "svg" || this.element?.closest("svg") !== null
+    )
+  }
 }
 
 export class FragmentComponent extends Component<any> {

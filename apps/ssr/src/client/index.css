@@ -64,42 +64,11 @@ nav ul {
   gap:.5rem;
 }
 
-svg {
-  height: 33vw;
-  width: 33vw;
-  transition: transform .3s;
-}
-@media screen and (min-width: 640px) {
-  svg {
-    max-height: 330px;
-    max-width: 330px;
-  }
+svg#logo {
+  width: 100%;
+  max-width: 50px;
 }
 
-
-svg:hover {
-  transform: scale(1.1);
-}
-svg g {
-  fill: #fff;
-  filter: drop-shadow( 3px 3px 2px rgba(0,0,0, .35));
-
-}
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg)
-  }
-  87.5% {
-    transform: rotate(0);
-  }
-}
-
-svg > g:nth-child(2) {
-  /* transition: transform 2s, color 2s; */
-  transform-origin:25% center;
-  position:relative;
-  animation: rotate 8s infinite ease;
-}
 
 
 
