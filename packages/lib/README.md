@@ -35,18 +35,14 @@
 
 - Create a Vite config (vite.config.ts) like so:
 
-```js
+```ts
 import { defineConfig } from "vite"
-import esBuildSettings from "cinnabun/settings.esbuild"
-
-const { jsxInject, jsxFactory, jsxFragment } = esBuildSettings
 
 export default defineConfig({
   esbuild: {
     jsx: "transform",
-    jsxInject,
-    jsxFactory,
-    jsxFragment,
+    jsxFactory: "Cinnabun.h",
+    jsxFragment: "Cinnabun.fragment",
   },
 })
 ```
@@ -79,6 +75,7 @@ Cinnabun.bake(App(), root)
 _App.ts_
 
 ```js
+import * as Cinnabun from "cinnabun"
 import { createSignal } from "cinnabun"
 
 export const App = () => {
