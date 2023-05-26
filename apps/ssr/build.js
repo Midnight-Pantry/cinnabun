@@ -6,7 +6,18 @@ const { exec, ChildProcess } = require("node:child_process")
 const EventEmitter = require("events")
 const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
 
-const watch = process.argv.find((arg) => ["-W", "--watch"].indexOf(arg) > -1)
+function getArgs() {
+  return {
+    prod: !!process.argv.find((arg) => arg === "--prod"),
+    debug: !!process.argv.find((arg) => arg === "--debug"),
+  }
+}
+const { prod, debug } = getArgs()
+
+const envVars = {
+  "process.env.NODE_ENV": prod ? '"production"' : '"development"',
+  "process.env.DEBUG": debug ? "true" : "false",
+}
 
 let [clientBuilt, serverBuilt] = [false, false]
 
@@ -43,7 +54,7 @@ emitter.on("build-finished", () => {
   if (!clientBuilt || !serverBuilt) return
 
   log("FgBlue", "build finished")
-  if (watch) restartServer()
+  if (!prod) restartServer()
 })
 
 /** @type {esbuild.BuildOptions} */
@@ -57,82 +68,70 @@ const sharedSettings = {
   jsxFactory: "Cinnabun.h",
   jsxFragment: "Cinnabun.fragment",
   jsxImportSource: "Cinnabun",
+  sourcemap: "linked",
+  define: { ...envVars },
+}
+
+const clientCfg = {
+  entryPoints: ["./src/client/index.ts"],
+  outdir: "dist/static",
+  ...sharedSettings,
+  plugins: [
+    replaceServerFunctions(regexPatterns.ServerPromise),
+    replaceServerFunctions(regexPatterns.$fn),
+    {
+      name: "build-evts",
+      setup({ onStart, onEnd }) {
+        onStart(() => {
+          clientBuilt = false
+          serverBuilt = false
+          console.time(fmt("Dim", "client build time"))
+        })
+        onEnd(() => {
+          clientBuilt = true
+          console.timeEnd(fmt("Dim", "client build time"))
+          emitter.emit("build-finished")
+        })
+      },
+    },
+  ],
+}
+
+const serverCfg = {
+  entryPoints: ["./src/server/index.ts"],
+  outdir: "dist/server",
+  platform: "node",
+  ...sharedSettings,
+  plugins: [
+    {
+      name: "build-evts",
+      setup({ onStart, onEnd }) {
+        onStart(() => {
+          serverBuilt = false
+          console.time(fmt("Dim", "server build time"))
+        })
+        onEnd(() => {
+          serverBuilt = true
+          console.timeEnd(fmt("Dim", "server build time"))
+          emitter.emit("build-finished")
+        })
+      },
+    },
+  ],
 }
 
 const build = async () => {
-  esbuild
-    .context({
-      sourcemap: "linked",
-      entryPoints: ["./src/client/index.ts"],
-      outdir: "dist/static",
-      ...sharedSettings,
-      define: {
-        "process.env.NODE_ENV": '"development"',
-        "process.env.DEBUG": "true",
-      },
-      plugins: [
-        replaceServerFunctions(regexPatterns.ServerPromise),
-        replaceServerFunctions(regexPatterns.$fn),
-        {
-          name: "build-evts",
-          setup({ onStart, onEnd }) {
-            onStart(() => {
-              clientBuilt = false
-              serverBuilt = false
-              console.time(fmt("Dim", "client build time"))
-            })
-            onEnd(() => {
-              clientBuilt = true
-              console.timeEnd(fmt("Dim", "client build time"))
-              emitter.emit("build-finished")
-            })
-          },
-        },
-      ],
+  log("FgBlue", "building...")
+  if (prod) {
+    await Promise.all([esbuild.build(clientCfg), esbuild.build(serverCfg)])
+  } else {
+    esbuild.context(clientCfg).then((ctx) => {
+      ctx.watch()
     })
-    .then((ctx) => {
-      if (watch) {
-        ctx.watch()
-      } else {
-        ctx.dispose()
-      }
+    esbuild.context(serverCfg).then((ctx) => {
+      ctx.watch()
     })
-
-  esbuild
-    .context({
-      sourcemap: "linked",
-      entryPoints: ["./src/server/index.ts"],
-      outdir: "dist/server",
-      platform: "node",
-      ...sharedSettings,
-      define: {
-        "process.env.NODE_ENV": '"development"',
-        "process.env.DEBUG": "true",
-      },
-      plugins: [
-        {
-          name: "build-evts",
-          setup({ onStart, onEnd }) {
-            onStart(() => {
-              serverBuilt = false
-              console.time(fmt("Dim", "server build time"))
-            })
-            onEnd(() => {
-              serverBuilt = true
-              console.timeEnd(fmt("Dim", "server build time"))
-              emitter.emit("build-finished")
-            })
-          },
-        },
-      ],
-    })
-    .then((ctx) => {
-      if (watch) {
-        ctx.watch()
-      } else {
-        ctx.dispose()
-      }
-    })
+  }
 }
 
 build()

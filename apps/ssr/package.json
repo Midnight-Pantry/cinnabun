@@ -6,8 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "build": "node build",
-    "dev": "node build --watch",
-    "prod": "node build && node dist/server",
+    "dev": "pnpm build --debug",
+    "prod": "pnpm build --prod && node dist/server",
     "test": "echo \"Error: no test specified\""
   },
   "keywords": [],
