@@ -5,12 +5,12 @@ import { Signal } from "./signal"
 import { SSRProps, ComponentChild, SerializedComponent } from "./types"
 
 export class Hydration {
-  static validate(component: Component<any>) {
+  static validate(component: Component) {
     if (component.tag && component.shouldRender()) {
       const hasElement = component.element
       const elementMatchesTag =
         hasElement &&
-        component.element.tagName.toLowerCase() === component.tag.toLowerCase()
+        component.element?.tagName.toLowerCase() === component.tag.toLowerCase()
 
       if (!elementMatchesTag)
         console.error("component hydration failed", component)
@@ -19,7 +19,7 @@ export class Hydration {
       if (c instanceof Component) Hydration.validate(c)
     }
   }
-  static hydrate(app: Component<any>, ssrProps: SSRProps) {
+  static hydrate(app: Component, ssrProps: SSRProps) {
     console.log("hydrating", ssrProps)
     console.time("hydration time")
 
@@ -44,7 +44,7 @@ export class Hydration {
   }
 
   static hydrateComponent(
-    parent: Component<any>,
+    parent: Component,
     c: ComponentChild,
     sc: SerializedComponent,
     parentElement: Element | ChildNode
@@ -87,6 +87,7 @@ export class Hydration {
     if (!c.shouldRender()) return
 
     if (c.tag) {
+      //@ts-ignore
       c.element = parentElement.childNodes[childOffset]
       Cinnabun.rootMap.set(parentElement, childOffset + 1)
       DomInterop.updateElement(c)

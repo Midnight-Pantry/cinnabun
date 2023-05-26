@@ -43,7 +43,7 @@ export const addNotification = ({
   notificationStore.value.set(notification.id!, notification as INotification)
 }
 
-class NotificationComponent extends Component<any> {
+class NotificationComponent extends Component {
   constructor(id: string, type: NotificationType, text: string) {
     super("div", {
       ["data-id"]: id,
@@ -53,30 +53,30 @@ class NotificationComponent extends Component<any> {
   }
 }
 
-export class NotificationTrayComponent extends Component<any> {
+export class NotificationTrayComponent extends Component {
   constructor(private animationDuration: number) {
     super("div", { className: "notification-tray" })
 
     const addNotification = (notification: INotification) => {
       const child = notification.component
       this.prependChild(child)
-      const element: HTMLElement = child.element
-      element.addEventListener("mouseenter", function handler() {
+      const element = child.element
+      element?.addEventListener("mouseenter", function handler() {
         child.props.hovered = true
       })
 
-      element.addEventListener("mouseleave", function handler() {
+      element?.addEventListener("mouseleave", function handler() {
         child.props.hovered = false
       })
     }
 
     const removeNotification = (notification: INotification) => {
       const child = notification.component
-      child.element.removeEventListener("mouseenter", function handler() {
+      child.element?.removeEventListener("mouseenter", function handler() {
         child.props.hovered = true
       })
 
-      child.element.removeEventListener("mouseleave", function handler() {
+      child.element?.removeEventListener("mouseleave", function handler() {
         child.props.hovered = false
       })
       DomInterop.unRender(child)
@@ -99,7 +99,7 @@ export class NotificationTrayComponent extends Component<any> {
         children.forEach((c) => {
           if (c.props.hovered) return
 
-          const element: HTMLElement = c.element,
+          const element = c.element,
             notifId: string = c.props["data-id"],
             notification: INotification | undefined =
               notificationStore.value.get(notifId)
@@ -113,7 +113,7 @@ export class NotificationTrayComponent extends Component<any> {
             deleteList.push(notifId)
           } else if (notification.duration < this.animationDuration) {
             if (!c.props.hidden) {
-              element.classList.add("hide")
+              element?.classList.add("hide")
               c.props.hidden = true
             }
           }

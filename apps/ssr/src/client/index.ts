@@ -10,11 +10,12 @@ const env = process.env.NODE_ENV ?? "development"
 
 if ("__cbData" in window) {
   Cinnabun.registerRuntimeServices(createLiveSocket())
-  try {
-    Hydration.hydrate(Template(App), window.__cbData as SSRProps)
-  } catch (error) {
-    console.error(error)
-  }
+  Hydration.hydrate(Template(App), window.__cbData as SSRProps)
+  // try {
+  //   Hydration.hydrate(Template(App), window.__cbData as SSRProps)
+  // } catch (error) {
+  //   console.error(error)
+  // }
 
   if (env === "development") {
     const evtHandler = new EventSource("/sse")

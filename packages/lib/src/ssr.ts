@@ -2,7 +2,7 @@ import { Writable } from "stream"
 import { Cinnabun } from "./cinnabun"
 import { Component } from "./component"
 import { Signal } from "./signal"
-import { ComponentProps, GenericComponent, SerializedComponent } from "./types"
+import { ComponentProps, SerializedComponent } from "./types"
 
 export type ServerPromise<T> = Promise<T>
 
@@ -24,7 +24,7 @@ export type SSRConfig = {
 
 export class SSR {
   static async serverBake(
-    app: Component<any>,
+    app: Component,
     config: SSRConfig
   ): Promise<ServerBakeResult> {
     if (process.env.DEBUG) console.time("render time")
@@ -51,10 +51,8 @@ export class SSR {
     }
   }
 
-  public static serializeProps<T extends HTMLElement>(
-    component: GenericComponent
-  ): Partial<ComponentProps<T>> {
-    const res: Partial<ComponentProps<T>> = {}
+  public static serializeProps(component: Component): Partial<ComponentProps> {
+    const res: Partial<ComponentProps> = {}
 
     for (const k of Object.keys(component.props)) {
       // const p =
@@ -73,7 +71,7 @@ export class SSR {
 
   public static async serialize(
     accumulator: Accumulator,
-    component: GenericComponent,
+    component: Component,
     config: SSRConfig
   ): Promise<SerializedComponent> {
     component.cbInstance = config.cinnabunInstance
@@ -159,7 +157,7 @@ export class SSR {
 
   public static async serializeChildren(
     accumulator: Accumulator,
-    component: GenericComponent,
+    component: Component,
     shouldRender: boolean,
     config: SSRConfig
   ): Promise<SerializedComponent[]> {
@@ -212,7 +210,7 @@ export class SSR {
 }
 
 export function useRequestData<T>(
-  self: GenericComponent,
+  self: Component,
   requestDataPath: string,
   fallback: T
 ) {

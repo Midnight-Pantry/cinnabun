@@ -6,6 +6,6 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
-  video: false,
-  screenshotOnRunFailure: false,
+  //video: false,
+  //screenshotOnRunFailure: false,
 })

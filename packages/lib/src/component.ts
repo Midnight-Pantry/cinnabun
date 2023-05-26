@@ -8,14 +8,13 @@ import {
   ComponentChild,
   ComponentEventProps,
   ClassConstructor,
-  GenericComponent,
 } from "./types"
 
-export class Component<T extends HTMLElement> {
-  parent: Component<any> | null = null
+export class Component {
+  parent: Component | null = null
   children: ComponentChild[] = []
-  funcComponents: GenericComponent[] = []
-  element: T | undefined
+  funcComponents: Component[] = []
+  element: HTMLElement | SVGSVGElement | undefined
   cbInstance: Cinnabun | undefined
 
   private _mounted: boolean = false
@@ -33,15 +32,15 @@ export class Component<T extends HTMLElement> {
   }
 
   private subscription: ComponentSubscription | undefined
-  private _props: ComponentProps<T> = {}
-  constructor(public tag: string, props: ComponentProps<T> = {}) {
+  private _props: ComponentProps = {}
+  constructor(public tag: string, props: ComponentProps = {}) {
     this.props = props
     if (typeof this._props.render === "undefined") this._props.render = true
   }
   get props() {
     return this._props
   }
-  set props(props: ComponentProps<T>) {
+  set props(props: ComponentProps) {
     const { children, watch, ...rest } = props
 
     Object.assign(this._props, rest)
@@ -108,17 +107,17 @@ export class Component<T extends HTMLElement> {
     if (this.subscription) return
     this.subscription = subscription
 
-    const setProps = (props: ComponentProps<T>) => {
+    const setProps = (props: ComponentProps) => {
       this.props = Object.assign(this.props, props)
     }
-    const unsubscriber = this.subscription(setProps, this as Component<any>)
+    const unsubscriber = this.subscription(setProps, this)
     Cinnabun.addComponentReference({
       component: this,
       onDestroyed: () => unsubscriber(),
     })
   }
 
-  bindEvents({ onDestroyed }: ComponentEventProps<T>) {
+  bindEvents({ onDestroyed }: ComponentEventProps) {
     if (onDestroyed) {
       Cinnabun.addComponentReference({
         component: this,
@@ -127,13 +126,13 @@ export class Component<T extends HTMLElement> {
     }
   }
 
-  addChild(child: Component<any>) {
+  addChild(child: Component) {
     this.children.push(child)
     child.parent = this
     DomInterop.reRender(child)
   }
 
-  prependChild(child: Component<any>) {
+  prependChild(child: Component) {
     this.children.unshift(child)
     child.parent = this
     DomInterop.reRender(child)
@@ -150,7 +149,7 @@ export class Component<T extends HTMLElement> {
     }
   }
 
-  destroyChildComponentRefs(el: Component<any>) {
+  destroyChildComponentRefs(el: Component) {
     for (const c of el.children) {
       if (typeof c === "string" || typeof c === "number") continue
       const val = typeof c === "function" ? c(...this.childArgs) : c
@@ -164,7 +163,7 @@ export class Component<T extends HTMLElement> {
     return true
   }
 
-  destroyComponentRefs(el: Component<any>) {
+  destroyComponentRefs(el: Component) {
     this.destroyChildComponentRefs(el)
     el.parent = null
     const subs = Cinnabun.getComponentReferences(el).filter(
@@ -180,7 +179,7 @@ export class Component<T extends HTMLElement> {
     if (this.props.onDestroyed) this.props.onDestroyed(this)
   }
 
-  getParentOfType<Class extends ClassConstructor<Component<any>>>(
+  getParentOfType<Class extends ClassConstructor<Component>>(
     classRef: Class
   ): InstanceType<Class> | undefined {
     if (!this.parent) return undefined
@@ -194,19 +193,22 @@ export class Component<T extends HTMLElement> {
 
   unMount() {
     for (const c of this.children) {
-      if (c instanceof Component<any>) c.unMount()
+      if (c instanceof Component) c.unMount()
     }
     this.mounted = false
   }
 
   isSVG(): boolean {
-    return (
-      this.tag.toLowerCase() === "svg" || this.element?.closest("svg") !== null
-    )
+    try {
+      return this.tag.toLowerCase() === "svg" || !!this.element?.closest("svg")
+    } catch (error) {
+      console.error("isSVG ERROR", this.element)
+      return false
+    }
   }
 }
 
-export class FragmentComponent extends Component<any> {
+export class FragmentComponent extends Component {
   constructor(children: ComponentChild[] = []) {
     super("", { children })
   }

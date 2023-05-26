@@ -1,7 +1,7 @@
 import * as Cinnabun from "cinnabun"
-import { GenericComponent } from "cinnabun/types"
+import { type Component } from "cinnabun"
 
-export const Template = (App: { (): GenericComponent }) => {
+export const Template = (App: { (): Component }) => {
   return (
     <>
       <head>

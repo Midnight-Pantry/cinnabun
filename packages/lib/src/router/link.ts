@@ -15,7 +15,7 @@ export const setPath = (store: Signal<string>, newPath: string) => {
   store.value = newPath
 }
 
-export const Link = (props: LinkProps, children: Component<any>[]) => {
+export const Link = (props: LinkProps, children: Component[]) => {
   const { to, store, className, activeClass, useHash, ...rest } = props
 
   const onclick = (e: MouseEvent) => {
@@ -26,7 +26,7 @@ export const Link = (props: LinkProps, children: Component<any>[]) => {
 
   return new Component("a", {
     watch: store,
-    ["bind:className"]: (self: Component<HTMLAnchorElement>) => {
+    ["bind:className"]: (self: Component) => {
       const curPath = Cinnabun.isClient
         ? store.value
         : self.cbInstance?.getServerRequestData<string>("path")

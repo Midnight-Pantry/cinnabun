@@ -16,7 +16,7 @@ import {
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      [key: string]: Partial<ComponentProps<any>>
+      [key: string]: Partial<ComponentProps>
     }
   }
 }
@@ -26,12 +26,12 @@ export const h = (tag: Tag, props: JSXProps, ...children: NodeChildren) => {
     return tag({ ...props, children }, children)
   }
 
-  let p = props ? props : ({} as ComponentProps<any>)
+  let p = props ? props : ({} as ComponentProps)
 
   //@ts-ignore
   p.children = children
 
-  return new Component<HTMLElement>(tag, p)
+  return new Component(tag, p)
 }
 
 export function fragment(_: any, children: ComponentChild[]) {

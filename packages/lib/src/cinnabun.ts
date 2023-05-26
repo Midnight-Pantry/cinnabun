@@ -1,6 +1,6 @@
 import { Component } from "."
 import { DomInterop } from "./domInterop"
-import { ClassConstructor, GenericComponent, WatchedElementRef } from "./types"
+import { ClassConstructor, WatchedElementRef } from "./types"
 export { h, fragment } from "."
 
 export type RuntimeService<Class> = InstanceType<ClassConstructor<Class>>
@@ -44,21 +44,21 @@ export class Cinnabun {
     return value as T | undefined
   }
 
-  static bake(app: Component<any>, root: HTMLElement): void {
-    const tray = new Component<any>(root.tagName, {
+  static bake(app: Component, root: HTMLElement): void {
+    const tray = new Component(root.tagName, {
       children: [app],
     })
     tray.element = root
     DomInterop.render(tray)
   }
 
-  static getComponentReferences(component: GenericComponent) {
+  static getComponentReferences(component: Component) {
     return Cinnabun.isClient
       ? Cinnabun.componentReferences
       : component.cbInstance!.serverComponentReferences
   }
 
-  static removeComponentReferences(component: GenericComponent) {
+  static removeComponentReferences(component: Component) {
     Cinnabun.removeComponentChildReferences(component)
 
     if (Cinnabun.isClient) {
@@ -73,7 +73,7 @@ export class Cinnabun {
     }
   }
 
-  static removeComponentChildReferences(component: GenericComponent) {
+  static removeComponentChildReferences(component: Component) {
     for (const c of component.children) {
       if (c instanceof Component) Cinnabun.removeComponentReferences(c)
     }
@@ -90,7 +90,7 @@ export class Cinnabun {
       Cinnabun.logComponentRefCount(ref.component)
   }
 
-  static logComponentRefCount(component: GenericComponent) {
+  static logComponentRefCount(component: Component) {
     console.debug(
       "~~ CB REF COUNT",
       Cinnabun.isClient

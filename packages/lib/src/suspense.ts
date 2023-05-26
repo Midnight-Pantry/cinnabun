@@ -3,7 +3,7 @@ import { Component } from "./component"
 import { Cinnabun } from "./cinnabun"
 import { DomInterop } from "./domInterop"
 
-export class SuspenseComponent extends Component<any> {
+export class SuspenseComponent extends Component {
   promiseFunc: { (): Promise<any> } | undefined
   promiseInstance: Promise<any> | undefined
   promiseCache: any

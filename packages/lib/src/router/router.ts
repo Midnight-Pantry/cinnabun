@@ -5,7 +5,7 @@ import { Cinnabun } from "../cinnabun"
 import { DomInterop } from "../domInterop"
 import { ComponentChild, PropsSetter, RouteProps } from "../types"
 
-export class RouteComponent extends Component<any> {
+export class RouteComponent extends Component {
   constructor(path: string, component: ComponentChild) {
     super("", {
       path,
@@ -20,7 +20,7 @@ export class RouteComponent extends Component<any> {
   }
 }
 
-export class RouterComponent extends Component<any> {
+export class RouterComponent extends Component {
   constructor(store: Signal<string>, children: RouteComponent[]) {
     if (children.some((c) => !(c instanceof RouteComponent)))
       throw new Error("Must provide Route as child of Router")
@@ -32,7 +32,7 @@ export class RouterComponent extends Component<any> {
       )
     })
 
-    const subscription = (_: PropsSetter, self: Component<any>) => {
+    const subscription = (_: PropsSetter, self: Component) => {
       return store.subscribe((val) => {
         let len = self.children.length
         while (len--) {

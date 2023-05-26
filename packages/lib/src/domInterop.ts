@@ -1,9 +1,9 @@
 import { Component, Signal } from "."
 import { Cinnabun } from "./cinnabun"
-import { ComponentChild, GenericComponent } from "./types"
+import { ComponentChild } from "./types"
 
 export class DomInterop {
-  static updateElement(component: GenericComponent) {
+  static updateElement(component: Component) {
     if (!component.element) return
     const {
       htmlFor,
@@ -52,13 +52,13 @@ export class DomInterop {
     }
   }
 
-  static getRenderedChildren(component: GenericComponent) {
+  static getRenderedChildren(component: Component) {
     return DomInterop.getRenderableChildren(component).map((c) =>
       DomInterop.renderChild(component, c)
     )
   }
 
-  static getRenderableChildren(component: GenericComponent) {
+  static getRenderableChildren(component: Component) {
     return component.children.filter(
       (c) =>
         typeof c === "function" ||
@@ -69,7 +69,7 @@ export class DomInterop {
     )
   }
 
-  static renderChildren(component: GenericComponent) {
+  static renderChildren(component: Component) {
     if (!component.props.render) return
     if (!component.element) return
     DomInterop.removeFuncComponents(component)
@@ -80,7 +80,7 @@ export class DomInterop {
   }
 
   static renderChild(
-    component: GenericComponent,
+    component: Component,
     child: ComponentChild
   ): string | Node {
     if (child instanceof Signal) {
@@ -99,7 +99,7 @@ export class DomInterop {
     return child.toString()
   }
 
-  static removeFuncComponents(component: GenericComponent) {
+  static removeFuncComponents(component: Component) {
     if (component.funcComponents.length > 0) {
       for (const fc of component.funcComponents) {
         DomInterop.unRender(fc)
@@ -109,7 +109,7 @@ export class DomInterop {
     }
   }
 
-  static unRender(component: GenericComponent) {
+  static unRender(component: Component) {
     try {
       DomInterop.removeFuncComponents(component)
       if (component.element) {
@@ -117,7 +117,7 @@ export class DomInterop {
         return component.element.remove()
       }
       for (const c of component.children) {
-        if (c instanceof Component<any>) {
+        if (c instanceof Component) {
           DomInterop.unRender(c)
         } else if (c instanceof Node) {
           c.parentNode?.removeChild(c)
@@ -129,7 +129,7 @@ export class DomInterop {
     }
   }
 
-  static reRender(component: GenericComponent) {
+  static reRender(component: Component) {
     if (!component.shouldRender()) return
     const el = component.element ?? DomInterop.render(component, true)
     if (component.element) DomInterop.renderChildren(component)
@@ -152,7 +152,7 @@ export class DomInterop {
   }
 
   static render<T extends HTMLElement>(
-    component: Component<T>,
+    component: Component,
     isRerender: boolean = false
   ): T | Node {
     const { children, onDestroyed, subscription, promise } = component.props
@@ -195,7 +195,7 @@ export class DomInterop {
     return component.element
   }
 
-  static svg(component: Component<any>): SVGSVGElement {
+  static svg(component: Component): SVGSVGElement {
     const el = document.createElementNS(
       "http://www.w3.org/2000/svg",
       component.tag
@@ -229,9 +229,9 @@ export class DomInterop {
   }
 
   static getMountLocation(
-    component: GenericComponent,
+    component: Component,
     start = 0
-  ): { element: HTMLElement | null; idx: number } {
+  ): { element: HTMLElement | SVGSVGElement | null; idx: number } {
     if (!component.parent) return { element: null, idx: -1 }
     //if (component.element) start++
 

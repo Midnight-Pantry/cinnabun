@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "build": "node build",
-    "dev": "pnpm build --debug",
-    "prod": "pnpm build --prod && node dist/server",
+    "build": "node build --prod",
+    "dev": "node build --debug",
+    "prod": "node build --prod && node dist/server",
     "test": "echo \"Error: no test specified\""
   },
   "keywords": [],

@@ -4,7 +4,7 @@ import { ComponentProps } from "./types"
 
 export const lazy = (
   func: Promise<{ default: any }>,
-  props: Partial<ComponentProps<any>>,
+  props: Partial<ComponentProps>,
   prefetch: boolean = true
 ) => {
   return new SuspenseComponent("", {
