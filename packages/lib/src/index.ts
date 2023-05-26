@@ -23,13 +23,13 @@ declare global {
 
 export const h = (tag: Tag, props: JSXProps, ...children: NodeChildren) => {
   if (typeof tag === "function") {
-    return tag({ ...props }, children)
+    return tag({ ...props, children }, children)
   }
 
   let p = props ? props : ({} as ComponentProps<any>)
 
   //@ts-ignore
-  p.children = [...children]
+  p.children = children
 
   return new Component<HTMLElement>(tag, p)
 }

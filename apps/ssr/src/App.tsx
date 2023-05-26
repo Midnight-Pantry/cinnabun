@@ -1,6 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import {
   ContextExample,
+  FCWithChildrenExample,
   NestedRoutingExample,
   SignalsExample,
   SuspenseExample,
@@ -12,24 +13,18 @@ import { ProductList } from "./components/ProductList"
 import { AuthButtons } from "./components/AuthButtons"
 import { Nav } from "./components/Nav"
 import { Chat } from "./components/chat/Chat"
-import { NotificationTray, addNotification } from "./components/Notifications"
+import { NotificationTray } from "./components/Notifications"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
     <ul>
-      {...Array(n)
+      {Array(n)
         .fill(0)
-        .map((_, i) => <li>{i}</li>)}
+        .map((_, i) => (
+          <li>{i}</li>
+        ))}
     </ul>
   )
-}
-
-if (Cinnabun.Cinnabun.isClient) {
-  setTimeout(() => {
-    addNotification({
-      text: "Eyyyyyy 😁",
-    })
-  }, 1000)
 }
 
 export const App = () => {
@@ -52,38 +47,20 @@ export const App = () => {
           <Route path="/todo" component={<ToDoExample />} />
           <Route path="/perf" component={<PerfTest n={1_000} />} />
           <Route path="/chat" component={<Chat />} />
-          <Route path="/events" component={<LifeCycleEventsTest />} />
+          <Route
+            path="/fc-with-children"
+            component={
+              <FCWithChildrenExample>
+                <h4>This is a Functional Component child!</h4>
+              </FCWithChildrenExample>
+            }
+          />
         </Router>
       </main>
       <br />
       <AuthButtons />
       <br />
       <NotificationTray />
-    </div>
-  )
-}
-
-const evtstore = Cinnabun.createSignal(true)
-
-const LifeCycleEventsTest = () => {
-  return (
-    <div>
-      <button onclick={() => (evtstore.value = !evtstore.value)}>
-        Toggle state
-      </button>
-      <div
-        watch={evtstore}
-        bind:render={() => evtstore.value}
-        onMounted={() => console.log("parent mounted")}
-        onUnmounted={() => console.log("parent unmounted")}
-      >
-        <h1
-          onMounted={() => console.log("child mounted")}
-          onUnmounted={() => console.log("child unmounted")}
-        >
-          Child
-        </h1>
-      </div>
     </div>
   )
 }

@@ -5,12 +5,6 @@ import { ServerPromise } from "cinnabun/ssr"
 
 type ProductListResponse = Either<{ message: string }, { items: string[] }>
 
-// async function $loadProductList(): Promise<ProductListResponse> {
-//   if (Math.random() < 0.7) return { items: ["this", "was", "prefetched!"] }
-//   return {
-//     message: "Oops! Something went wrong 😢 (not really, just testing :P)",
-//   }
-// }
 async function loadProductList(): ServerPromise<ProductListResponse> {
   if (Math.random() < 0.7) return { items: ["this", "was", "prefetched!"] }
   return {
@@ -21,10 +15,16 @@ async function loadProductList(): ServerPromise<ProductListResponse> {
 export const ProductList = () => {
   return (
     <Suspense prefetch promise={loadProductList}>
-      {(loading: boolean, res?: ProductListResponse) => {
-        if (res?.message) return <p>{res.message}</p>
+      {(loading: boolean, res: ProductListResponse) => {
         if (loading) return <p>loading...</p>
-        return res?.items && <ul>{...res.items.map((c) => <li>{c}</li>)}</ul>
+        if (res.message) return <p>{res.message}</p>
+        return (
+          <ul>
+            {res.items?.map((c) => (
+              <li>{c}</li>
+            ))}
+          </ul>
+        )
       }}
     </Suspense>
   )

@@ -31,6 +31,13 @@ export const Nav = () => {
         <li>
           <Link to="/chat" innerText="Chat" store={pathStore} />
         </li>
+        <li>
+          <Link
+            to="/fc-with-children"
+            innerText="FC w/ Children"
+            store={pathStore}
+          />
+        </li>
       </ul>
     </nav>
   )

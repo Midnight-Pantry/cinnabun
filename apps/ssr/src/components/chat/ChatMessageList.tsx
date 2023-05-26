@@ -31,7 +31,7 @@ export const ChatMessageList = () => {
     >
       {() => (
         <>
-          {...chatMessages.value.map((message) => (
+          {chatMessages.value.map((message) => (
             <ChatMessageItem message={message} />
           ))}
         </>

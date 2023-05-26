@@ -17,7 +17,7 @@ export const ToDoExample = () => {
   }
   const removeToDo = (idx: number) => {
     todos.value.splice(idx, 1)
-    todos.value = todos.value
+    todos.notify()
   }
 
   const handleSubmit = (e: Event) => {
@@ -31,7 +31,7 @@ export const ToDoExample = () => {
       <ul className="todo-list" watch={todos} bind:render>
         {() => (
           <>
-            {...todos.value.map((item, i) => (
+            {todos.value.map((item, i) => (
               <li>
                 <input
                   type="checkbox"

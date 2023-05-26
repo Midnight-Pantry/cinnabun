@@ -11,9 +11,15 @@ export const ChatMessageList_REST = () => {
       promise={cb.isClient ? getChatMessages : prefetchChatMessages}
     >
       {(loading: boolean, res: ChatMessagesResponse) => {
-        if (res?.error) return <p>{res.error}</p>
         if (loading) return <p>loading chat messages...</p>
-        return res && <ul>{...res.data.map((c) => <li>{c.contents}</li>)}</ul>
+        if (res.error) return <p>{res.error}</p>
+        return (
+          <ul>
+            {res.data.map((c) => (
+              <li>{c.contents}</li>
+            ))}
+          </ul>
+        )
       }}
     </Cinnabun.Suspense>
   )

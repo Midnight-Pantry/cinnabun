@@ -26,6 +26,12 @@ export type ComponentChild =
   | number
   | { (): string | number }
 
+export type ComponentChildren = Array<ComponentChild>
+
+export type PropsWithChildren = {
+  children?: ComponentChildren
+}
+
 export type PropsSetter = { (props: ComponentProps<any>): void }
 export type ComponentSubscription = {
   (fn: PropsSetter, self: Component<HTMLElement>): { (): void }

@@ -6,13 +6,8 @@ import {
   SuspenseExample,
   NestedRoutingExample,
   ToDoExample,
+  FCWithChildrenExample,
 } from "@cinnabun/example-components"
-import { Component, createSignal } from "cinnabun"
-
-const signal = createSignal(123)
-setTimeout(() => {
-  signal.value = 456
-}, 500)
 
 export const App = () => {
   return (
@@ -40,6 +35,13 @@ export const App = () => {
           <li>
             <Link to="/todo" innerText="ToDo" store={pathStore} />
           </li>
+          <li>
+            <Link
+              to="/fc-with-children"
+              innerText="FC w/ Children"
+              store={pathStore}
+            />
+          </li>
         </ul>
       </nav>
 
@@ -53,6 +55,14 @@ export const App = () => {
             component={<NestedRoutingExample {...{ pathStore }} />}
           />
           <Route path="/todo" component={<ToDoExample />} />
+          <Route
+            path="/fc-with-children"
+            component={
+              <FCWithChildrenExample>
+                <h4>This is a Functional Component child!</h4>
+              </FCWithChildrenExample>
+            }
+          />
         </Router>
       </main>
     </div>

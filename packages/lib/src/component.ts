@@ -45,9 +45,7 @@ export class Component<T extends HTMLElement> {
     const { children, watch, ...rest } = props
 
     Object.assign(this._props, rest)
-    if (children) {
-      if (this.validateChildren(children)) this.replaceChildren(children)
-    }
+    if (children) this.replaceChildren(children)
 
     if (Cinnabun.isClient && watch) {
       this._props.watch = watch
@@ -64,14 +62,6 @@ export class Component<T extends HTMLElement> {
 
   get childArgs(): any[] {
     return []
-  }
-
-  validateChildren(children: ComponentChild[] = []): boolean {
-    if (children.some((c) => Array.isArray(c))) {
-      console.error("Error: Cannot render child of type Array", children)
-      return false
-    }
-    return true
   }
 
   applyBindProps() {
@@ -151,7 +141,9 @@ export class Component<T extends HTMLElement> {
 
   replaceChildren(newChildren: ComponentChild[]) {
     this.destroyChildComponentRefs(this)
-    this.children = newChildren
+    this.children = newChildren.map((c) =>
+      Array.isArray(c) ? new FragmentComponent(c) : c
+    )
     for (let i = 0; i < this.children.length; i++) {
       const c = this.children[i]
       if (c instanceof Component) c.parent = this
