@@ -13,14 +13,35 @@ import { socketHandler } from "./socket"
 import { configureAuthRoutes } from "./auth"
 import { configureChatRoutes } from "./chat"
 import { Template } from "../Template"
+import { log } from "../../logger.js"
+
+const env = process.env.NODE_ENV ?? "development"
+
+if (env === "development") {
+  try {
+    log("Dim", "  evaluating application... 🔍")
+    Template(App)
+    log("Dim", "  good to go! ✅")
+  } catch (error) {
+    if ("message" in (error as Error)) {
+      const err = error as Error
+      log(
+        "FgRed",
+        `
+Failed to evaluate application.
+${err.stack}
+`
+      )
+      process.exit(96)
+      //throw new Error("Failed to evaluate app \n" + err.message)
+    }
+  }
+}
 
 declare module "fastify" {
   export interface FastifyInstance {
     authenticate: {
       (request: FastifyRequest, reply: FastifyReply): Promise<void>
-    }
-    verify: {
-      (request: FastifyRequest): Promise<void>
     }
   }
 }
@@ -46,17 +67,12 @@ const app = fastify()
     "authenticate",
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        await request.jwtVerify()
-      } catch (err) {
-        reply.send(err)
+        await request.jwtVerify({ onlyCookie: true })
+      } catch (error) {
+        reply.clearCookie("refreshToken")
       }
     }
   )
-  app.decorate("verify", async (request: FastifyRequest) => {
-    try {
-      await request.jwtVerify({ onlyCookie: true })
-    } catch (error) {}
-  })
 
   app.register(websocket, {
     options: { maxPayload: 1048576 },
@@ -82,8 +98,11 @@ const app = fastify()
 
 configureAuthRoutes(app)
 configureChatRoutes(app)
+if (env === "development") {
+  import("../../sse").then(({ configureSSE }) => configureSSE(app))
+}
 
-app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
+app.get("/*", { onRequest: [app.authenticate] }, async (req, res) => {
   const cinnabunInstance = new Cinnabun()
   cinnabunInstance.setServerRequestData({
     path: req.url,
@@ -120,6 +139,9 @@ app.listen({ port }, function (err) {
     process.exit(1)
   }
 
-  console.log(`Server is listening on port ${port}`)
-  console.log("http://localhost:3000")
+  log(
+    "FgGreen",
+    `
+Server is listening on port ${port} - http://localhost:3000`
+  )
 })

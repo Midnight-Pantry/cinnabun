@@ -1,5 +1,7 @@
 const esbuild = require("esbuild")
 const kill = require("tree-kill")
+const { log, fmt } = require("./logger.js")
+
 const { exec, ChildProcess } = require("node:child_process")
 const EventEmitter = require("events")
 const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
@@ -11,26 +13,37 @@ let [clientBuilt, serverBuilt] = [false, false]
 /** @type {ChildProcess | null} */
 let serverProcess = null
 
-const startServer = () => {
+const restartServer = () => {
   if (serverProcess && serverProcess.pid) {
     kill(serverProcess.pid, () => {
-      serverProcess = exec("node dist/server")
-      console.log("server started")
+      startServer()
     })
     return
   }
+  startServer()
+}
+
+const startServer = () => {
   serverProcess = exec("node dist/server")
-  console.log("server started")
+  serverProcess.stdout.on("data", (data) => {
+    process.stdout.write(data)
+  })
+  serverProcess.stderr.on("data", (data) => {
+    process.stderr.write(data)
+  })
+  serverProcess.on("close", (code) => {
+    if (code && code === 96) {
+      log("Bold", "serverProcess exited, awaiting changes...")
+    }
+  })
 }
 
 const emitter = new EventEmitter()
 emitter.on("build-finished", () => {
   if (!clientBuilt || !serverBuilt) return
-  clientBuilt = false
-  serverBuilt = false
 
-  console.log("build finished")
-  if (watch) startServer()
+  log("FgBlue", "build finished")
+  if (watch) restartServer()
 })
 
 /** @type {esbuild.BuildOptions} */
@@ -47,62 +60,79 @@ const sharedSettings = {
 }
 
 const build = async () => {
-  const serverCtx = await esbuild.context({
-    sourcemap: "linked",
-    entryPoints: ["./src/server/index.ts"],
-    outdir: "dist/server",
-    platform: "node",
-    ...sharedSettings,
-    plugins: [
-      {
-        name: "build-started",
-        setup({ onStart }) {
-          onStart(() => {
-            console.log("build started")
-          })
-        },
+  esbuild
+    .context({
+      sourcemap: "linked",
+      entryPoints: ["./src/client/index.ts"],
+      outdir: "dist/static",
+      ...sharedSettings,
+      define: {
+        "process.env.NODE_ENV": '"development"',
+        "process.env.DEBUG": "true",
       },
-      {
-        name: "build-finished",
-        setup({ onEnd }) {
-          onEnd(() => {
-            serverBuilt = true
-            emitter.emit("build-finished")
-          })
+      plugins: [
+        replaceServerFunctions(regexPatterns.ServerPromise),
+        replaceServerFunctions(regexPatterns.$fn),
+        {
+          name: "build-evts",
+          setup({ onStart, onEnd }) {
+            onStart(() => {
+              clientBuilt = false
+              serverBuilt = false
+              console.time(fmt("Dim", "client build time"))
+            })
+            onEnd(() => {
+              clientBuilt = true
+              console.timeEnd(fmt("Dim", "client build time"))
+              emitter.emit("build-finished")
+            })
+          },
         },
-      },
-    ],
-  })
-  if (watch) {
-    await serverCtx.watch()
-  } else {
-    await serverCtx.dispose()
-  }
+      ],
+    })
+    .then((ctx) => {
+      if (watch) {
+        ctx.watch()
+      } else {
+        ctx.dispose()
+      }
+    })
 
-  const ctx = await esbuild.context({
-    sourcemap: "linked",
-    entryPoints: ["./src/client/index.ts"],
-    outdir: "dist/static",
-    ...sharedSettings,
-    plugins: [
-      replaceServerFunctions(regexPatterns.ServerPromise),
-      replaceServerFunctions(regexPatterns.$fn),
-      {
-        name: "build-finished",
-        setup({ onEnd }) {
-          onEnd(() => {
-            clientBuilt = true
-            emitter.emit("build-finished")
-          })
-        },
+  esbuild
+    .context({
+      sourcemap: "linked",
+      entryPoints: ["./src/server/index.ts"],
+      outdir: "dist/server",
+      platform: "node",
+      ...sharedSettings,
+      define: {
+        "process.env.NODE_ENV": '"development"',
+        "process.env.DEBUG": "true",
       },
-    ],
-  })
-  if (watch) {
-    await ctx.watch()
-  } else {
-    await ctx.dispose()
-  }
+      plugins: [
+        {
+          name: "build-evts",
+          setup({ onStart, onEnd }) {
+            onStart(() => {
+              serverBuilt = false
+              console.time(fmt("Dim", "server build time"))
+            })
+            onEnd(() => {
+              serverBuilt = true
+              console.timeEnd(fmt("Dim", "server build time"))
+              emitter.emit("build-finished")
+            })
+          },
+        },
+      ],
+    })
+    .then((ctx) => {
+      if (watch) {
+        ctx.watch()
+      } else {
+        ctx.dispose()
+      }
+    })
 }
 
 build()

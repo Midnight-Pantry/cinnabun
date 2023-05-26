@@ -6,6 +6,7 @@ import { parseJwt } from "./client/jwt"
 const isClient = Cinnabun.isClient
 
 const getUserDataFromToken = () => {
+  if (document.cookie === "") localStorage.removeItem("token")
   const tkn = localStorage.getItem("token")
   if (!tkn) return null
   return parseJwt(tkn)

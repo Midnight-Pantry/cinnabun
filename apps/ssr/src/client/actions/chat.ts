@@ -24,7 +24,7 @@ export const getChatMessages = async (): Promise<ChatMessagesResponse> => {
     const data = await res.json()
 
     return {
-      data: [...data.messages],
+      data: data.messages,
     }
   } catch (error) {
     return { error: error as Error }

@@ -13,6 +13,18 @@ if ("__cbData" in window) {
   // non-streaming
   //Hydration.hydrate(App(), window.__cbData as SSRProps)
 
+  const evtHandler = new EventSource("/sse")
+  let didConnect = false
+  evtHandler.addEventListener("handshake", () => {
+    didConnect = true
+  })
+
+  evtHandler.addEventListener("error", (evt: Event) => {
+    const connIsReset = didConnect && evtHandler.readyState === 0
+    if (connIsReset) location.reload()
+    console.log("evtHandler err evt", evt)
+  })
+
   //TestSerialization()
 }
 
