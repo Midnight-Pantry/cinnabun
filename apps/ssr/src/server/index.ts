@@ -15,9 +15,9 @@ import { configureChatRoutes } from "./chat"
 import { Template } from "../Template"
 import { log } from "../../logger.js"
 
-const env = process.env.NODE_ENV ?? "development"
+const isDev = process.env.NODE_ENV === "development"
 
-if (env === "development") {
+if (isDev) {
   ;(async () => {
     try {
       log("Dim", "  evaluating application... 🔍")
@@ -100,7 +100,7 @@ const app = fastify()
 
 configureAuthRoutes(app)
 configureChatRoutes(app)
-if (env === "development") {
+if (isDev) {
   import("../../sse").then(({ configureSSE }) => configureSSE(app))
 }
 

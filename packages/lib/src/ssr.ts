@@ -27,16 +27,15 @@ export class SSR {
     app: Component<any>,
     config: SSRConfig
   ): Promise<ServerBakeResult> {
-    console.time("render time")
+    if (process.env.DEBUG) console.time("render time")
     const accumulator: Accumulator = {
       html: [],
       promiseQueue: [],
     }
 
     const serialized = await SSR.serialize(accumulator, app, config)
-    // resolve promises, components should replace their corresponding item in the html arr
 
-    console.timeEnd("render time")
+    if (process.env.DEBUG) console.timeEnd("render time")
     return {
       componentTree: { children: [serialized], props: {} },
       html: accumulator.html.join(""),
@@ -117,7 +116,7 @@ export class SSR {
       return res
     }
 
-    if (component.tag === "svg") return SSR.serializeSvg(component)
+    //if (component.tag === "svg") return SSR.serializeSvg(component)
 
     const renderClosingTag =
       ["br", "hr", "img", "input", "link", "meta"].indexOf(
@@ -209,10 +208,6 @@ export class SSR {
       res.push(sc)
     }
     return res
-  }
-
-  public static serializeSvg(_: Component<any>): SerializedComponent {
-    throw new Error("not implemented yet")
   }
 }
 

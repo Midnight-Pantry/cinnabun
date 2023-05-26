@@ -6,24 +6,29 @@ import "./index.css"
 import { createLiveSocket } from "./liveSocket"
 import { Cinnabun } from "cinnabun"
 
+const env = process.env.NODE_ENV ?? "development"
+
 if ("__cbData" in window) {
   Cinnabun.registerRuntimeServices(createLiveSocket())
-  // streaming
-  Hydration.hydrate(Template(App), window.__cbData as SSRProps)
-  // non-streaming
-  //Hydration.hydrate(App(), window.__cbData as SSRProps)
+  try {
+    Hydration.hydrate(Template(App), window.__cbData as SSRProps)
+  } catch (error) {
+    console.error(error)
+  }
 
-  const evtHandler = new EventSource("/sse")
-  let didConnect = false
-  evtHandler.addEventListener("handshake", () => {
-    didConnect = true
-  })
+  if (env === "development") {
+    const evtHandler = new EventSource("/sse")
+    let didConnect = false
+    evtHandler.addEventListener("handshake", () => {
+      didConnect = true
+    })
 
-  evtHandler.addEventListener("error", (evt: Event) => {
-    const connIsReset = didConnect && evtHandler.readyState === 0
-    if (connIsReset) location.reload()
-    console.log("evtHandler err evt", evt)
-  })
+    evtHandler.addEventListener("error", (evt: Event) => {
+      const connIsReset = didConnect && evtHandler.readyState === 0
+      if (connIsReset) location.reload()
+      console.log("evtHandler err evt", evt)
+    })
+  }
 
   //TestSerialization()
 }
