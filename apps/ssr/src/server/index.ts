@@ -18,24 +18,26 @@ import { log } from "../../logger.js"
 const env = process.env.NODE_ENV ?? "development"
 
 if (env === "development") {
-  try {
-    log("Dim", "  evaluating application... 🔍")
-    Template(App)
-    log("Dim", "  good to go! ✅")
-  } catch (error) {
-    if ("message" in (error as Error)) {
-      const err = error as Error
-      log(
-        "FgRed",
-        `
-Failed to evaluate application.
-${err.stack}
-`
-      )
-      process.exit(96)
-      //throw new Error("Failed to evaluate app \n" + err.message)
+  ;(async () => {
+    try {
+      log("Dim", "  evaluating application... 🔍")
+      const cinnabunInstance = new Cinnabun()
+      await SSR.serverBake(Template(App), { cinnabunInstance })
+      log("Dim", "  good to go! ✅")
+    } catch (error) {
+      if ("message" in (error as Error)) {
+        const err = error as Error
+        log(
+          "FgRed",
+          `
+  Failed to evaluate application.
+  ${err.stack}
+  `
+        )
+        process.exit(96)
+      }
     }
-  }
+  })()
 }
 
 declare module "fastify" {
