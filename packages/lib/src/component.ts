@@ -143,9 +143,16 @@ export class Component {
     this.children = newChildren.map((c) =>
       Array.isArray(c) ? new FragmentComponent(c) : c
     )
+    this.linkChildren()
+  }
+
+  linkChildren() {
     for (let i = 0; i < this.children.length; i++) {
       const c = this.children[i]
-      if (c instanceof Component) c.parent = this
+      if (c instanceof Component) {
+        c.parent = this
+        c.linkChildren()
+      }
     }
   }
 
@@ -165,7 +172,7 @@ export class Component {
 
   destroyComponentRefs(el: Component) {
     this.destroyChildComponentRefs(el)
-    el.parent = null
+    //el.parent = null
     const subs = Cinnabun.getComponentReferences(el).filter(
       (s) => s.component === el
     )

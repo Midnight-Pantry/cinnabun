@@ -87,17 +87,24 @@ export class DomInterop {
             )
             return
           }
-          const c = element.childNodes[idx] as ChildNode | undefined
+          const c = element.childNodes[idx]
           if (c) c.nodeValue = child.value.toString()
         })
       )
       return child.value.toString()
     }
-    if (child instanceof Component) return DomInterop.render(child)
+    if (child instanceof Component) {
+      if (!child.props.render) return ""
+      return DomInterop.render(child)
+    }
     if (typeof child === "function") {
       const c = child(...component.childArgs)
       const res = DomInterop.renderChild(component, c, idx)
-      if (c instanceof Component) component.funcComponents.push(c)
+      if (c instanceof Component) {
+        if (!c.props.render) return ""
+        c.parent = component
+        component.funcComponents.push(c)
+      }
       return res
     }
     return child.toString()
@@ -141,6 +148,7 @@ export class DomInterop {
 
     const { element, idx } = DomInterop.getMountLocation(component)
     if (!element) {
+      debugger
       console.error("Failed to get component mount element", component, el)
       return
     }

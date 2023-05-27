@@ -99,7 +99,6 @@ export class Hydration {
 
       return
     }
-    //if (c.tag.toLowerCase() === "input") debugger
 
     c.parent = parent
 
@@ -114,8 +113,7 @@ export class Hydration {
     if (!c.shouldRender()) return
 
     if (c.tag) {
-      //@ts-ignore
-      c.element = parentElement.childNodes[childOffset]
+      c.element = parentElement.childNodes[childOffset] as HTMLElement
       Cinnabun.rootMap.set(parentElement, childOffset + 1)
       DomInterop.updateElement(c)
     }

@@ -1,8 +1,7 @@
 import * as Cinnabun from "cinnabun"
-import { Route, Router } from "cinnabun/router"
+import { Link, Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
 import { Logo } from "./Logo"
-import { SuspenseExample } from "@cinnabun/example-components"
 
 const state = Cinnabun.createSignal(123)
 
@@ -14,11 +13,18 @@ export const App = () => {
         <Logo />
       </div>
 
+      <Link to="/" store={pathStore}>
+        Home
+      </Link>
+      <Link to="/test" store={pathStore}>
+        Test
+      </Link>
+
       <main style={{ textAlign: "center", flexGrow: "1" }}>
         <Router store={pathStore}>
           <Route
             path="/"
-            component={Cinnabun.lazy(import("./Page"), { state })}
+            component={() => Cinnabun.lazy(import("./Page"), { state })}
           />
           <Route
             path="/:test"
@@ -28,9 +34,6 @@ export const App = () => {
           />
         </Router>
       </main>
-      <div style="max-height: 300px; overflow-y:scroll">
-        <SuspenseExample />
-      </div>
     </div>
   )
 }

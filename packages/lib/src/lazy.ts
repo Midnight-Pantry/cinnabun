@@ -11,10 +11,15 @@ export const lazy = (
   const suspenseWrapper = new SuspenseComponent("", {
     promise: async () => modulePromise,
     prefetch,
+    cache: true,
     children: [
       (loading: boolean, res: { default?: any }) => {
         if (loading) return new FragmentComponent()
-        if ("default" in res) return res.default(props)
+        if ("default" in res) {
+          const component = res.default(props)
+          component.parent = suspenseWrapper
+          return component
+        }
         Hydration.lazyHydrate(suspenseWrapper, modulePromise, props)
       },
     ],
