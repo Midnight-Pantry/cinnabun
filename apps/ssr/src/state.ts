@@ -1,6 +1,5 @@
-import { Cinnabun, createSignal } from "cinnabun"
+import { Cinnabun, createSignal, type Component } from "cinnabun"
 import { useRequestData } from "cinnabun/ssr"
-import { GenericComponent } from "cinnabun/types"
 import { parseJwt } from "./client/jwt"
 
 const isClient = Cinnabun.isClient
@@ -18,12 +17,12 @@ export const userStore = createSignal<{ username: string } | null>(
   isClient ? getUserDataFromToken() : null
 )
 
-export const getUser = (self: GenericComponent) =>
+export const getUser = (self: Component) =>
   useRequestData<{ username: string } | null>(
     self,
     "data.user",
     userStore.value
   )
 
-export const isAuthenticated = (self: GenericComponent) => !!getUser(self)
-export const isNotAuthenticated = (self: GenericComponent) => !getUser(self)
+export const isAuthenticated = (self: Component) => !!getUser(self)
+export const isNotAuthenticated = (self: Component) => !getUser(self)
