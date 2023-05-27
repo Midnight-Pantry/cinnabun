@@ -1,0 +1,10 @@
+{
+  "jsx": "transform",
+  "jsxFactory": "Cinnabun.h",
+  "jsxFragment": "Cinnabun.fragment",
+  "module": "Node16",
+  "lib": ["ESNext", "DOM"],
+  "moduleResolution": "Node",
+  "esModuleInterop": true,
+  "isolatedModules": true
+}
