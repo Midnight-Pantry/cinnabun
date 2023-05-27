@@ -16,6 +16,10 @@ export type Tag = string | ((props: any, children: any[]) => Component)
 export type JSXProps = Record<string, string | number | null | undefined> | null
 export type NodeChildren = (Node | string)[]
 
+export type LazyComponentModule = Promise<{
+  default: { (...args: any[]): Component }
+}>
+
 export type ComponentFunc = { (...args: any[]): Component }
 //Type '(loading: boolean, data: number) => Component<any>' is not assignable to type 'ComponentFunc'
 export type ComponentChild =

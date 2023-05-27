@@ -2,7 +2,14 @@ import { Cinnabun } from "./cinnabun"
 import { Component } from "./component"
 import { DomInterop } from "./domInterop"
 import { Signal } from "./signal"
-import { SSRProps, ComponentChild, SerializedComponent } from "./types"
+import { SuspenseComponent } from "./suspense"
+import {
+  SSRProps,
+  ComponentChild,
+  SerializedComponent,
+  LazyComponentModule,
+  ComponentProps,
+} from "./types"
 
 export class Hydration {
   static validate(component: Component) {
@@ -43,13 +50,33 @@ export class Hydration {
     //Hydration.validate(tray)
   }
 
+  static async lazyHydrate(
+    suspenseWrapper: SuspenseComponent,
+    modulePromise: LazyComponentModule,
+    props?: Partial<ComponentProps>
+  ) {
+    const module = await modulePromise
+    const component = module.default(props)
+    component.parent = suspenseWrapper
+    const { element } = DomInterop.getMountLocation(component)
+    if (!element) return
+
+    suspenseWrapper.funcComponents.push(component)
+    Hydration.hydrateComponent(
+      suspenseWrapper,
+      component,
+      {} as SerializedComponent,
+      element
+    )
+    DomInterop.reRender(component)
+  }
+
   static hydrateComponent(
     parent: Component,
     c: ComponentChild,
     sc: SerializedComponent,
     parentElement: Element | ChildNode
   ) {
-    if (!sc) return
     const childOffset: number = Cinnabun.rootMap.get(parentElement) ?? 0
 
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
@@ -76,7 +103,7 @@ export class Hydration {
 
     c.parent = parent
 
-    if (sc.props && Object.keys(sc.props).length) {
+    if (sc?.props && Object.keys(sc.props).length) {
       for (const [k, v] of Object.entries(sc.props)) {
         const curProp = c.props[k]
         if (curProp instanceof Signal) continue
@@ -106,7 +133,7 @@ export class Hydration {
 
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
-      const sChild = sc.children[i]
+      const sChild = sc.children ? sc.children[i] : ({} as SerializedComponent)
 
       if (child instanceof Signal) {
         DomInterop.renderChild(c, child, i)

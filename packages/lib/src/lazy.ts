@@ -1,20 +1,23 @@
 import { FragmentComponent } from "./component"
+import { Hydration } from "./hydration"
 import { SuspenseComponent } from "./suspense"
-import { ComponentProps } from "./types"
+import { ComponentProps, LazyComponentModule } from "./types"
 
 export const lazy = (
-  func: Promise<{ default: any }>,
-  props: Partial<ComponentProps>,
+  modulePromise: LazyComponentModule,
+  props?: Partial<ComponentProps>,
   prefetch: boolean = true
 ) => {
-  return new SuspenseComponent("", {
-    promise: async () => func,
+  const suspenseWrapper = new SuspenseComponent("", {
+    promise: async () => modulePromise,
     prefetch,
     children: [
-      (loading: boolean, res: { default: any }) => {
+      (loading: boolean, res: { default?: any }) => {
         if (loading) return new FragmentComponent()
-        return res.default(props)
+        if ("default" in res) return res.default(props)
+        Hydration.lazyHydrate(suspenseWrapper, modulePromise, props)
       },
     ],
   })
+  return suspenseWrapper
 }
