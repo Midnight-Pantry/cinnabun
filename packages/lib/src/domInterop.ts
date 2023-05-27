@@ -53,19 +53,8 @@ export class DomInterop {
   }
 
   static getRenderedChildren(component: Component) {
-    return DomInterop.getRenderableChildren(component).map((c) =>
-      DomInterop.renderChild(component, c)
-    )
-  }
-
-  static getRenderableChildren(component: Component) {
-    return component.children.filter(
-      (c) =>
-        typeof c === "function" ||
-        typeof c === "string" ||
-        typeof c === "number" ||
-        (c instanceof Component && c.props.render) ||
-        c instanceof Signal
+    return component.children.map((c, i) =>
+      DomInterop.renderChild(component, c, i)
     )
   }
 
@@ -81,18 +70,33 @@ export class DomInterop {
 
   static renderChild(
     component: Component,
-    child: ComponentChild
+    child: ComponentChild,
+    idx: number
   ): string | Node {
     if (child instanceof Signal) {
       component.subscribeTo((_, __) =>
-        child.subscribe(() => DomInterop.renderChildren(component))
+        child.subscribe(() => {
+          const { element } = component.element
+            ? { element: component.element }
+            : DomInterop.getMountLocation(component)
+          if (!element) {
+            console.error(
+              "Failed to get component mount element",
+              component,
+              child
+            )
+            return
+          }
+          const c = element.childNodes[idx] as ChildNode | undefined
+          if (c) c.nodeValue = child.value.toString()
+        })
       )
       return child.value.toString()
     }
     if (child instanceof Component) return DomInterop.render(child)
     if (typeof child === "function") {
       const c = child(...component.childArgs)
-      const res = DomInterop.renderChild(component, c)
+      const res = DomInterop.renderChild(component, c, idx)
       if (c instanceof Component) component.funcComponents.push(c)
       return res
     }
@@ -151,10 +155,7 @@ export class DomInterop {
     component.mounted = true
   }
 
-  static render<T extends HTMLElement>(
-    component: Component,
-    isRerender: boolean = false
-  ): T | Node {
+  static render(component: Component, isRerender: boolean = false) {
     const { children, onDestroyed, subscription, promise } = component.props
 
     Cinnabun.removeComponentReferences(component)
@@ -178,7 +179,7 @@ export class DomInterop {
 
     if (component.tag.toLowerCase() === "svg") return DomInterop.svg(component)
     if (!component.element) {
-      component.element = document.createElement(component.tag) as T
+      component.element = document.createElement(component.tag) as HTMLElement
     }
 
     if (children) component.replaceChildren(children)

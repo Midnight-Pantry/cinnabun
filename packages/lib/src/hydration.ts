@@ -109,7 +109,7 @@ export class Hydration {
       const sChild = sc.children[i]
 
       if (child instanceof Signal) {
-        DomInterop.renderChild(c, child)
+        DomInterop.renderChild(c, child, i)
       }
       Hydration.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
