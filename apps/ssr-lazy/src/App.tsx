@@ -13,7 +13,6 @@ export const App = () => {
 
         <Logo />
       </div>
-      asd
       <Link to="/" store={pathStore}>
         Home
       </Link>
