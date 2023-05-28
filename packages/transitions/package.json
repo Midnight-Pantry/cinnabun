@@ -1,7 +1,7 @@
 {
   "name": "cinnabun-transitions",
   "version": "1.0.0",
-  "description": "",
+  "description": "Fancy transitions for Cinnabun components",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\""
