@@ -25,7 +25,7 @@ export class Component {
     const changed = this._mounted !== val
     this._mounted = val
     if (changed && val && this._props.onMounted) {
-      this._props.onMounted(this)
+      setTimeout(() => this._props.onMounted!(this), 0)
     } else if (changed && !val && this._props.onUnmounted) {
       this._props.onUnmounted(this)
     }
