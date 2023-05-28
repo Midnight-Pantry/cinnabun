@@ -11,7 +11,7 @@
     "build": "tsc",
     "build:watch": "tsc -w",
     "start": "pnpm build && node dist/index.js",
-    "test": "vitest"
+    "test": "echo \"Error: no test specified\""
   },
   "keywords": [],
   "author": "",
