@@ -1,5 +1,5 @@
 import { Cinnabun } from "./cinnabun"
-import { Component } from "./component"
+import { Component, FragmentComponent } from "./component"
 import { DomInterop } from "./domInterop"
 import { Signal } from "./signal"
 import { SuspenseComponent } from "./suspense"
@@ -87,10 +87,11 @@ export class Hydration {
       const usePromiseCache =
         "promiseCache" in parent.props && parent.props.prefetch
 
-      const val = usePromiseCache
+      let val = usePromiseCache
         ? c(...[false, parent.props.promiseCache])
         : c(...parent.childArgs)
 
+      if (Array.isArray(val)) val = new FragmentComponent(val)
       if (val instanceof Component) {
         if (!val.shouldRender()) return
         Hydration.hydrateComponent(parent, val, sc, parentElement)

@@ -1,5 +1,6 @@
 import { Component, Signal } from "."
 import { Cinnabun } from "./cinnabun"
+import { FragmentComponent } from "./component"
 import { ComponentChild } from "./types"
 
 export class DomInterop {
@@ -98,7 +99,8 @@ export class DomInterop {
       return DomInterop.render(child)
     }
     if (typeof child === "function") {
-      const c = child(...component.childArgs)
+      let c = child(...component.childArgs)
+      if (Array.isArray(c)) c = new FragmentComponent(c)
       const res = DomInterop.renderChild(component, c, idx)
       if (c instanceof Component) {
         if (!c.props.render) return ""

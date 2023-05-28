@@ -1,6 +1,6 @@
 import { Writable } from "stream"
 import { Cinnabun } from "./cinnabun"
-import { Component } from "./component"
+import { Component, FragmentComponent } from "./component"
 import { Signal } from "./signal"
 import { ComponentProps, SerializedComponent } from "./types"
 
@@ -189,7 +189,8 @@ export class SSR {
           component.props.promiseCache = component.promiseCache
         }
 
-        const val = c(...component.childArgs)
+        let val = c(...component.childArgs)
+        if (Array.isArray(val)) val = new FragmentComponent(val)
         if (val instanceof Component) {
           val.parent = component
           const sc = await SSR.serialize(accumulator, val, config)
