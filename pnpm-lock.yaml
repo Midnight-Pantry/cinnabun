@@ -57,6 +57,9 @@ importers:
       cinnabun:
         specifier: workspace:^
         version: link:../../packages/lib
+      cinnabun-transitions:
+        specifier: workspace:^
+        version: link:../../packages/transitions
       esbuild:
         specifier: ^0.17.18
         version: 0.17.18
@@ -259,6 +262,12 @@ importers:
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
+
+  packages/transitions:
+    dependencies:
+      cinnabun:
+        specifier: workspace:^
+        version: link:../lib
 
 packages:
 
