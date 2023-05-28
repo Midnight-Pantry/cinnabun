@@ -31,7 +31,7 @@ export type ComponentChild =
 
 export type ComponentChildren = Array<ComponentChild>
 
-export type PropsWithChildren = {
+export type PropsWithChildren = ComponentProps & {
   children?: ComponentChildren
 }
 
@@ -57,6 +57,7 @@ export type WatchedElementRef = {
 export type ComponentEventProps = {
   onMounted?: { (c: Component): void }
   onUnmounted?: { (c: Component): void }
+  onBeforeUnmounted?: { (c: Component): Promise<boolean> | undefined }
   onDestroyed?: { (c: Component): void }
 }
 export type ReactivityProps = {

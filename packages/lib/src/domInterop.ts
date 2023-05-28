@@ -122,8 +122,15 @@ export class DomInterop {
     }
   }
 
-  static unRender(component: Component) {
+  static unRender(component: Component, forceSync: boolean = false) {
     try {
+      if (!forceSync && component.props.onBeforeUnmounted) {
+        component.props.onBeforeUnmounted(component)?.then((res) => {
+          if (res) DomInterop.unRender(component, true)
+        })
+        return
+      }
+
       DomInterop.removeFuncComponents(component)
       if (component.element) {
         component.unMount()
