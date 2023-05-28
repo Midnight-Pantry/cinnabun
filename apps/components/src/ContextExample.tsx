@@ -48,11 +48,9 @@ const Buttons = () => {
   )
 }
 
-export const ContextExample = () => {
-  return (
-    <>
-      <Heading />
-      <Buttons />
-    </>
-  )
-}
+export const ContextExample = () => (
+  <>
+    <Heading />
+    <Buttons />
+  </>
+)

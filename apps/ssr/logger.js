@@ -1,7 +1,6 @@
 const formats = {
   Reset: "\x1b[0m",
-  Bold: "\033[1m",
-  Bright: "\x1b[1m",
+  Bold: "\x1b[1m",
   Dim: "\x1b[2m",
   Underscore: "\x1b[4m",
   Blink: "\x1b[5m",

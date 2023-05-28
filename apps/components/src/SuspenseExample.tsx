@@ -17,20 +17,18 @@ async function getProductCategories(): Promise<ProductCategoriesResponse> {
   }
 }
 
-export const SuspenseExample = ({ cache }: { cache?: boolean }) => {
-  return (
-    <Suspense cache={cache} promise={getProductCategories}>
-      {(loading: boolean, res?: ProductCategoriesResponse) => {
-        if (loading) return <p>loading...</p>
-        if (res?.error) return <p>{res.error}</p>
-        return (
-          <ul>
-            {res?.data.map((c) => (
-              <li>{c}</li>
-            ))}
-          </ul>
-        )
-      }}
-    </Suspense>
-  )
-}
+export const SuspenseExample = ({ cache }: { cache?: boolean }) => (
+  <Suspense cache={cache} promise={getProductCategories}>
+    {(loading: boolean, res?: ProductCategoriesResponse) => {
+      if (loading || !res) return <p>loading...</p>
+      if (res.error) return <p>{res.error}</p>
+      return (
+        <ul>
+          {res.data.map((c) => (
+            <li>{c}</li>
+          ))}
+        </ul>
+      )
+    }}
+  </Suspense>
+)

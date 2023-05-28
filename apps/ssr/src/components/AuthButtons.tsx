@@ -4,28 +4,23 @@ import { isAuthenticated, isNotAuthenticated, userStore } from "../state"
 import { toggleAuthModal, AuthModal } from "./AuthModal"
 import { addNotification } from "./Notifications"
 
-export const AuthButtons = () => {
-  const onLogout = async () => {
-    await handleLogout()
-    addNotification({ text: "See ya next time 😢" })
-  }
-  return (
-    <>
-      <button
-        onclick={toggleAuthModal}
-        watch={userStore}
-        bind:render={isNotAuthenticated}
-      >
-        Log in
-      </button>
-      <button
-        onclick={onLogout}
-        watch={userStore}
-        bind:render={isAuthenticated}
-      >
-        Log out
-      </button>
-      <AuthModal />
-    </>
-  )
+const onLogout = async () => {
+  await handleLogout()
+  addNotification({ text: "See ya next time 😢" })
 }
+
+export const AuthButtons = () => (
+  <>
+    <button
+      onclick={toggleAuthModal}
+      watch={userStore}
+      bind:render={isNotAuthenticated}
+    >
+      Log in
+    </button>
+    <button onclick={onLogout} watch={userStore} bind:render={isAuthenticated}>
+      Log out
+    </button>
+    <AuthModal />
+  </>
+)

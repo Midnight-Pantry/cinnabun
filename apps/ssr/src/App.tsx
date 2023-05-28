@@ -31,7 +31,7 @@ const PerfTest = ({ n }: { n: number }) => {
 export const App = () => {
   return (
     <div style="display: flex; min-height: 100vh">
-      <div style={{ display: "flex", gap: "1rem" }}>
+      <div style="display: flex; gap: 1rem">
         <h1>Cinnabun JS - SSR</h1>
         <Logo />
       </div>
@@ -39,7 +39,7 @@ export const App = () => {
       <ProductList />
       <Nav />
 
-      <main style={{ textAlign: "center", flexGrow: "1" }}>
+      <main style="text-align:center; flex-grow: 1;">
         <Router store={pathStore}>
           <Route path="/" component={<SignalsExample />} />
           <Route path="/context" component={<ContextExample />} />

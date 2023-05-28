@@ -1,5 +1,5 @@
 import * as Cinnabun from "cinnabun"
-import { Link, Route, Router } from "cinnabun/router"
+import { Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
 import {
   SignalsExample,
@@ -9,44 +9,16 @@ import {
   ToDoExample,
   FCWithChildrenExample,
 } from "@cinnabun/example-components"
+import { Nav } from "./Nav"
 
 export const App = () => {
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div style="display: flex; minHeight: 100vh">
       <h1>Cinnabun JS</h1>
       <br />
-      <nav>
-        <ul>
-          <li>
-            <Link to="/" innerText="Signals" store={pathStore} />
-          </li>
-          <li>
-            <Link to="/context" innerText="Context" store={pathStore} />
-          </li>
-          <li>
-            <Link to="/suspense" innerText="Suspense" store={pathStore} />
-          </li>
-          <li>
-            <Link
-              to="/nested-routing"
-              innerText="Nested Routing"
-              store={pathStore}
-            />
-          </li>
-          <li>
-            <Link to="/todo" innerText="ToDo" store={pathStore} />
-          </li>
-          <li>
-            <Link
-              to="/fc-with-children"
-              innerText="FC w/ Children"
-              store={pathStore}
-            />
-          </li>
-        </ul>
-      </nav>
+      <Nav />
 
-      <main style={{ textAlign: "center", flexGrow: "1" }}>
+      <main style="text-align: center; flex-grow: 1">
         <Router store={pathStore}>
           <Route path="/" component={<SignalsExample />} />
           <Route path="/context" component={<ContextExample />} />

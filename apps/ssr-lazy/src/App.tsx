@@ -8,19 +8,19 @@ const state = Cinnabun.createSignal(123)
 export const App = () => {
   return (
     <div style="display: flex; min-height: 100vh">
-      <div style={{ display: "flex", gap: "1rem" }}>
+      <div style="display: flex; gap: 1rem;">
         <h1>Cinnabun JS - SSR</h1>
+
         <Logo />
       </div>
-
+      asd
       <Link to="/" store={pathStore}>
         Home
       </Link>
       <Link to="/test" store={pathStore}>
         Test
       </Link>
-
-      <main style={{ textAlign: "center", flexGrow: "1" }}>
+      <main style="text-align:center; flex-grow: 1;">
         <Router store={pathStore}>
           <Route
             path="/"

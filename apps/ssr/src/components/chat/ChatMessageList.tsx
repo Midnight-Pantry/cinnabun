@@ -4,7 +4,6 @@ import { IChatMessage } from "../../types/chat"
 import { LiveSocket } from "../../client/liveSocket"
 import { prefetchChatMessages } from "../../server/actions/chat"
 import { getUser, userStore } from "../../state"
-import { GenericComponent } from "cinnabun/types"
 
 let serverData = Cinnabun.createSignal<IChatMessage[]>([])
 
@@ -29,13 +28,11 @@ export const ChatMessageList = () => {
       watch={[chatMessages, userStore]}
       bind:render
     >
-      {() => (
-        <>
-          {chatMessages.value.map((message) => (
-            <ChatMessageItem message={message} />
-          ))}
-        </>
-      )}
+      {() =>
+        chatMessages.value.map((message) => (
+          <ChatMessageItem message={message} />
+        ))
+      }
     </div>
   )
 }
@@ -43,10 +40,11 @@ export const ChatMessageList = () => {
 const ChatMessageItem = ({ message }: { message: IChatMessage }) => {
   const isOwnMessage = (userData: { username: string } | null | undefined) =>
     message.username === userData?.username
+
   return (
     <div
       watch={userStore}
-      bind:className={(self: GenericComponent) =>
+      bind:className={(self: Cinnabun.Component) =>
         `chat-message ${isOwnMessage(getUser(self)) ? "is-owner" : ""}`
       }
     >

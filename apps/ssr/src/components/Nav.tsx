@@ -7,36 +7,44 @@ export const Nav = () => {
     <nav>
       <ul>
         <li>
-          <Link to="/" innerText="Signals" store={pathStore} />
+          <Link to="/" store={pathStore}>
+            Signals
+          </Link>
         </li>
         <li>
-          <Link to="/context" innerText="Context" store={pathStore} />
+          <Link to="/context" store={pathStore}>
+            Context
+          </Link>
         </li>
         <li>
-          <Link to="/suspense" innerText="Suspense" store={pathStore} />
+          <Link to="/suspense" store={pathStore}>
+            Suspense
+          </Link>
         </li>
         <li>
-          <Link
-            to="/nested-routing"
-            innerText="Nested Routing"
-            store={pathStore}
-          />
+          <Link to="/nested-routing" store={pathStore}>
+            Nested Routing
+          </Link>
         </li>
         <li>
-          <Link to="/todo" innerText="ToDo" store={pathStore} />
+          <Link to="/todo" store={pathStore}>
+            ToDo
+          </Link>
         </li>
         <li>
-          <Link to="/perf" innerText="Performance test" store={pathStore} />
+          <Link to="/perf" store={pathStore}>
+            Performance test
+          </Link>
         </li>
         <li>
-          <Link to="/chat" innerText="Chat" store={pathStore} />
+          <Link to="/chat" store={pathStore}>
+            Chat
+          </Link>
         </li>
         <li>
-          <Link
-            to="/fc-with-children"
-            innerText="FC w/ Children"
-            store={pathStore}
-          />
+          <Link to="/fc-with-children" store={pathStore}>
+            FC w/ Children
+          </Link>
         </li>
       </ul>
     </nav>
