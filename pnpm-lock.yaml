@@ -266,7 +266,7 @@ importers:
   packages/transitions:
     dependencies:
       cinnabun:
-        specifier: workspace:^
+        specifier: ^0.1.26
         version: link:../lib
 
 packages:
