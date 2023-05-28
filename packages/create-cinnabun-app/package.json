@@ -1,6 +1,6 @@
 {
   "name": "create-cinnabun-app",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "type": "module",
   "description": "A command-line tool for quickly creating Cinnabun applications from a template.",
   "scripts": {

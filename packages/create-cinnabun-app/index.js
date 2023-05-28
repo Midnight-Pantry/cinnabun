@@ -7,11 +7,11 @@ import inquirer from "inquirer"
 const templates = [
   {
     name: "CSR (Client-side rendering)",
-    value: "Robby6Strings/cinnabun-csr-template",
+    value: "Midnight-Pantry/cinnabun-csr-template",
   },
   {
     name: "Hybrid (SSR + CSR)",
-    value: "Robby6Strings/cinnabun-ssr-template",
+    value: "Midnight-Pantry/cinnabun-ssr-template",
   },
 ]
 
