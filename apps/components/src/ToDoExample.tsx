@@ -43,17 +43,20 @@ export const ToDoExample = () => {
         }
       </ul>
       <br />
-      <input
-        placeholder="Add a new item"
-        watch={inputVal}
-        bind:value={() => inputVal.value}
-        onkeyup={(e: Event) => {
-          inputVal.value = (e.target as HTMLInputElement).value
-        }}
-      />
-      <button watch={inputVal} bind:disabled={() => !inputVal.value}>
-        Add
-      </button>
+      <div style="display:flex; gap:0.5rem">
+        <input
+          placeholder="Add a new item"
+          watch={inputVal}
+          bind:value={() => inputVal.value}
+          onkeyup={(e: Event) => {
+            inputVal.value = (e.target as HTMLInputElement).value
+          }}
+          onMounted={(self) => self.element?.focus()}
+        />
+        <button watch={inputVal} bind:disabled={() => !inputVal.value}>
+          Add
+        </button>
+      </div>
       <br />
       <span watch={todos} bind:render>
         {() =>
