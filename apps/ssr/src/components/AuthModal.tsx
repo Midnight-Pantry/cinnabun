@@ -1,8 +1,9 @@
-import * as Cinnabun from "cinnabun"
-import { handleCreateAccount, handleLogin } from "../client/actions/auth"
 import "./modal.css"
 import "./tabs.css"
+import * as Cinnabun from "cinnabun"
+import { handleCreateAccount, handleLogin } from "../client/actions/auth"
 import { NotificationType, addNotification } from "./Notifications"
+import { FadeInOut, SlideInOut } from "cinnabun-transitions"
 
 export const authModalVisible = Cinnabun.createSignal(false)
 
@@ -60,7 +61,7 @@ export const AuthModal = () => {
   }
 
   return (
-    <div
+    <FadeInOut
       className="modal-outer"
       tabIndex={-1}
       watch={authModalVisible}
@@ -69,67 +70,75 @@ export const AuthModal = () => {
         return authModalVisible.value
       }}
       onmouseup={(e: MouseEvent) => {
-        if ((e.target as HTMLElement).className === "modal-outer") {
-          toggleAuthModal()
-        }
+        if (!authModalVisible.value) return
+        const el = e.target as HTMLDivElement
+        if (el.className === "modal-outer") toggleAuthModal()
       }}
     >
-      <form className="modal" onsubmit={handleSubmit}>
-        <div className="modal-header">
-          <h2>Log in</h2>
-        </div>
-        <div className="modal-body">
-          <div className="tab-list">
-            <div
-              watch={formMode}
-              bind:className={() =>
-                `tab${formMode.value === FormMode.LOGIN ? " active" : ""}`
-              }
-            >
-              <button
-                type="button"
-                onclick={() => (formMode.value = FormMode.LOGIN)}
-              >
-                Log in
-              </button>
-            </div>
-            <div
-              watch={formMode}
-              bind:className={() =>
-                `tab${formMode.value === FormMode.CREATE ? " active" : ""}`
-              }
-            >
-              <button
-                type="button"
-                onclick={() => (formMode.value = FormMode.CREATE)}
-              >
-                Create account
-              </button>
-            </div>
+      <SlideInOut
+        className="modal"
+        settings={{ from: "left", duration: 300 }}
+        watch={authModalVisible}
+        bind:render={() => authModalVisible.value}
+      >
+        <form onsubmit={handleSubmit}>
+          <div className="modal-header">
+            <h2>Log in</h2>
           </div>
-          <input
-            watch={formState}
-            bind:value={() => formState.value.username}
-            onkeyup={handleChange}
-            type="text"
-            name="username"
-            placeholder="username"
-          />
-          <input
-            watch={formState}
-            bind:value={() => formState.value.password}
-            onkeyup={handleChange}
-            type="password"
-            name="password"
-            placeholder="password"
-          />
-        </div>
-        <div className="modal-footer">
-          <button watch={formState} bind:disabled={() => isFormInvalid()}>
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="modal-body">
+            <div className="tab-list">
+              <div
+                watch={formMode}
+                bind:className={() =>
+                  `tab${formMode.value === FormMode.LOGIN ? " active" : ""}`
+                }
+              >
+                <button
+                  type="button"
+                  onclick={() => (formMode.value = FormMode.LOGIN)}
+                >
+                  Log in
+                </button>
+              </div>
+              <div
+                watch={formMode}
+                bind:className={() =>
+                  `tab${formMode.value === FormMode.CREATE ? " active" : ""}`
+                }
+              >
+                <button
+                  type="button"
+                  onclick={() => (formMode.value = FormMode.CREATE)}
+                >
+                  Create account
+                </button>
+              </div>
+            </div>
+            <input
+              watch={formState}
+              bind:value={() => formState.value.username}
+              onkeyup={handleChange}
+              type="text"
+              name="username"
+              placeholder="username"
+              onMounted={(self) => self.element?.focus()}
+            />
+            <input
+              watch={formState}
+              bind:value={() => formState.value.password}
+              onkeyup={handleChange}
+              type="password"
+              name="password"
+              placeholder="password"
+            />
+          </div>
+          <div className="modal-footer">
+            <button watch={formState} bind:disabled={() => isFormInvalid()}>
+              Submit
+            </button>
+          </div>
+        </form>
+      </SlideInOut>
+    </FadeInOut>
   )
 }

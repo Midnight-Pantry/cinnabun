@@ -17,7 +17,7 @@
   flex-basis: 350px;
 }
 
-.modal > * {
+.modal form > * {
   padding: 1rem;
 }
 .modal .modal-header {
