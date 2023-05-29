@@ -1,7 +1,7 @@
 import { Component, Signal } from "."
 import { Cinnabun } from "./cinnabun"
 import { FragmentComponent } from "./component"
-import { ComponentChild } from "./types"
+import { ComponentChild, DiffCheckResult, DiffType } from "./types"
 
 export class DomInterop {
   static updateElement(component: Component) {
@@ -109,7 +109,7 @@ export class DomInterop {
       }
       return res
     }
-    return child.toString()
+    return child?.toString() ?? ""
   }
 
   static removeFuncComponents(component: Component) {
@@ -213,6 +213,103 @@ export class DomInterop {
     return component.element
   }
 
+  static diffCheckChildren(
+    children: Component[],
+    newChildren: Component[]
+  ): DiffCheckResult[] {
+    let res: DiffCheckResult[] = []
+    const len = Math.max(children.length, newChildren.length)
+    let i = 0
+    while (i < len) {
+      res.push(DomInterop.diffCheckChild(i, children[i], newChildren[i]))
+      i++
+    }
+    return res
+  }
+
+  static diffCheckChild(
+    index: number,
+    a?: Component,
+    b?: Component
+  ): DiffCheckResult {
+    if (!a && b) {
+      return {
+        index,
+        result: DiffType.ADDED,
+      }
+    }
+    if (a && !b) {
+      return {
+        index,
+        result: DiffType.REMOVED,
+        node: a.element,
+      }
+    }
+
+    if (a && b) {
+      const el1 = a.element ?? null
+      const el2 = b.element ?? DomInterop.render(b)
+      if (!el1 && !el2)
+        return {
+          index,
+          result: DiffType.NONE,
+        }
+
+      if ((el1 && !el2) || (el2 && !el1))
+        return {
+          index,
+          result: DiffType.CHANGED,
+          node: b.element,
+        }
+
+      if (!el1?.isEqualNode(el2)) {
+        return {
+          index,
+          result: DiffType.CHANGED,
+          node: b.element,
+        }
+      }
+    }
+
+    return {
+      index,
+      result: DiffType.NONE,
+    }
+  }
+
+  static diffMergeChildren(parent: Component, newChildren: Component[]) {
+    const diffs = DomInterop.diffCheckChildren(
+      parent.children as Component[],
+      newChildren
+    )
+    const rerenderList: number[] = []
+    for (let i = 0; i < diffs.length; i++) {
+      const { index, result } = diffs[i]
+      switch (result) {
+        case DiffType.ADDED:
+          parent.insertChild(newChildren[index], index)
+          break
+        case DiffType.REMOVED:
+          parent.removeChild(parent.children[index])
+          break
+        case DiffType.CHANGED:
+          rerenderList.push(index)
+          break
+        case DiffType.NONE:
+        default:
+          break
+      }
+    }
+    for (let i = 0; i < rerenderList.length; i++) {
+      const idx = rerenderList[i]
+      const child = parent.children[idx] as Component
+      //child.element?.replaceWith(newChildren[idx].element ?? "")
+      Object.assign(child.props, newChildren[idx].props)
+      child.replaceChildren(newChildren[idx].children)
+      DomInterop.reRender(child)
+    }
+  }
+
   static svg(component: Component): SVGSVGElement {
     const el = document.createElementNS(
       "http://www.w3.org/2000/svg",
@@ -237,7 +334,7 @@ export class DomInterop {
             el.append(DomInterop.svg(val))
           }
         } else {
-          el.append(DomInterop.svg(c))
+          if (c) el.append(DomInterop.svg(c))
         }
       }
     }

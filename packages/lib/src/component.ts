@@ -126,6 +126,22 @@ export class Component {
     }
   }
 
+  removeChild(child: ComponentChild) {
+    const idx = this.children.indexOf(child)
+    if (child instanceof Component) {
+      this.destroyComponentRefs(child)
+      child.parent = null
+      DomInterop.unRender(child)
+    }
+    this.children[idx] = null
+  }
+
+  insertChild(child: Component, index: number) {
+    this.children.splice(index, 0, child)
+    child.parent = this
+    DomInterop.reRender(child)
+  }
+
   addChild(child: Component) {
     this.children.push(child)
     child.parent = this
