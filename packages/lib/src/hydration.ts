@@ -100,6 +100,7 @@ export class Hydration {
 
       return
     }
+    if (!c) return
 
     c.parent = parent
 
