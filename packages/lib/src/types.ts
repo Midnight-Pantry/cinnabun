@@ -28,6 +28,7 @@ export type ComponentChild =
   | string
   | number
   | { (): string | number }
+  | null
 
 export type ComponentChildren = Array<ComponentChild>
 
@@ -98,4 +99,25 @@ export type SerializedComponent = {
 export type SSRProps = {
   component: SerializedComponent
   root: HTMLElement
+}
+
+export type ForChild = { (item: unknown, index?: number): Component }
+
+export enum DiffType {
+  NONE,
+  CHANGED,
+  ADDED,
+  REMOVED,
+}
+// export enum DiffType {
+//   NONE = "none",
+//   CHANGED = "changed",
+//   ADDED = "added",
+//   REMOVED = "removed",
+// }
+
+export type DiffCheckResult = {
+  index: number
+  result: DiffType
+  node?: Node
 }
