@@ -74,6 +74,7 @@ export type ComponentProps = ReactivityProps &
     children?: ComponentChild[]
     render?: boolean
     style?: Partial<CSSStyleDeclaration> | string
+    key?: string | number
     [key: string]: any
   }
 
@@ -117,7 +118,7 @@ export enum DiffType {
 // }
 
 export type DiffCheckResult = {
-  index: number
+  key: string | number
   result: DiffType
   node?: Node
 }

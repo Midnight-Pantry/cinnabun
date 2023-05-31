@@ -6,8 +6,8 @@ import {
   ContextExample,
   SuspenseExample,
   NestedRoutingExample,
-  ToDoExample,
   FCWithChildrenExample,
+  SmartToDoExample,
 } from "@cinnabun/example-components"
 import { Nav } from "./Nav"
 
@@ -27,7 +27,7 @@ export const App = () => {
             path="/nested-routing"
             component={<NestedRoutingExample {...{ pathStore }} />}
           />
-          <Route path="/todo" component={<ToDoExample />} />
+          <Route path="/todo" component={<SmartToDoExample />} />
           <Route
             path="/fc-with-children"
             component={

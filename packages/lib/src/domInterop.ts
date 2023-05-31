@@ -124,6 +124,7 @@ export class DomInterop {
 
   static unRender(component: Component, forceSync: boolean = false) {
     try {
+      // handle delayed/cancellable unmounting
       if (!forceSync && component.props.onBeforeUnmounted) {
         component.props.onBeforeUnmounted(component)?.then((res) => {
           if (res) DomInterop.unRender(component, true)
@@ -217,64 +218,68 @@ export class DomInterop {
     children: Component[],
     newChildren: Component[]
   ): DiffCheckResult[] {
-    let res: DiffCheckResult[] = []
-    const len = Math.max(children.length, newChildren.length)
-    let i = 0
-    while (i < len) {
-      res.push(DomInterop.diffCheckChild(i, children[i], newChildren[i]))
-      i++
-    }
-    return res
-  }
+    const childKeys = children.map((c) => c.props.key)
+    const newChildKeys = newChildren.map((c) => c.props.key)
 
-  static diffCheckChild(
-    index: number,
-    a?: Component,
-    b?: Component
-  ): DiffCheckResult {
-    if (!a && b) {
-      return {
-        index,
-        result: DiffType.ADDED,
-      }
-    }
-    if (a && !b) {
-      return {
-        index,
-        result: DiffType.REMOVED,
-        node: a.element,
-      }
-    }
+    const addedKeys = newChildren
+      .filter((c) => !childKeys.includes(c.props.key!))
+      .map((c) => c.props.key!)
 
-    if (a && b) {
-      const el1 = a.element ?? null
-      const el2 = b.element ?? DomInterop.render(b)
-      if (!el1 && !el2)
+    const removedKeys = children
+      .filter((c) => !newChildKeys.includes(c.props.key!))
+      .map((c) => c.props.key!)
+
+    const changedKeys = newChildren
+      .filter(
+        (c) =>
+          !addedKeys.includes(c.props.key!) &&
+          !removedKeys.includes(c.props.key!)
+      )
+      .filter((nc) => {
+        const oldChild = children.find((oc) => oc.props.key === nc.props.key)!
+        return !DomInterop.render(nc).isEqualNode(DomInterop.render(oldChild))
+      })
+      .map((c) => c.props.key!)
+
+    const unchangedKeys = children
+      .filter(
+        (c) =>
+          !addedKeys.includes(c.props.key!) &&
+          !removedKeys.includes(c.props.key!) &&
+          !changedKeys.includes(c.props.key!)
+      )
+      .map((c) => c.props.key!)
+
+    return [
+      ...addedKeys.map((k) => {
         return {
-          index,
+          result: DiffType.ADDED,
+          key: k,
+          node: newChildren.find((c) => c.props.key === k)!.element,
+        }
+      }),
+      ...removedKeys.map((k) => {
+        return {
+          result: DiffType.REMOVED,
+          key: k,
+          node: children.find((c) => c.props.key === k)!.element,
+        }
+      }),
+      ...changedKeys.map((k) => {
+        return {
+          result: DiffType.CHANGED,
+          key: k,
+          node: children.find((c) => c.props.key === k)!.element,
+        }
+      }),
+      ...unchangedKeys.map((k) => {
+        return {
           result: DiffType.NONE,
+          key: k,
+          node: children.find((c) => c.props.key === k)!.element,
         }
-
-      if ((el1 && !el2) || (el2 && !el1))
-        return {
-          index,
-          result: DiffType.CHANGED,
-          node: b.element,
-        }
-
-      if (!el1?.isEqualNode(el2)) {
-        return {
-          index,
-          result: DiffType.CHANGED,
-          node: b.element,
-        }
-      }
-    }
-
-    return {
-      index,
-      result: DiffType.NONE,
-    }
+      }),
+    ]
   }
 
   static diffMergeChildren(parent: Component, newChildren: Component[]) {
@@ -282,32 +287,35 @@ export class DomInterop {
       parent.children as Component[],
       newChildren
     )
-    const rerenderList: number[] = []
     for (let i = 0; i < diffs.length; i++) {
-      const { index, result } = diffs[i]
-      switch (result) {
-        case DiffType.ADDED:
-          parent.insertChild(newChildren[index], index)
+      const diff = diffs[i]
+      switch (diff.result) {
+        case DiffType.ADDED: {
+          const newC = newChildren.find((c) => c.props.key === diff.key)!
+          parent.insertChild(newC, newChildren.indexOf(newC))
           break
-        case DiffType.REMOVED:
-          parent.removeChild(parent.children[index])
+        }
+        case DiffType.REMOVED: {
+          const oldC = (parent.children as Component[]).find(
+            (c) => c.props.key === diff.key
+          )!
+          parent.removeChild(oldC)
           break
-        case DiffType.CHANGED:
-          rerenderList.push(index)
+        }
+        case DiffType.CHANGED: {
+          const oldC = (parent.children as Component[]).find(
+            (c) => c.props.key === diff.key
+          )!
+          const newC = newChildren.find((c) => c.props.key === diff.key)!
+          parent.replaceChild(oldC, newC)
           break
+        }
         case DiffType.NONE:
         default:
           break
       }
     }
-    for (let i = 0; i < rerenderList.length; i++) {
-      const idx = rerenderList[i]
-      const child = parent.children[idx] as Component
-      //child.element?.replaceWith(newChildren[idx].element ?? "")
-      Object.assign(child.props, newChildren[idx].props)
-      child.replaceChildren(newChildren[idx].children)
-      DomInterop.reRender(child)
-    }
+    parent.children = parent.children.filter((c) => c !== null)
   }
 
   static svg(component: Component): SVGSVGElement {

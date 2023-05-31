@@ -77,6 +77,7 @@ export class Hydration {
     sc: SerializedComponent,
     parentElement: Element | ChildNode
   ) {
+    if (!c) return
     const childOffset: number = Cinnabun.rootMap.get(parentElement) ?? 0
 
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
@@ -100,8 +101,8 @@ export class Hydration {
 
       return
     }
-    if (!c) return
 
+    c.props.hydrating = true
     c.parent = parent
 
     if (sc?.props && Object.keys(sc.props).length) {
@@ -141,5 +142,6 @@ export class Hydration {
       Hydration.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
     c.mounted = true
+    c.props.hydrating = false
   }
 }
