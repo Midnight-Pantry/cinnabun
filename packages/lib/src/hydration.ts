@@ -37,7 +37,7 @@ export class Hydration {
     Hydration.hydrateComponent(
       tray,
       app,
-      ssrProps.component.children[0],
+      ssrProps.component.children[0] as SerializedComponent,
       ssrProps.root
     )
 
@@ -102,6 +102,8 @@ export class Hydration {
       return
     }
 
+    //if (c.tag.toLowerCase() === "article") debugger
+
     c.props.hydrating = true
     c.parent = parent
 
@@ -110,6 +112,27 @@ export class Hydration {
         const curProp = c.props[k]
         if (curProp instanceof Signal) continue
         c.props[k] = v
+      }
+    }
+    if (sc?.children && sc.children.length && c.children.length === 0) {
+      const serializedChildrenWithKeys = sc.children.filter(
+        (c) => typeof c === "object" && c.props.key
+      )
+      for (let i = 0; i < serializedChildrenWithKeys.length; i++) {
+        const sChild = serializedChildrenWithKeys[i] as SerializedComponent
+        if (
+          !c.children.find(
+            (child) =>
+              child instanceof Component && child.props.key === sChild.props.key
+          )
+        ) {
+          const newChild = Hydration.createTreeFromServerState(
+            sChild,
+            parentElement as HTMLElement
+          ) as Component
+          newChild.parent = c
+          c.children.push(newChild)
+        }
       }
     }
 
@@ -135,6 +158,7 @@ export class Hydration {
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
       const sChild = sc.children ? sc.children[i] : ({} as SerializedComponent)
+      if (typeof sChild === "string" || typeof sChild === "number") continue
 
       if (child instanceof Signal) {
         DomInterop.renderChild(c, child, i)
@@ -143,5 +167,32 @@ export class Hydration {
     }
     c.mounted = true
     c.props.hydrating = false
+  }
+
+  static createTreeFromServerState(
+    sc: SerializedComponent | string | number,
+    parentElement: HTMLElement
+  ): string | number | Component {
+    if (typeof sc === "string" || typeof sc === "number") {
+      return sc
+    }
+    const element = Array.from(parentElement.childNodes).find(
+      (cn) =>
+        cn instanceof HTMLElement &&
+        cn.tagName.toLowerCase() === sc.tag?.toLowerCase() &&
+        (sc.props.key ? cn.getAttribute("key") === sc.props.key : true)
+    )
+    const newComponent = new Component(sc.tag ?? "", { ...sc.props })
+    newComponent.element = element as HTMLElement
+    newComponent.children = sc.children.map((c) => {
+      const child = Hydration.createTreeFromServerState(
+        c,
+        element as HTMLElement
+      )
+      if (typeof child === "string" || typeof child === "number") return child
+      child.parent = newComponent
+      return child
+    })
+    return newComponent
   }
 }

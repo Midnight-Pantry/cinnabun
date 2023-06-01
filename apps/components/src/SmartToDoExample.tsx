@@ -29,8 +29,8 @@ interface ToDoItem {
   id: string
 }
 const todos = createSignal<ToDoItem[]>([
-  { text: "Make a coffee", id: generateUUID() },
-  { text: "Write a cool new app", id: generateUUID() },
+  { text: "Make a coffee", id: "6303e923-2369-4ff8-9bd8-3a79770defba" },
+  { text: "Write a cool new app", id: "8210de9d-8abb-46ab-9423-781b4666e7d1" },
 ])
 
 export const SmartToDoExample = () => {

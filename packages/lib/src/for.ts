@@ -24,19 +24,23 @@ export class ForComponent extends Component {
           const allKeysAreUnique = keys.every((k, i) => keys.indexOf(k) === i)
           if (!allKeysAreUnique) {
             console.error(
-              "Children of <For/> must have a unique key to enable partial rerendering"
+              "Children of <For/> must have unique keys, and they should not be index-based - expect bugs!"
             )
           }
-          // this is the classic approach where the entire list is rerendered.
-          // instead we want to do a diff and only rerender the changed items -
-          // but only if all children have a unique key and we're on the client
-          // // DomInterop.unRender(self)
-          // // self.replaceChildren(newChildren)
-          // // DomInterop.reRender(self)
-
-          if (!Cinnabun.isClient || !allKeysAreUnique) {
+          const hardReRender = () => {
+            DomInterop.unRender(self)
             self.replaceChildren(newChildren)
+            DomInterop.reRender(self)
+          }
+
+          if (!allKeysAreUnique || !Cinnabun.isClient) {
+            if (Cinnabun.isClient) {
+              hardReRender()
+            } else {
+              self.replaceChildren(newChildren)
+            }
           } else {
+            //if (!allKeysAreUnique) return hardReRender()
             DomInterop.diffMergeChildren(self, newChildren)
           }
         }),

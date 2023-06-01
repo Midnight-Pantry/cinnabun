@@ -114,7 +114,7 @@ export class SSR {
       return res
     }
 
-    //if (component.tag === "svg") return SSR.serializeSvg(component)
+    res.tag = component.tag
 
     const renderClosingTag =
       ["br", "hr", "img", "input", "link", "meta"].indexOf(
@@ -160,18 +160,18 @@ export class SSR {
     component: Component,
     shouldRender: boolean,
     config: SSRConfig
-  ): Promise<SerializedComponent[]> {
-    const res: SerializedComponent[] = []
+  ): Promise<(SerializedComponent | string)[]> {
+    const res: (SerializedComponent | string)[] = []
     for await (const c of component.children) {
       if (typeof c === "string" || typeof c === "number") {
         if (shouldRender) SSR.render(c.toString(), config, accumulator)
-        res.push({ children: [], props: {} })
+        res.push(c.toString())
         continue
       }
 
       if (c instanceof Signal) {
         if (shouldRender) SSR.render(c.value.toString(), config, accumulator)
-        res.push({ children: [], props: {} })
+        res.push(c.value.toString())
         continue
       }
       if (typeof c === "object" && !(c instanceof Component)) {
@@ -179,8 +179,9 @@ export class SSR {
         //instead of crashing from trying to serialize the object as a component
 
         //@ts-ignore
-        if (shouldRender) SSR.render(c.toString(), config, accumulator)
-        res.push({ children: [], props: {} })
+        const stringified = JSON.stringify(c)
+        if (shouldRender) SSR.render(stringified, config, accumulator)
+        res.push(stringified)
         continue
       }
       if (typeof c === "function") {
@@ -197,7 +198,7 @@ export class SSR {
           res.push(sc)
         } else if (typeof val === "string" || typeof val === "number") {
           if (shouldRender) SSR.render(val.toString(), config, accumulator)
-          res.push({ children: [], props: {} })
+          res.push(val.toString())
           continue
         }
         continue

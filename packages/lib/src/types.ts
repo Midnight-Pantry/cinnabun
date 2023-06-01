@@ -94,7 +94,8 @@ export type SerializedComponent = {
   props: {
     [key: string]: any
   }
-  children: SerializedComponent[]
+  children: (SerializedComponent | string)[]
+  tag?: string
 }
 
 export type SSRProps = {

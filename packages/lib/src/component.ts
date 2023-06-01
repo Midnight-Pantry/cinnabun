@@ -155,6 +155,7 @@ export class Component {
   }
 
   replaceChild(child: Component, newChild: Component) {
+    DomInterop.unRender(child)
     this.destroyComponentRefs(child)
     const idx = this.children.indexOf(child)
     this.children[idx] = newChild

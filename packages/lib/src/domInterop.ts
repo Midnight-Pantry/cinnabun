@@ -283,38 +283,41 @@ export class DomInterop {
   }
 
   static diffMergeChildren(parent: Component, newChildren: Component[]) {
-    const diffs = DomInterop.diffCheckChildren(
-      parent.children as Component[],
-      newChildren
-    )
-    for (let i = 0; i < diffs.length; i++) {
-      const diff = diffs[i]
-      switch (diff.result) {
-        case DiffType.ADDED: {
-          const newC = newChildren.find((c) => c.props.key === diff.key)!
-          parent.insertChild(newC, newChildren.indexOf(newC))
-          break
+    const oldChildren = parent.children as Component[]
+    try {
+      const diffs = DomInterop.diffCheckChildren(oldChildren, newChildren)
+      for (let i = 0; i < diffs.length; i++) {
+        const diff = diffs[i]
+        switch (diff.result) {
+          case DiffType.ADDED: {
+            const newC = newChildren.find((c) => c.props.key === diff.key)!
+            parent.insertChild(newC, newChildren.indexOf(newC))
+            break
+          }
+          case DiffType.REMOVED: {
+            const oldC = (parent.children as (Component | null)[]).find(
+              (c) => c?.props.key === diff.key
+            )!
+            parent.removeChild(oldC)
+            break
+          }
+          case DiffType.CHANGED: {
+            const oldC = (parent.children as Component[]).find(
+              (c) => c.props.key === diff.key
+            )!
+            const newC = newChildren.find((c) => c.props.key === diff.key)!
+            parent.replaceChild(oldC, newC)
+            break
+          }
+          case DiffType.NONE:
+          default:
+            break
         }
-        case DiffType.REMOVED: {
-          const oldC = (parent.children as Component[]).find(
-            (c) => c.props.key === diff.key
-          )!
-          parent.removeChild(oldC)
-          break
-        }
-        case DiffType.CHANGED: {
-          const oldC = (parent.children as Component[]).find(
-            (c) => c.props.key === diff.key
-          )!
-          const newC = newChildren.find((c) => c.props.key === diff.key)!
-          parent.replaceChild(oldC, newC)
-          break
-        }
-        case DiffType.NONE:
-        default:
-          break
       }
+    } catch (error) {
+      console.error("failed to diff merge children", parent, newChildren, error)
     }
+
     parent.children = parent.children.filter((c) => c !== null)
   }
 
