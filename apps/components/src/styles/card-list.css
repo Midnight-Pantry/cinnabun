@@ -3,12 +3,24 @@
   flex-direction: column;
   gap: 1rem;
   align-items: center;
-  max-width: 420px
+  max-width: 360px;
+  transition: max-width 0.15s ease;
+}
+@media screen and (min-width: 768px) {
+  /* make card list show two columns */
+  .card-list {
+    max-width: 500px;
+  }  
 }
 
 .card-list .card {
+  padding: 0;
   background: #333;
-  border-radius: 2rem;
+  border-radius: 1rem;
   display: inline-block;
   box-shadow: 0 0 15px rgba(0, 0, 0, .075)
+}
+
+.card-list .card .description {
+  color: #aaa
 }

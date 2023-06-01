@@ -3,6 +3,7 @@ import "./styles/card-list.css"
 import { For } from "cinnabun"
 import { Suspense, createSignal } from "cinnabun"
 import { ProductAPIResponse, Product } from "./types/products"
+import { Carousel } from "./Carousel"
 import { sleep } from "cinnabun/utils"
 
 type UrlParams = {
@@ -12,7 +13,7 @@ type UrlParams = {
 
 const products = createSignal<Product[]>([])
 const loadingMore = createSignal<boolean>(false)
-const args = createSignal<UrlParams>({ skip: 0, limit: 3 })
+const args = createSignal<UrlParams>({ skip: 0, limit: 4 })
 
 args.subscribe((v) => {
   if (v.skip === 0) return // skip initial load, this is handled by Suspense
@@ -40,11 +41,13 @@ async function getProducts(): Promise<ProductAPIResponse> {
 const ProductCard = ({ product }: { product: Product }) => (
   <div key={product.id} className="card">
     <h2>{product.title}</h2>
-    <img src={product.images[0]} alt={product.title} />
+    <Carousel
+      images={product.images.map((src) => ({ src, alt: product.title }))}
+    />
     <br />
     <div style="padding:1rem">
-      <p>{product.description}</p>
-      <span>{product.price}</span>
+      <p className="description">{product.description}</p>
+      <small>${product.price}</small>
     </div>
   </div>
 )
@@ -52,7 +55,7 @@ const ProductCard = ({ product }: { product: Product }) => (
 export const LazyListExample = () => {
   const onScroll = () => {
     if (loadingMore.value) return
-    const bottomPadding = 50
+    const bottomPadding = 500
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement
     if (scrollTop + clientHeight + bottomPadding >= scrollHeight) {
       args.value.skip += args.value.limit
@@ -66,7 +69,7 @@ export const LazyListExample = () => {
         if (loading) return <p>loading...</p>
         products.value = res.products
         return (
-          <div>
+          <>
             <div
               className="card-list"
               onMounted={() => document.addEventListener("scroll", onScroll)}
@@ -78,10 +81,14 @@ export const LazyListExample = () => {
                 {(p: Product) => <ProductCard product={p} />}
               </For>
             </div>
-            <p watch={loadingMore} bind:render={() => loadingMore.value}>
-              loading more...
-            </p>
-          </div>
+            <div
+              style="margin: 2rem"
+              watch={loadingMore}
+              bind:render={() => loadingMore.value}
+            >
+              <p>loading more...</p>
+            </div>
+          </>
         )
       }}
     </Suspense>
