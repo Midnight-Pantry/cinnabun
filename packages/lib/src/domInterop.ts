@@ -237,7 +237,8 @@ export class DomInterop {
       )
       .filter((nc) => {
         const oldChild = children.find((oc) => oc.props.key === nc.props.key)!
-        return !DomInterop.render(nc).isEqualNode(oldChild.element!)
+        return JSON.stringify(oldChild.props) !== JSON.stringify(nc.props)
+        //return !DomInterop.render(nc).isEqualNode(oldChild.element!)
       })
       .map((c) => c.props.key!)
 
