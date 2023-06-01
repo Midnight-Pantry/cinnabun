@@ -20,29 +20,26 @@ export class ForComponent extends Component {
           const newChildren = newItems.map(mapPredicate)
           // check if all children have a key and the key is unique
           // if not, we can't do partial rerendering
-          const keys = newChildren.map((c) => c.props.key)
-          const allKeysAreUnique = keys.every((k, i) => keys.indexOf(k) === i)
-          if (!allKeysAreUnique) {
-            console.error(
-              "Children of <For/> must have unique keys, and they should not be index-based - expect bugs!"
-            )
-          }
-          const hardReRender = () => {
-            DomInterop.unRender(self)
-            self.replaceChildren(newChildren)
-            DomInterop.reRender(self)
-          }
-
-          if (!allKeysAreUnique || !Cinnabun.isClient) {
-            if (Cinnabun.isClient) {
-              hardReRender()
-            } else {
-              self.replaceChildren(newChildren)
+          let uniqueKeys = true
+          for (const child of newChildren) {
+            //prettier-ignore
+            if (newChildren.filter((c) => c.props.key === child.props.key).length > 1) {
+              uniqueKeys = false
+              console.error("non-unique key found in <For/>", child.props.key)
+              console.error(
+                "Children of <For/> must have unique keys, and they should not be index-based - expect bugs!"
+              )
+              break
             }
-          } else {
-            //if (!allKeysAreUnique) return hardReRender()
-            DomInterop.diffMergeChildren(self, newChildren)
           }
+          // ssr doesn't need to worry about partial rerendering, so we can just replace the children
+          if (!Cinnabun.isClient) return self.replaceChildren(newChildren)
+          // if we have unique keys, we can do partial rerendering
+          if (uniqueKeys) return DomInterop.diffMergeChildren(self, newChildren)
+          // otherwise, we have to do a full rerender
+          DomInterop.unRender(self)
+          self.replaceChildren(newChildren)
+          DomInterop.reRender(self)
         }),
     })
   }
