@@ -114,7 +114,7 @@ export class Hydration {
         c.props[k] = v
       }
     }
-    if (sc?.children && sc.children.length && c.children.length === 0) {
+    if (sc?.children && sc.children.length > 0 && c.children.length === 0) {
       const serializedChildrenWithKeys = sc.children.filter(
         (c) => typeof c === "object" && c.props.key
       )
@@ -158,11 +158,12 @@ export class Hydration {
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
       const sChild = sc.children ? sc.children[i] : ({} as SerializedComponent)
-      if (typeof sChild === "string" || typeof sChild === "number") continue
 
       if (child instanceof Signal) {
         DomInterop.renderChild(c, child, i)
       }
+      if (typeof sChild === "string" || typeof sChild === "number") continue
+
       Hydration.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
     c.mounted = true
