@@ -10,7 +10,7 @@ const onLogout = async () => {
 }
 
 export const AuthButtons = () => (
-  <>
+  <footer style="position:fixed;bottom:0;width:100vw;text-align:center;padding:.5rem;">
     <button
       onclick={toggleAuthModal}
       watch={userStore}
@@ -22,5 +22,5 @@ export const AuthButtons = () => (
       Log out
     </button>
     <AuthModal />
-  </>
+  </footer>
 )

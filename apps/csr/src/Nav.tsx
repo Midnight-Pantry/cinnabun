@@ -35,6 +35,11 @@ export const Nav = () => (
           FC w/ Children
         </Link>
       </li>
+      <li>
+        <Link to="/lazy-list" store={pathStore}>
+          Lazy List
+        </Link>
+      </li>
     </ul>
   </nav>
 )

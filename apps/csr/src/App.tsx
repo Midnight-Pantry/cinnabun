@@ -8,6 +8,7 @@ import {
   NestedRoutingExample,
   FCWithChildrenExample,
   SmartToDoExample,
+  LazyListExample,
 } from "@cinnabun/example-components"
 import { Nav } from "./Nav"
 
@@ -36,6 +37,7 @@ export const App = () => {
               </FCWithChildrenExample>
             }
           />
+          <Route path="/lazy-list" component={<LazyListExample />} />
         </Router>
       </main>
     </div>

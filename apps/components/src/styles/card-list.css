@@ -1,0 +1,14 @@
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  max-width: 420px
+}
+
+.card-list .card {
+  background: #333;
+  border-radius: 2rem;
+  display: inline-block;
+  box-shadow: 0 0 15px rgba(0, 0, 0, .075)
+}

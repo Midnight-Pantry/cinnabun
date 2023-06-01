@@ -2,6 +2,7 @@ import * as Cinnabun from "cinnabun"
 import {
   ContextExample,
   FCWithChildrenExample,
+  LazyListExample,
   NestedRoutingExample,
   SignalsExample,
   SmartToDoExample,
@@ -59,6 +60,7 @@ export const App = () => {
               </FCWithChildrenExample>
             }
           />
+          <Route path="/lazy-list" component={<LazyListExample />} />
         </Router>
       </main>
       <br />
