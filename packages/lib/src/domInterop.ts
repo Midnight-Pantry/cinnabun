@@ -238,6 +238,11 @@ export class DomInterop {
       .filter((nc) => {
         const oldChild = children.find((oc) => oc.props.key === nc.props.key)!
         return JSON.stringify(oldChild.props) !== JSON.stringify(nc.props)
+
+        // node equality is not worth it - it's definitely slower and means that
+        // external changes to element attributes (style etc...) during runtime will
+        // cause the child to be considered 'changed', even for a simple list addition.
+
         //return !DomInterop.render(nc).isEqualNode(oldChild.element!)
       })
       .map((c) => c.props.key!)
@@ -307,18 +312,37 @@ export class DomInterop {
               (c) => c.props.key === diff.key
             )!
             const newC = newChildren.find((c) => c.props.key === diff.key)!
-            parent.replaceChild(oldC, newC)
+            Object.assign(oldC.props, newC.props)
+            DomInterop.updateElement(oldC)
+
             break
           }
           case DiffType.NONE:
           default:
+            {
+              // recurse into children and ensure they are up to date
+              const oldC = parent.children.find(
+                (c) => c instanceof Component && c.props.key === diff.key
+              ) as Component
+              const newC = newChildren.find(
+                (c) => c instanceof Component && c.props.key === diff.key
+              )
+              if (oldC && newC) {
+                DomInterop.diffMergeChildren(
+                  oldC,
+                  newC.children.filter(
+                    (c) => c instanceof Component
+                  ) as Component[]
+                )
+              }
+            }
+
             break
         }
       }
     } catch (error) {
       console.error("failed to diff merge children", parent, newChildren, error)
     }
-
     parent.children = parent.children.filter((c) => c !== null)
   }
 

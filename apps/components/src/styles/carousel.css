@@ -40,7 +40,7 @@
 .carousel-controls button {
   background: transparent;
   border: none;
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #fff;
   cursor: pointer;
   outline: none;
@@ -48,6 +48,8 @@
   height: 100%;
   text-shadow: 0 0 3px black;
   user-select: none;
+  outline: none !important;
+  border: none !important
 }
 .carousel-controls button:disabled {
   opacity: 0.3;
