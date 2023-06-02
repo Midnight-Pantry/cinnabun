@@ -4,17 +4,25 @@ import * as Cinnabun from "cinnabun"
 import { handleCreateAccount, handleLogin } from "../client/actions/auth"
 import { NotificationType, addNotification } from "./Notifications"
 import { FadeInOut, SlideInOut } from "cinnabun-transitions"
+import { KeyboardListener, NavigationListener } from "cinnabun/listeners"
 
-export const authModalVisible = Cinnabun.createSignal(false)
+const authModalVisible = Cinnabun.createSignal(false)
+let authModalToggler: HTMLElement | null = null
+
+export const toggleAuthModal = () => {
+  authModalVisible.value = !authModalVisible.value
+
+  if (authModalVisible.value)
+    authModalToggler = document.activeElement as HTMLElement
+
+  if (!authModalVisible.value && authModalToggler)
+    return authModalToggler.focus()
+}
 
 enum FormMode {
   LOGIN,
   CREATE,
 }
-
-export const toggleAuthModal = () =>
-  (authModalVisible.value = !authModalVisible.value)
-
 export const AuthModal = () => {
   const formState = Cinnabun.createSignal({
     username: "",
@@ -81,6 +89,13 @@ export const AuthModal = () => {
         watch={authModalVisible}
         bind:render={() => authModalVisible.value}
       >
+        <NavigationListener
+          onCapture={() => (authModalVisible.value = false)}
+        />
+        <KeyboardListener
+          keys={["Escape"]}
+          onCapture={() => toggleAuthModal()}
+        />
         <form onsubmit={handleSubmit}>
           <div className="modal-header">
             <h2>Log in</h2>
@@ -123,6 +138,7 @@ export const AuthModal = () => {
               placeholder="username"
               onMounted={(self) => self.element?.focus()}
             />
+
             <input
               watch={formState}
               bind:value={() => formState.value.password}
