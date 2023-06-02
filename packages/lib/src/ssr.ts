@@ -27,7 +27,8 @@ export class SSR {
     app: Component,
     config: SSRConfig
   ): Promise<ServerBakeResult> {
-    if (process.env.DEBUG) console.time("render time")
+    let startTime = 0
+    if (process.env.DEBUG) startTime = performance.now()
     const accumulator: Accumulator = {
       html: [],
       promiseQueue: [],
@@ -35,7 +36,11 @@ export class SSR {
 
     const serialized = await SSR.serialize(accumulator, app, config)
 
-    if (process.env.DEBUG) console.timeEnd("render time")
+    if (process.env.DEBUG) {
+      console.log(
+        `render time: ${Number(performance.now() - startTime).toFixed(3)}ms`
+      )
+    }
     return {
       componentTree: { children: [serialized], props: {} },
       html: accumulator.html.join(""),
@@ -185,22 +190,27 @@ export class SSR {
         continue
       }
       if (typeof c === "function") {
-        if ("promiseCache" in component && component.props.prefetch) {
-          component.promiseCache = await component.props.promise()
-          component.props.promiseCache = component.promiseCache
+        try {
+          if ("promiseCache" in component && component.props.prefetch) {
+            component.promiseCache = await component.props.promise()
+            component.props.promiseCache = component.promiseCache
+          }
+
+          let val = c(...component.childArgs)
+          if (Array.isArray(val)) val = new FragmentComponent(val)
+          if (val instanceof Component) {
+            val.parent = component
+            const sc = await SSR.serialize(accumulator, val, config)
+            res.push(sc)
+          } else if (typeof val === "string" || typeof val === "number") {
+            if (shouldRender) SSR.render(val.toString(), config, accumulator)
+            res.push(val.toString())
+            continue
+          }
+        } catch (error) {
+          console.error(error)
         }
 
-        let val = c(...component.childArgs)
-        if (Array.isArray(val)) val = new FragmentComponent(val)
-        if (val instanceof Component) {
-          val.parent = component
-          const sc = await SSR.serialize(accumulator, val, config)
-          res.push(sc)
-        } else if (typeof val === "string" || typeof val === "number") {
-          if (shouldRender) SSR.render(val.toString(), config, accumulator)
-          res.push(val.toString())
-          continue
-        }
         continue
       }
 
