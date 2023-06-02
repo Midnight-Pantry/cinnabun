@@ -65,14 +65,14 @@ export const Carousel = (props: CarouselProps) => {
           watch={currentIndex}
           bind:disabled={() => currentIndex.value === 0}
         >
-          {"<"}
+          &lt;
         </button>
         <button
           onclick={() => goToNext()}
           watch={currentIndex}
           bind:disabled={() => currentIndex.value === totalItems - 1}
         >
-          {">"}
+          &gt;
         </button>
       </div>
     </div>
