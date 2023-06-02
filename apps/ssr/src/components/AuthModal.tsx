@@ -85,7 +85,8 @@ export const AuthModal = () => {
     >
       <SlideInOut
         className="modal"
-        settings={{ from: "left", duration: 300 }}
+        settings={{ from: "bottom", duration: 300 }}
+        properties={[{ name: "scale", from: 0, to: 1 }]}
         watch={authModalVisible}
         bind:render={() => authModalVisible.value}
       >
