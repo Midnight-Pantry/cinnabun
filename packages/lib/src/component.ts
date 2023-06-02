@@ -175,6 +175,7 @@ export class Component {
       const c = this.children[i]
       if (c instanceof Component) {
         c.parent = this
+        c.cbInstance = this.cbInstance
         c.linkChildren()
       }
     }
@@ -183,8 +184,9 @@ export class Component {
   destroyChildComponentRefs(el: Component) {
     for (const c of el.children) {
       if (typeof c === "string" || typeof c === "number") continue
-      const val = typeof c === "function" ? c(...this.childArgs) : c
-      if (val instanceof Component) this.destroyComponentRefs(val)
+      if (typeof c === "function") continue
+      if (!c) continue
+      this.destroyComponentRefs(c)
     }
   }
 
@@ -227,6 +229,13 @@ export class Component {
       if (c instanceof Component) c.unMount()
     }
     this.mounted = false
+  }
+
+  recursiveCall(func: { (c: Component): void }) {
+    func(this)
+    for (const c of this.children) {
+      if (c instanceof Component) c.recursiveCall(func)
+    }
   }
 
   isSVG(): boolean {
