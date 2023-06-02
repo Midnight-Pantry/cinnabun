@@ -36,14 +36,13 @@ const serverCacheConfig = {
 }
 async function getProducts(): Promise<ProductAPIResponse> {
   if (!Cinnabun.Cinnabun.isClient) {
-    const cacheIsFresh =
-      performance.now() - serverCacheConfig.lastFetch < serverCacheConfig.maxAge
+    const { lastFetch, maxAge } = serverCacheConfig
+    const cacheIsFresh = performance.now() - lastFetch < maxAge
     // check if we have cached products and if they are still fresh
     if (products.value.length > 0 && cacheIsFresh) {
       return { products: products.value }
-    } else {
-      serverCacheConfig.lastFetch = performance.now()
     }
+    serverCacheConfig.lastFetch = performance.now()
   }
 
   const { skip, limit } = args.value
