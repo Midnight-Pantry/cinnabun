@@ -127,9 +127,10 @@ export class SSR {
       ) === -1
 
     const html = `<${component.tag}${Object.entries(rest ?? {})
-      .filter(
-        ([k]) => k !== "style" && !k.startsWith("bind:") && !k.startsWith("on")
-      )
+      .filter(([k, v]) => {
+        if (k === "style" && typeof v !== "string") return false
+        return !k.startsWith("bind:") && !k.startsWith("on")
+      })
       .map(
         ([k, v]) =>
           ` ${SSR.serializePropName(k)}="${component.getPrimitive(v)}"`
