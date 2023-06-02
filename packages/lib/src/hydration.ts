@@ -126,10 +126,11 @@ export class Hydration {
               child instanceof Component && child.props.key === sChild.props.key
           )
         ) {
-          const newChild = Hydration.createTreeFromServerState(
+          const newChild = Hydration.createKeyNodeChild(
             sChild,
             parentElement as HTMLElement
-          ) as Component
+          )
+          if (!newChild) continue
           newChild.parent = c
           c.children.push(newChild)
         }
@@ -170,30 +171,29 @@ export class Hydration {
     c.props.hydrating = false
   }
 
-  static createTreeFromServerState(
-    sc: SerializedComponent | string | number,
+  static createKeyNodeChild(
+    sc: SerializedComponent,
     parentElement: HTMLElement
-  ): string | number | Component {
+  ): Component | undefined {
     if (typeof sc === "string" || typeof sc === "number") {
       return sc
     }
-    const element = Array.from(parentElement.childNodes).find(
-      (cn) =>
-        cn instanceof HTMLElement &&
-        cn.tagName.toLowerCase() === sc.tag?.toLowerCase() &&
-        (sc.props.key ? cn.getAttribute("key") === sc.props.key : true)
-    )
-    const newComponent = new Component(sc.tag ?? "", { ...sc.props })
-    newComponent.element = element as HTMLElement
-    newComponent.children = sc.children.map((c) => {
-      const child = Hydration.createTreeFromServerState(
-        c,
-        element as HTMLElement
+    const newComponent = new Component(sc.tag!, { ...sc.props })
+    if (newComponent.tag) {
+      const element = Array.from(parentElement.childNodes).find(
+        (cn) =>
+          cn instanceof HTMLElement &&
+          cn.tagName.toLowerCase() === sc.tag?.toLowerCase() &&
+          cn.getAttribute("key")!.toString() === sc.props.key.toString()
       )
-      if (typeof child === "string" || typeof child === "number") return child
-      child.parent = newComponent
-      return child
-    })
+      if (element) {
+        newComponent.element = element as HTMLElement
+      } else {
+        console.error("failed to acquire element for", sc)
+        return undefined
+      }
+    }
+
     return newComponent
   }
 }
