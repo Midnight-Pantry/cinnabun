@@ -25,6 +25,12 @@ export class RouterComponent extends Component {
     if (children.some((c) => !(c instanceof RouteComponent)))
       throw new Error("Must provide Route as child of Router")
 
+    if (Cinnabun.isClient) {
+      window.addEventListener("popstate", (e) => {
+        store.value = (e.target as Window)?.location.pathname ?? "/"
+      })
+    }
+
     children.sort((a, b) => {
       return (
         (b as RouteComponent).props.pathDepth -
