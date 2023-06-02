@@ -35,7 +35,8 @@ export class ForComponent extends Component {
           // ssr doesn't need to worry about partial rerendering, so we can just replace the children
           if (!Cinnabun.isClient) return self.replaceChildren(newChildren)
           // if we have unique keys, we can do partial rerendering
-          if (uniqueKeys) return DomInterop.diffMergeChildren(self, newChildren)
+          if (uniqueKeys && !self.props.hydrating)
+            return DomInterop.diffMergeChildren(self, newChildren)
           // otherwise, we have to do a full rerender
           DomInterop.unRender(self)
           self.replaceChildren(newChildren)
