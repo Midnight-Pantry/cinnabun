@@ -30,7 +30,22 @@ async function loadNextProducts(): Promise<void> {
   products.notify()
 }
 
+const serverCacheConfig = {
+  maxAge: 5000,
+  lastFetch: 0,
+}
 async function getProducts(): Promise<ProductAPIResponse> {
+  if (!Cinnabun.Cinnabun.isClient) {
+    const cacheIsFresh =
+      performance.now() - serverCacheConfig.lastFetch < serverCacheConfig.maxAge
+    // check if we have cached products and if they are still fresh
+    if (products.value.length > 0 && cacheIsFresh) {
+      return { products: products.value }
+    } else {
+      serverCacheConfig.lastFetch = performance.now()
+    }
+  }
+
   const { skip, limit } = args.value
   const res = await fetch(
     `https://dummyjson.com/products?skip=${skip}&limit=${limit}`
@@ -64,33 +79,35 @@ export const LazyListExample = () => {
   }
 
   return (
-    <Suspense cache promise={getProducts}>
-      {(loading: boolean, res: ProductAPIResponse) => {
-        if (loading) return <p>loading...</p>
-        products.value = res.products
-        return (
-          <>
-            <div
-              className="card-list"
-              onMounted={() => document.addEventListener("scroll", onScroll)}
-              onUnmounted={() =>
-                document.removeEventListener("scroll", onScroll)
-              }
-            >
-              <For each={products}>
-                {(p: Product) => <ProductCard product={p} />}
-              </For>
-            </div>
-            <div
-              style="margin: 2rem"
-              watch={loadingMore}
-              bind:render={() => loadingMore.value}
-            >
-              <p>loading more...</p>
-            </div>
-          </>
-        )
-      }}
-    </Suspense>
+    <>
+      <Suspense prefetch cache promise={getProducts}>
+        {(loading: boolean, res: ProductAPIResponse) => {
+          if (loading) return <p>loading...</p>
+          products.value = res.products
+          return (
+            <>
+              <div
+                className="card-list"
+                onMounted={() => document?.addEventListener("scroll", onScroll)}
+                onUnmounted={() =>
+                  document?.removeEventListener("scroll", onScroll)
+                }
+              >
+                <For each={products}>
+                  {(p: Product) => <ProductCard product={p} />}
+                </For>
+              </div>
+            </>
+          )
+        }}
+      </Suspense>
+      <div
+        style="margin: 2rem"
+        watch={loadingMore}
+        bind:render={() => loadingMore.value}
+      >
+        <p>loading more...</p>
+      </div>
+    </>
   )
 }

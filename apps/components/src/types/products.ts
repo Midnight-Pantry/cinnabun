@@ -14,7 +14,4 @@ export type Product = {
 
 export type ProductAPIResponse = {
   products: Product[]
-  total: number
-  skip: 0
-  limit: 30
 }
