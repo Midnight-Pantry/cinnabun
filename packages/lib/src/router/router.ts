@@ -40,14 +40,17 @@ export class RouterComponent extends Component {
 
     const subscription = (_: PropsSetter, self: Component) => {
       return store.subscribe((val) => {
-        let len = self.children.length
-        while (len--) {
-          const rc = self.children[len] as RouteComponent
-          rc.props.render = false
-          rc.props.params = {}
-        }
-        if (Cinnabun.isClient) DomInterop.unRender(self)
+        let prevRoute: RouteComponent | undefined = self.children.find(
+          (c) => (c as RouteComponent).props.render
+        ) as RouteComponent | undefined
 
+        if (prevRoute) {
+          prevRoute.props.render = false
+          prevRoute.props.params = {}
+          if (Cinnabun.isClient) DomInterop.unRender(prevRoute)
+        }
+
+        let nextRoute: RouteComponent | undefined = undefined
         for (let i = 0; i < self.children.length; i++) {
           const c = self.children[i] as RouteComponent
           const matchRes = (self as RouterComponent).matchRoute(
@@ -55,12 +58,14 @@ export class RouterComponent extends Component {
             useRequestData<string>(self, "path", val)!
           )
           if (matchRes.routeMatch) {
+            nextRoute = c
             c.props.render = !!matchRes.routeMatch
             c.props.params = matchRes.params ?? {}
             break
           }
         }
-        if (Cinnabun.isClient && self.mounted) DomInterop.reRender(self)
+        if (Cinnabun.isClient && self.mounted && nextRoute)
+          DomInterop.reRender(nextRoute)
       })
     }
 
