@@ -3,7 +3,10 @@ import { Route } from "cinnabun/router"
 import { RouteProps } from "cinnabun/types"
 import { SlideInOut } from "./SlideInOut"
 
-export const AnimatedRoute = ({ path, component: Component }: RouteProps) => {
+export const Experimental_AnimatedRoute = ({
+  path,
+  component: Component,
+}: RouteProps) => {
   return (
     <Route
       path={path}
