@@ -30,7 +30,7 @@ export class RouterComponent extends Component {
         store.value = (e.target as Window)?.location.pathname ?? "/"
       })
     }
-
+    // Sort children by path depth so that the most specific path is matched first
     children.sort((a, b) => {
       return (
         (b as RouteComponent).props.pathDepth -
@@ -40,14 +40,10 @@ export class RouterComponent extends Component {
 
     const subscription = (_: PropsSetter, self: Component) => {
       return store.subscribe((val) => {
-        let prevRoute: RouteComponent | undefined = self.children.find(
-          (c) => (c as RouteComponent).props.render
-        ) as RouteComponent | undefined
-
-        if (prevRoute) {
-          prevRoute.props.render = false
-          prevRoute.props.params = {}
-          if (Cinnabun.isClient) DomInterop.unRender(prevRoute)
+        for (const c of self.children as RouteComponent[]) {
+          if (c.props.render) DomInterop.unRender(c)
+          c.props.render = false
+          c.props.params = {}
         }
 
         let nextRoute: RouteComponent | undefined = undefined

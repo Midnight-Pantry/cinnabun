@@ -10,56 +10,53 @@ type SlideSettings = {
 type SlideProps = {
   settings: SlideSettings
   properties?: TransitionProperty[]
+  reverseExit?: boolean
+  absoluteExit?: boolean
 }
 
 export const SlideInOut = ({
   children,
   settings,
-  properties,
+  properties = [],
   ...rest
 }: PropsWithChildren & SlideProps) => {
   const ms = settings.duration ?? 300
-  const getProperties = (settings: SlideSettings) => {
-    const slideProps: TransitionProperty[] = []
-    switch (settings.from) {
-      case "bottom":
-        slideProps.push({
-          name: "translate",
-          from: "0 100vh",
-          to: "0",
-          ms,
-        })
-        break
-      case "top":
-        slideProps.push({
-          name: "translate",
-          from: "0 -100vh",
-          to: "0",
-          ms,
-        })
-        break
-      case "left":
-        slideProps.push({
-          name: "translate",
-          from: "-100vw",
-          to: "0",
-          ms,
-        })
-        break
-      case "right":
-        slideProps.push({
-          name: "translate",
-          from: "100vw",
-          to: "0",
-          ms,
-        })
-        break
-    }
-    if (properties) slideProps.push(...properties)
-    return slideProps
+  switch (settings.from) {
+    case "bottom":
+      properties.push({
+        name: "translate",
+        from: "0 100vh",
+        to: "0",
+        ms,
+      })
+      break
+    case "top":
+      properties.push({
+        name: "translate",
+        from: "0 -100vh",
+        to: "0",
+        ms,
+      })
+      break
+    case "left":
+      properties.push({
+        name: "translate",
+        from: "-100vw",
+        to: "0",
+        ms,
+      })
+      break
+    case "right":
+      properties.push({
+        name: "translate",
+        from: "100vw",
+        to: "0",
+        ms,
+      })
+      break
   }
   return (
-    <Transition {...rest} {...{ properties: getProperties(settings) }}>
+    <Transition {...rest} {...{ properties }}>
       {children}
     </Transition>
   )
