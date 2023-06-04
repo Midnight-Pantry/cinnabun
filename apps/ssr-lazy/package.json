@@ -24,6 +24,7 @@
     "esbuild": "^0.17.18",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0",
+    "glob": "^10.2.6",
     "tree-kill": "^1.2.2"
   },
   "devDependencies": {

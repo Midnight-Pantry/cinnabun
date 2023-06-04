@@ -1,3 +1,6 @@
+import fs from "node:fs"
+import { globSync } from "glob"
+import path from "node:path"
 import esbuild from "esbuild"
 import kill from "tree-kill"
 import { log, fmt } from "./logger.js"
@@ -71,6 +74,44 @@ const sharedSettings = {
   sourcemap: "linked",
   splitting: true,
   define: { ...envVars },
+  metafile: !prod,
+  plugins: [
+    {
+      name: "cleanup",
+      async setup(build) {
+        const options = build.initialOptions
+        if (!options.metafile) {
+          console.log(
+            "[esbuild cleanup] Metafile is not enabled - skipping the cleanup"
+          )
+          return
+        }
+
+        const safelistSet = new Set([])
+        build.onEnd((result) => {
+          Object.keys(result.metafile.outputs).forEach((path) =>
+            safelistSet.add(path)
+          )
+          const fPath = path.join(options.outdir, "*").replace(/\\/g, "/")
+          const files = globSync(fPath)
+          files.forEach((f) => {
+            if (!safelistSet.has(f.replace(/\\/g, "/"))) fs.unlinkSync(f)
+          })
+        })
+      },
+    },
+  ],
+  loader: {
+    ".png": "file",
+    ".svg": "file",
+    ".jpg": "file",
+    ".jpeg": "file",
+    ".gif": "file",
+    ".woff": "file",
+    ".woff2": "file",
+    ".ttf": "file",
+    ".eot": "file",
+  },
 }
 
 const clientCfg = {
@@ -78,6 +119,7 @@ const clientCfg = {
   outdir: "dist/static",
   ...sharedSettings,
   plugins: [
+    ...sharedSettings.plugins,
     replaceServerFunctions(regexPatterns.ServerPromise),
     replaceServerFunctions(regexPatterns.$fn),
     {
@@ -107,6 +149,7 @@ const serverCfg = {
     js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
   },
   plugins: [
+    ...sharedSettings.plugins,
     {
       name: "build-evts",
       setup({ onStart, onEnd }) {
