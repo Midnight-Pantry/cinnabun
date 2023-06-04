@@ -3,6 +3,7 @@ import { handleLogout } from "../client/actions/auth"
 import { isAuthenticated, isNotAuthenticated, userStore } from "../state"
 import { toggleAuthModal, AuthModal } from "./AuthModal"
 import { addNotification } from "./Notifications"
+import { Portal } from "./Portal"
 
 const onLogout = async () => {
   await handleLogout()
@@ -21,6 +22,8 @@ export const AuthButtons = () => (
     <button onclick={onLogout} watch={userStore} bind:render={isAuthenticated}>
       Log out
     </button>
-    <AuthModal />
+    <Portal>
+      <AuthModal />
+    </Portal>
   </footer>
 )

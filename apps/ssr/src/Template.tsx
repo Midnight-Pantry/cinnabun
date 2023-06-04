@@ -14,6 +14,7 @@ export const Template = (App: { (): Component }) => (
       <div id="app">
         <App />
       </div>
+      <div id="portal-root"></div>
     </body>
   </>
 )
