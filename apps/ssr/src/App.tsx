@@ -16,6 +16,7 @@ import { Nav } from "./components/Nav"
 import { Chat } from "./components/chat/Chat"
 import { NotificationTray } from "./components/Notifications"
 import { Logo } from "./Logo"
+import { Portal } from "./components/Portal"
 
 const PerfTest = ({ n }: { n: number }) => {
   return (
@@ -66,7 +67,9 @@ export const App = () => {
       <br />
       <AuthButtons />
       <br />
-      <NotificationTray />
+      <Portal>
+        <NotificationTray />
+      </Portal>
     </div>
   )
 }

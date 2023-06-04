@@ -125,13 +125,6 @@ img {
   filter: drop-shadow(0 0 2em #3178c6aa);
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
 
 button {
   border-radius: 8px;

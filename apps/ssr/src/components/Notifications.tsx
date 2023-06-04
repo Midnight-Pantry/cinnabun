@@ -59,7 +59,7 @@ export class NotificationTrayComponent extends Component {
 
     const addNotification = (notification: INotification) => {
       const child = notification.component
-      this.prependChild(child)
+      this.prependChildren(child)
       const element = child.element
       element?.addEventListener("mouseenter", function handler() {
         child.props.hovered = true
