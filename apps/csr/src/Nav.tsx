@@ -40,6 +40,11 @@ export const Nav = () => (
           Lazy List
         </Link>
       </li>
+      <li>
+        <Link to="/portals" store={pathStore}>
+          Portals
+        </Link>
+      </li>
     </ul>
   </nav>
 )

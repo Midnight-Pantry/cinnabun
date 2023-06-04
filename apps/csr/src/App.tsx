@@ -9,6 +9,7 @@ import {
   FCWithChildrenExample,
   SmartToDoExample,
   LazyListExample,
+  PortalExample,
 } from "@cinnabun/example-components"
 import { Nav } from "./Nav"
 
@@ -38,6 +39,7 @@ export const App = () => {
             }
           />
           <Route path="/lazy-list" component={<LazyListExample />} />
+          <Route path="/portals" component={<PortalExample />} />
         </Router>
       </main>
     </div>
