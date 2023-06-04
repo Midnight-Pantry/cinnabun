@@ -16,6 +16,7 @@ export class Component {
   funcComponents: Component[] = []
   element: HTMLElement | SVGSVGElement | undefined
   cbInstance: Cinnabun | undefined
+  isStatic: boolean = false
 
   private _mounted: boolean = false
   get mounted() {
