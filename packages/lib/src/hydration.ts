@@ -78,10 +78,12 @@ export class Hydration {
     parentElement: Element | ChildNode
   ) {
     if (!c) return
-    const childOffset: number = Cinnabun.rootMap.get(parentElement) ?? 0
 
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
-      Cinnabun.rootMap.set(parentElement, childOffset + 1)
+      Cinnabun.rootMap.set(
+        parentElement,
+        Hydration.getParentOffset(parentElement) + 1
+      )
       return
     }
     if (typeof c === "function") {
@@ -140,8 +142,13 @@ export class Hydration {
     if (!c.shouldRender()) return
 
     if (c.tag) {
-      c.element = parentElement.childNodes[childOffset] as HTMLElement
-      Cinnabun.rootMap.set(parentElement, childOffset + 1)
+      c.element = parentElement.childNodes[
+        Hydration.getParentOffset(parentElement)
+      ] as HTMLElement
+      Cinnabun.rootMap.set(
+        parentElement,
+        Hydration.getParentOffset(parentElement) + 1
+      )
       DomInterop.updateElement(c)
     }
 
@@ -163,12 +170,20 @@ export class Hydration {
       if (child instanceof Signal) {
         DomInterop.renderChild(c, child, i)
       }
-      if (typeof sChild === "string" || typeof sChild === "number") continue
+      if (typeof sChild === "string" || typeof sChild === "number") {
+        const el = c.element ?? parentElement
+        Cinnabun.rootMap.set(el, Hydration.getParentOffset(el) + 1)
+        continue
+      }
 
       Hydration.hydrateComponent(c, child, sChild, c.element ?? parentElement)
     }
     c.mounted = true
     c.props.hydrating = false
+  }
+
+  static getParentOffset(parentElement: Element | ChildNode): number {
+    return Cinnabun.rootMap.get(parentElement) ?? 0
   }
 
   static createKeyNodeChild(
