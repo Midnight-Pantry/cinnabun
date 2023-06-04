@@ -3,6 +3,7 @@ export { Signal, createSignal } from "./signal"
 export { Suspense } from "./suspense"
 export { lazy } from "./lazy"
 export { For } from "./for"
+export { createPortal } from "./portal"
 
 import { Component } from "."
 import { FragmentComponent } from "./component"
