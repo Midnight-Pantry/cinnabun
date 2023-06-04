@@ -8,6 +8,7 @@ import {
   ComponentChild,
   ComponentEventProps,
   ClassConstructor,
+  ComponentChildren,
 } from "./types"
 
 export class Component {
@@ -77,7 +78,6 @@ export class Component {
         )
 
         if (propName === "render" && Cinnabun.isClient) {
-          //debugger
           if (!this._props.render || !this.parent?._props.render) {
             DomInterop.unRender(this)
           } else if (this._props.render) {
@@ -127,32 +127,46 @@ export class Component {
     }
   }
 
-  removeChild(child: ComponentChild) {
-    const idx = this.children.indexOf(child)
-    if (child instanceof Component) {
-      this.destroyComponentRefs(child)
-      child.parent = null
-      DomInterop.unRender(child)
+  removeChildren(...children: ComponentChildren) {
+    for (const child of children) {
+      const idx = this.children.indexOf(child)
+      if (child instanceof Component) {
+        this.destroyComponentRefs(child)
+        child.parent = null
+        DomInterop.unRender(child)
+      }
+      this.children[idx] = null
     }
-    this.children[idx] = null
   }
 
-  insertChild(child: Component, index: number) {
-    this.children.splice(index, 0, child)
-    child.parent = this
-    DomInterop.reRender(child)
+  insertChildren(index: number, ...children: ComponentChildren) {
+    this.children.splice(index, 0, ...children)
+    for (const child of children) {
+      if (child instanceof Component) {
+        child.parent = this
+        DomInterop.reRender(child)
+      }
+    }
   }
 
-  addChild(child: Component) {
-    this.children.push(child)
-    child.parent = this
-    DomInterop.reRender(child)
+  appendChildren(...children: ComponentChildren) {
+    this.children.push(...children)
+    for (const child of children) {
+      if (child instanceof Component) {
+        child.parent = this
+        DomInterop.reRender(child)
+      }
+    }
   }
 
-  prependChild(child: Component) {
-    this.children.unshift(child)
-    child.parent = this
-    DomInterop.reRender(child)
+  prependChildren(...children: ComponentChildren) {
+    this.children.unshift(...children)
+    for (const child of children) {
+      if (child instanceof Component) {
+        child.parent = this
+        DomInterop.reRender(child)
+      }
+    }
   }
 
   replaceChild(child: Component, newChild: Component) {
