@@ -95,7 +95,7 @@ export class DomInterop {
       return child.value.toString()
     }
     if (child instanceof Component) {
-      if (!child.props.render || child.isStatic) return ""
+      if (!child.props.render) return ""
       return DomInterop.render(child)
     }
     if (typeof child === "function") {
@@ -103,7 +103,7 @@ export class DomInterop {
       if (Array.isArray(c)) c = new FragmentComponent(c)
       const res = DomInterop.renderChild(component, c, idx)
       if (c instanceof Component) {
-        if (!c.props.render || c.isStatic) return ""
+        if (!c.props.render) return ""
         c.parent = component
         component.funcComponents.push(c)
       }
@@ -163,7 +163,7 @@ export class DomInterop {
       return
     }
     //element.children[idx] is our actual previous child but be need to insert before the next.
-    const prevChild = element.children[idx - 1]
+    const prevChild = element.childNodes[idx - 1]
 
     if (prevChild) {
       element.insertBefore(el, prevChild)
@@ -297,14 +297,14 @@ export class DomInterop {
         switch (diff.result) {
           case DiffType.ADDED: {
             const newC = newChildren.find((c) => c.props.key === diff.key)!
-            parent.insertChild(newC, newChildren.indexOf(newC))
+            parent.insertChildren(newChildren.indexOf(newC), newC)
             break
           }
           case DiffType.REMOVED: {
             const oldC = (parent.children as (Component | null)[]).find(
               (c) => c?.props.key === diff.key
             )!
-            parent.removeChild(oldC)
+            parent.removeChildren(oldC)
             break
           }
           case DiffType.CHANGED: {
@@ -384,21 +384,36 @@ export class DomInterop {
     start = 0
   ): { element: HTMLElement | SVGSVGElement | null; idx: number } {
     if (!component.parent) return { element: null, idx: -1 }
-    //if (component.element) start++
 
     for (let i = 0; i < component.parent.children.length; i++) {
       const c = component.parent.children[i]
-      if (c instanceof Component && !c.props.render) continue
-      if (c === component) {
-        start++
-        break
-      }
-      if (c instanceof Component) {
-        if (c.element) start++
-      }
+      if (c === component) break
+      start += DomInterop.getRenderedNodeCount(c)
     }
     if (component.parent.element)
-      return { element: component.parent.element, idx: start }
+      return { element: component.parent.element, idx: start + 1 }
+
     return DomInterop.getMountLocation(component.parent, start)
+  }
+
+  static getRenderedNodeCount(child: ComponentChild): number {
+    let count = 0
+    if (child instanceof Component) {
+      if (!child.props.render) return 0
+      if (child.tag) return 1
+
+      for (const c of child.children) {
+        count += DomInterop.getRenderedNodeCount(c)
+      }
+      for (const c of child.funcComponents) {
+        count += DomInterop.getRenderedNodeCount(c)
+      }
+    } else if (child instanceof Signal) {
+      count++
+    } else if (typeof child === "string" || typeof child === "number") {
+      count++
+    }
+
+    return count
   }
 }
