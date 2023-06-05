@@ -71,6 +71,8 @@ export class Cinnabun {
           (c) => c.component !== component
         )
     }
+    if (Cinnabun.DEBUG_COMPONENT_REFCOUNT)
+      Cinnabun.logComponentRefCount(component)
   }
 
   static removeComponentChildReferences(component: Component) {
