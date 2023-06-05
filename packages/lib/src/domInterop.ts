@@ -308,10 +308,11 @@ export class DomInterop {
             break
           }
           case DiffType.CHANGED: {
-            const oldC = (parent.children as Component[]).find(
-              (c) => c.props.key === diff.key
+            const oldC = (parent.children as (Component | null)[]).find(
+              (c) => c?.props.key === diff.key
             )!
             const newC = newChildren.find((c) => c.props.key === diff.key)!
+            Cinnabun.removeComponentReferences(newC)
             Object.assign(oldC.props, newC.props)
             DomInterop.updateElement(oldC)
 
@@ -327,6 +328,7 @@ export class DomInterop {
               const newC = newChildren.find(
                 (c) => c instanceof Component && c.props.key === diff.key
               )
+              if (newC) Cinnabun.removeComponentReferences(newC)
               if (oldC && newC) {
                 DomInterop.diffMergeChildren(
                   oldC,
