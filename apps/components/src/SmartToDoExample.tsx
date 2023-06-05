@@ -1,46 +1,56 @@
 import * as Cinnabun from "cinnabun"
-import { For, createSignal } from "cinnabun"
-
-const generateUUID = () => {
-  // Public Domain/MIT
-  var d = new Date().getTime() //Timestamp
-  var d2 =
-    (typeof performance !== "undefined" &&
-      performance.now &&
-      performance.now() * 1000) ||
-    0 //Time in microseconds since page-load or 0 if unsupported
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 //random number between 0 and 16
-    if (d > 0) {
-      //Use timestamp until depleted
-      r = (d + r) % 16 | 0
-      d = Math.floor(d / 16)
-    } else {
-      //Use microseconds since page-load if supported
-      r = (d2 + r) % 16 | 0
-      d2 = Math.floor(d2 / 16)
-    }
-    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16)
-  })
-}
+import "./styles/todo-list.css"
+import { For, createSignal, computed } from "cinnabun"
+import { generateUUID } from "./utils"
+import * as Icons from "./icons"
+import { IconButton } from "./IconButton"
 
 interface ToDoItem {
   text: string
   id: string
+  completed: boolean
 }
+
 const todos = createSignal<ToDoItem[]>([
-  { text: "Make a coffee", id: "6303e923-2369-4ff8-9bd8-3a79770defba" },
-  { text: "Write a cool new app", id: "8210de9d-8abb-46ab-9423-781b4666e7d1" },
+  {
+    text: "Make a coffee",
+    id: "6303e923-2369-4ff8-9bd8-3a79770defba",
+    completed: false,
+  },
+  {
+    text: "Write a cool new app",
+    id: "8210de9d-8abb-46ab-9423-781b4666e7d1",
+    completed: false,
+  },
 ])
+
+const completedTodos = computed<ToDoItem[]>(todos, () =>
+  todos.value.filter((item) => item.completed)
+)
+const pendingTodos = computed<ToDoItem[]>(todos, () =>
+  todos.value.filter((item) => !item.completed)
+)
 
 export const SmartToDoExample = () => {
   const inputVal = createSignal<string>("")
   const addToDo = () => {
-    todos.value = [...todos.value, { text: inputVal.value, id: generateUUID() }]
+    todos.value = [
+      ...todos.value,
+      { text: inputVal.value, id: generateUUID(), completed: false },
+    ]
     inputVal.value = ""
   }
   const removeToDo = (id: string) => {
     todos.value = todos.value.filter((item) => item.id !== id)
+  }
+
+  const toggleTodo = (id: string, val: boolean = true) => {
+    todos.value = todos.value.map((item) => {
+      if (item.id === id) {
+        item.completed = val
+      }
+      return item
+    })
   }
 
   const handleSubmit = (e: Event) => {
@@ -49,22 +59,65 @@ export const SmartToDoExample = () => {
     addToDo()
   }
 
+  const handleChange = (e: Event, id: string) => {
+    const target = e.target as HTMLInputElement
+    todos.value = todos.value.map((item) => {
+      if (item.id === id) {
+        item.text = target.value
+      }
+      return item
+    })
+  }
+
   return (
     <form onsubmit={handleSubmit}>
-      <ul className="todo-list">
-        <For each={todos}>
-          {(item: ToDoItem) => (
-            <li key={item.id}>
-              <input
-                type="checkbox"
-                id={`todo-item-${item.id}`}
-                onchange={() => removeToDo(item.id)}
-              />
-              <label htmlFor={`todo-item-${item.id}`}>{item.text}</label>
-            </li>
-          )}
-        </For>
-      </ul>
+      <div
+        watch={completedTodos}
+        bind:render={() => completedTodos.value.length > 0}
+      >
+        <h2>Completed ({() => completedTodos.value.length})</h2>
+        <ul className="todo-list completed">
+          <For each={completedTodos}>
+            {(item: ToDoItem) => (
+              <li key={item.id}>
+                <span>{item.text}</span>
+                <IconButton
+                  type="button"
+                  onclick={() => toggleTodo(item.id, false)}
+                >
+                  <Icons.UndoIcon color="#aaa" color:hover="orange" />
+                </IconButton>
+              </li>
+            )}
+          </For>
+        </ul>
+      </div>
+      <div
+        watch={pendingTodos}
+        bind:render={() => pendingTodos.value.length > 0}
+      >
+        <h2>Pending ({() => pendingTodos.value.length})</h2>
+        <ul className="todo-list">
+          <For each={pendingTodos}>
+            {(item: ToDoItem) => (
+              <li key={item.id}>
+                <input
+                  type="text"
+                  value={() => item.text}
+                  onkeyup={(e: Event) => handleChange(e, item.id)}
+                />
+                <IconButton type="button" onclick={() => toggleTodo(item.id)}>
+                  <Icons.CheckIcon color="#aaa" color:hover="green" />
+                </IconButton>
+                <IconButton type="button" onclick={() => removeToDo(item.id)}>
+                  <Icons.TrashIcon color="#aaa" color:hover="orangered" />
+                </IconButton>
+              </li>
+            )}
+          </For>
+        </ul>
+      </div>
+
       <br />
       <div style="display:flex; gap:0.5rem">
         <input
@@ -76,16 +129,10 @@ export const SmartToDoExample = () => {
           }}
           onMounted={(self) => self.element?.focus()}
         />
-        <button watch={inputVal} bind:disabled={() => !inputVal.value}>
-          Add
-        </button>
+        <IconButton watch={inputVal} bind:disabled={() => !inputVal.value}>
+          <Icons.PlusIcon color="#aaa" color:hover="white" />
+        </IconButton>
       </div>
-      <br />
-      <span watch={todos} bind:render>
-        {() =>
-          `${todos.value.length} item${todos.value.length == 1 ? "" : "s"}`
-        }
-      </span>
     </form>
   )
 }

@@ -1,0 +1,11 @@
+.todo-list li {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.todo-list.completed li span {
+  opacity: 0.5;
+  text-decoration: line-through;
+}

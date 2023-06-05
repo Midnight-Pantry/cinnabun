@@ -11,8 +11,16 @@ describe("example to-do app", () => {
   it("displays two todo items by default", () => {
     cy.get(todoItem).should("have.length", 2)
 
-    cy.get(todoItem).first().should("have.text", "Make a coffee")
-    cy.get(todoItem).last().should("have.text", "Write a cool new app")
+    cy.get(todoItem)
+      .first()
+      .children()
+      .first()
+      .should("have.value", "Make a coffee")
+    cy.get(todoItem)
+      .last()
+      .children()
+      .first()
+      .should("have.value", "Write a cool new app")
   })
 
   it("can add new todo items", () => {
@@ -23,13 +31,14 @@ describe("example to-do app", () => {
     cy.get(todoItem)
       .should("have.length", 3)
       .last()
-      .should("have.text", newItem)
+      .children()
+      .first()
+      .should("have.value", newItem)
   })
 
   it("can check off an item as completed", () => {
-    const itemToRemove = "Write a cool new app"
-    cy.contains(itemToRemove).parent().find("input[type=checkbox]").check()
+    cy.get(todoItem).first().find("button").last().click()
 
-    cy.contains(itemToRemove).should("not.exist")
+    cy.get(todoItem + ' input[value="Make a coffee"]').should("not.exist")
   })
 })
