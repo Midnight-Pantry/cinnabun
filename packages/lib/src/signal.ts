@@ -1,8 +1,5 @@
 // Disclaimer: I stole this from EmNudge. Subscribe and pay respects to lord EmNudge.
 
-// initially undefined. We can set it to null instead.
-let computeFunc: { (): any } | null = null
-
 const LOG_NUM_SUBS = false
 
 export class Signal<T> {
@@ -15,13 +12,6 @@ export class Signal<T> {
   }
 
   get value() {
-    // If it exists, we add it to the subscribers.
-    // Do not call it, unlike a regular subscriber.
-    if (computeFunc) {
-      this._subscribers.add(computeFunc)
-      this.logSubscriberCount()
-    }
-
     return this._val
   }
 
@@ -57,22 +47,14 @@ export class Signal<T> {
   }
 }
 
-export function computed<T>(func: { (): any }, name?: string) {
-  const signal = new Signal<T | null>(null, name)
+export function computed<T>(signal: Signal<any>, func: { (): T }): Signal<T> {
+  const _signal = new Signal<T | null>(null)
+  _signal.value = func()
+  signal.subscribe(() => {
+    _signal.value = func()
+  })
 
-  // move the local variable assignment into the subcribed function
-  const fn = () => {
-    const prevVal = computeFunc
-    computeFunc = fn
-
-    signal.value = func()
-
-    computeFunc = prevVal
-  }
-
-  fn()
-
-  return signal as Signal<T>
+  return _signal as Signal<T>
 }
 
 export function createSignal<T>(initialValue: T) {
