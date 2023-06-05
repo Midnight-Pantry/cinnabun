@@ -2,6 +2,7 @@ import { Component, Signal } from "."
 import { Cinnabun } from "./cinnabun"
 import { FragmentComponent } from "./component"
 import { ComponentChild, DiffCheckResult, DiffType } from "./types"
+import { jsPropToHtmlProp, validHtmlProps } from "./utils"
 
 export class DomInterop {
   static updateElement(component: Component) {
@@ -32,14 +33,15 @@ export class DomInterop {
     }
     if (Object.keys(rest).length) {
       for (const [k, v] of Object.entries(rest)) {
-        if (k.includes("bind:")) continue
+        if (k.includes(":")) continue
+        if (k === "hydrating") continue
         if (k.startsWith("on")) {
           Object.assign(component.element, { [k]: v })
           continue
         }
         if (isSVG) {
           component.element.setAttribute(
-            k,
+            jsPropToHtmlProp(k),
             component.getPrimitive(v, () => DomInterop.updateElement(component))
           )
         } else {
@@ -356,8 +358,17 @@ export class DomInterop {
 
     const { render, ...props } = component.props
 
-    for (const [k, v] of Object.entries(props)) {
-      el.setAttribute(k, v)
+    const validProps = Object.entries(validHtmlProps(props))
+
+    for (const [k, v] of validProps) {
+      // convert camelCase to kebab-case
+      //const _k = k.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()
+      // skip bind: props
+      if (k.includes("bind:")) continue
+      // convert className to class
+      const _k2 = k === "className" ? "class" : k
+
+      el.setAttribute(_k2, v.toString())
     }
 
     for (const c of component.children) {

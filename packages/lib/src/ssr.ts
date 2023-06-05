@@ -3,6 +3,7 @@ import { Cinnabun } from "./cinnabun"
 import { Component, FragmentComponent } from "./component"
 import { Signal } from "./signal"
 import { ComponentProps, SerializedComponent } from "./types"
+import { validHtmlProps } from "./utils"
 
 export type ServerPromise<T> = Promise<T>
 
@@ -57,21 +58,24 @@ export class SSR {
   }
 
   public static serializeProps(component: Component): Partial<ComponentProps> {
-    const res: Partial<ComponentProps> = {}
+    // for (const k of Object.keys(component.props)) {
+    //   // const p =
+    //   //   typeof component.props[k] === "undefined" ? true : component.props[k]
+    //   const p = component.props[k]
+    //   if (p instanceof Signal) {
+    //     res[k] = p.value
+    //   } else {
+    //     if (k === "children") continue
+    //     if (k === "promise" && "prefetch" in component.props) continue
+    //     if (k === "className") {
+    //       res.class = p
+    //       continue
+    //     }
+    //     res[k] = p
+    //   }
+    // }
 
-    for (const k of Object.keys(component.props)) {
-      // const p =
-      //   typeof component.props[k] === "undefined" ? true : component.props[k]
-      const p = component.props[k]
-      if (p instanceof Signal) {
-        res[k] = p.value
-      } else {
-        if (k === "children") continue
-        if (k === "promise" && "prefetch" in component.props) continue
-        res[k] = p
-      }
-    }
-    return res
+    return validHtmlProps(component.props)
   }
 
   public static async serialize(
