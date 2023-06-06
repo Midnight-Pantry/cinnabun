@@ -13,7 +13,7 @@ export class DomInterop {
       onMounted,
       onDestroyed,
       subscription,
-      render,
+      visible,
       style,
       promise,
       ...rest
@@ -62,7 +62,7 @@ export class DomInterop {
   }
 
   static renderChildren(component: Component) {
-    if (!component.props.render) return
+    if (!component.props.visible) return
     if (!component.element) return
     DomInterop.removeFuncComponents(component)
 
@@ -97,7 +97,7 @@ export class DomInterop {
       return child.value.toString()
     }
     if (child instanceof Component) {
-      if (!child.props.render) return ""
+      if (!child.props.visible) return ""
       return DomInterop.render(child)
     }
     if (typeof child === "function") {
@@ -105,7 +105,7 @@ export class DomInterop {
       if (Array.isArray(c)) c = new FragmentComponent(c)
       const res = DomInterop.renderChild(component, c, idx)
       if (c instanceof Component) {
-        if (!c.props.render) return ""
+        if (!c.props.visible) return ""
         c.parent = component
         component.funcComponents.push(c)
       }
@@ -356,7 +356,7 @@ export class DomInterop {
       component.tag
     )
 
-    const { render, ...props } = component.props
+    const { visible, ...props } = component.props
 
     const validProps = Object.entries(validHtmlProps(props))
 
@@ -412,7 +412,7 @@ export class DomInterop {
   static getRenderedNodeCount(child: ComponentChild): number {
     let count = 0
     if (child instanceof Component) {
-      if (!child.props.render) return 0
+      if (!child.props.visible) return 0
       if (child.tag) return 1
 
       for (const c of child.children) {

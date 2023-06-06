@@ -72,7 +72,7 @@ export type ComponentProps = ReactivityProps &
     innerText?: string | number | Signal<string> | Signal<number>
     className?: string
     children?: ComponentChild[]
-    render?: boolean
+    visible?: boolean
     style?: Partial<CSSStyleDeclaration> | string
     key?: string | number
     [key: string]: any

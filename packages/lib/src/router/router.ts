@@ -11,7 +11,7 @@ export class RouteComponent extends Component {
       path,
       pathDepth: path.split("").filter((chr) => chr === "/").length,
       children: [component],
-      render: false,
+      visible: false,
     })
   }
 
@@ -41,8 +41,8 @@ export class RouterComponent extends Component {
     const subscription = (_: PropsSetter, self: Component) => {
       return store.subscribe((val) => {
         for (const c of self.children as RouteComponent[]) {
-          if (c.props.render) DomInterop.unRender(c)
-          c.props.render = false
+          if (c.props.visible) DomInterop.unRender(c)
+          c.props.visible = false
           c.props.params = {}
         }
 
@@ -55,7 +55,7 @@ export class RouterComponent extends Component {
           )
           if (matchRes.routeMatch) {
             nextRoute = c
-            c.props.render = !!matchRes.routeMatch
+            c.props.visible = !!matchRes.routeMatch
             c.props.params = matchRes.params ?? {}
             break
           }

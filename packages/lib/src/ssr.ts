@@ -98,7 +98,7 @@ export class SSR {
       subscription,
       promise,
       prefetch,
-      render,
+      visible,
       watch,
       ...rest
     } = component.props

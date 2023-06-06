@@ -36,8 +36,8 @@ export class Component {
   private subscription: ComponentSubscription | undefined
   private _props: ComponentProps = {}
   constructor(public tag: string, props: ComponentProps = {}) {
+    if (!("visible" in props)) props.visible = true
     this.props = props
-    if (typeof this._props.render === "undefined") this._props.render = true
   }
   get props() {
     return this._props
@@ -72,16 +72,17 @@ export class Component {
     if (bindFns.length > 0) {
       for (const [k, v] of bindFns) {
         const propName = k.substring(k.indexOf(":") + 1)
+        const val = this.getPrimitive(v, () => DomInterop.reRender(this))
+        const oldVal = this._props[propName]
+        this._props[propName] = val
 
-        this._props[propName] = this.getPrimitive(v, () =>
-          DomInterop.reRender(this)
-        )
-
-        if (propName === "render" && Cinnabun.isClient) {
-          if (!this._props.render || !this.parent?._props.render) {
-            DomInterop.unRender(this)
-          } else if (this._props.render) {
-            DomInterop.reRender(this)
+        if (propName === "visible" && Cinnabun.isClient) {
+          if (val !== oldVal) {
+            if (val && this.parent?._props.visible) {
+              DomInterop.reRender(this)
+            } else {
+              DomInterop.unRender(this)
+            }
           }
         } else if (propName === "children") {
           if (this._props.children) this.replaceChildren(this._props.children)
@@ -206,8 +207,8 @@ export class Component {
   }
 
   shouldRender(): boolean {
-    if (!this._props.render) return false
-    if (this.parent) return this.parent?.shouldRender()
+    if (!this._props.visible) return false
+    if (this.parent) return this.parent.shouldRender()
     return true
   }
 

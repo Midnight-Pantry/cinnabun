@@ -56,7 +56,7 @@ describe("When serialized, a Generic Component", function () {
       const signal = new Signal(123)
       const component = new Component("div", {
         watch: signal,
-        "bind:render": () => signal.value !== 123,
+        "bind:visible": () => signal.value !== 123,
       })
       const { html } = await SSR.serverBake(component, { cinnabunInstance })
       expect(html).to.equal("")
@@ -67,7 +67,7 @@ describe("When serialized, a Generic Component", function () {
       const signal = new Signal(["test", "123"])
       const component = new Component("ul", {
         watch: signal,
-        "bind:render": true,
+        "bind:visible": true,
         children: signal.value.map(
           (v) => new Component("li", { children: [v] })
         ),
