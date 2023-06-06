@@ -2,16 +2,29 @@ import { Cinnabun } from "./cinnabun"
 import { Component } from "./component"
 import { DomInterop } from "./domInterop"
 import { Signal } from "./signal"
-import { ForChild } from "./types"
 
-export class ForComponent extends Component {
-  constructor(items: Signal<any[]> | any[], forChild: [ForChild]) {
-    if (!forChild[0] || typeof forChild[0] !== "function")
-      throw new Error(
-        "<For/> must have child matching { (item: T, index?: number): Cinnabun.Component }"
-      )
+type TemplateFunc<T> = { (item: T, index: number): Component }
+type ForProps<T> = {
+  each: Signal<T[]> | T[]
+  /**
+   * @description
+   * A function that returns a component for each item in the array.
+   * The function will be called with the item and its index.
+   * ##### *Ensure components have a unique key to enable partial rerendering!*
+   *
+   * @example
+   * ```tsx
+   * <For
+   *  each={products}
+   *  template={(p) => <ProductCard product={p} />}
+   * />
+   * ```
+   */
+  template?: TemplateFunc<T>
+}
 
-    const mapPredicate = forChild[0]
+export class ForComponent<T> extends Component {
+  constructor(items: Signal<T[]> | T[], mapPredicate: TemplateFunc<T>) {
     const reactiveItems = items instanceof Signal ? items : new Signal(items)
 
     super("", {
@@ -46,9 +59,20 @@ export class ForComponent extends Component {
   }
 }
 
-export const For = (
-  { each }: { each: Signal<any[]> | any[] },
-  children: [ForChild]
-) => {
-  return new ForComponent(each, children)
+/**
+ * @description
+ * A component that renders a list of items
+ * @example
+ * ```tsx
+ * <For
+ *   each={products}
+ *   template={(p) => <ProductCard product={p} />}
+ * />
+ * ```
+ */
+export function For<T>(
+  { each, template }: ForProps<T>,
+  templateChild: [TemplateFunc<T>]
+): Component {
+  return new ForComponent<T>(each, template ?? templateChild[0])
 }
