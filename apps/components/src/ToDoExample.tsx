@@ -24,6 +24,53 @@ const todos = createSignal<ToDoItem[]>([
   },
 ])
 
+const removeToDo = (id: string) => {
+  todos.value = todos.value.filter((item) => item.id !== id)
+}
+
+const toggleTodo = (id: string, val: boolean = true) => {
+  todos.value = todos.value.map((item) => {
+    if (item.id === id) {
+      item.completed = val
+    }
+    return item
+  })
+}
+const handleTodoChange = (e: Event, id: string) => {
+  const target = e.target as HTMLInputElement
+  todos.value = todos.value.map((item) => {
+    if (item.id === id) {
+      item.text = target.value
+    }
+    return item
+  })
+}
+
+const CompletedToDo = ({ item }: { item: ToDoItem }) => (
+  <li key={item.id}>
+    <span>{item.text}</span>
+    <IconButton type="button" onclick={() => toggleTodo(item.id, false)}>
+      <Icons.UndoIcon color="#aaa" color:hover="orange" />
+    </IconButton>
+  </li>
+)
+
+const IncompleteToDo = ({ item }: { item: ToDoItem }) => (
+  <li key={item.id}>
+    <input
+      type="text"
+      value={() => item.text}
+      onkeyup={(e: Event) => handleTodoChange(e, item.id)}
+    />
+    <IconButton type="button" onclick={() => toggleTodo(item.id)}>
+      <Icons.CheckIcon color="#aaa" color:hover="green" />
+    </IconButton>
+    <IconButton type="button" onclick={() => removeToDo(item.id)}>
+      <Icons.TrashIcon color="#aaa" color:hover="orangered" />
+    </IconButton>
+  </li>
+)
+
 const completedTodos = computed<ToDoItem[]>(todos, () =>
   todos.value.filter((item) => item.completed)
 )
@@ -40,33 +87,11 @@ export const ToDoExample = () => {
     ]
     inputVal.value = ""
   }
-  const removeToDo = (id: string) => {
-    todos.value = todos.value.filter((item) => item.id !== id)
-  }
-
-  const toggleTodo = (id: string, val: boolean = true) => {
-    todos.value = todos.value.map((item) => {
-      if (item.id === id) {
-        item.completed = val
-      }
-      return item
-    })
-  }
 
   const handleSubmit = (e: Event) => {
     e.preventDefault()
     e.stopPropagation()
     addToDo()
-  }
-
-  const handleChange = (e: Event, id: string) => {
-    const target = e.target as HTMLInputElement
-    todos.value = todos.value.map((item) => {
-      if (item.id === id) {
-        item.text = target.value
-      }
-      return item
-    })
   }
 
   return (
@@ -75,46 +100,28 @@ export const ToDoExample = () => {
         watch={completedTodos}
         bind:visible={() => completedTodos.value.length > 0}
       >
-        <h2>Completed ({() => completedTodos.value.length})</h2>
+        <h2 watch={completedTodos} bind:children>
+          Completed ({() => completedTodos.value.length})
+        </h2>
         <ul className="todo-list completed">
-          <For each={completedTodos}>
-            {(item: ToDoItem) => (
-              <li key={item.id}>
-                <span>{item.text}</span>
-                <IconButton
-                  type="button"
-                  onclick={() => toggleTodo(item.id, false)}
-                >
-                  <Icons.UndoIcon color="#aaa" color:hover="orange" />
-                </IconButton>
-              </li>
-            )}
-          </For>
+          <For
+            each={completedTodos}
+            template={(todo) => <CompletedToDo item={todo} />}
+          />
         </ul>
       </div>
       <div
         watch={pendingTodos}
         bind:visible={() => pendingTodos.value.length > 0}
       >
-        <h2>Pending ({() => pendingTodos.value.length})</h2>
+        <h2 watch={pendingTodos} bind:children>
+          Pending ({() => pendingTodos.value.length})
+        </h2>
         <ul className="todo-list">
-          <For each={pendingTodos}>
-            {(item: ToDoItem) => (
-              <li key={item.id}>
-                <input
-                  type="text"
-                  value={() => item.text}
-                  onkeyup={(e: Event) => handleChange(e, item.id)}
-                />
-                <IconButton type="button" onclick={() => toggleTodo(item.id)}>
-                  <Icons.CheckIcon color="#aaa" color:hover="green" />
-                </IconButton>
-                <IconButton type="button" onclick={() => removeToDo(item.id)}>
-                  <Icons.TrashIcon color="#aaa" color:hover="orangered" />
-                </IconButton>
-              </li>
-            )}
-          </For>
+          <For
+            each={pendingTodos}
+            template={(todo) => <IncompleteToDo item={todo} />}
+          />
         </ul>
       </div>
 

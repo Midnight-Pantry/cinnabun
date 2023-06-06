@@ -24,9 +24,10 @@ export const ChatMessageList = () => {
 
   return (
     <div className="chat-message-list">
-      <Cinnabun.For each={chatMessages}>
-        {(message: IChatMessage) => <ChatMessageItem message={message} />}
-      </Cinnabun.For>
+      <Cinnabun.For
+        each={chatMessages}
+        template={(msg) => <ChatMessageItem message={msg} />}
+      />
     </div>
   )
 }

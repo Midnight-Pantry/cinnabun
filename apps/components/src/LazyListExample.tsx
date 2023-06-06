@@ -92,9 +92,10 @@ export const LazyListExample = () => {
                   document?.removeEventListener("scroll", onScroll)
                 }
               >
-                <For each={products}>
-                  {(p: Product) => <ProductCard product={p} />}
-                </For>
+                <For
+                  each={products}
+                  template={(p) => <ProductCard product={p} />}
+                />
               </div>
             </>
           )
