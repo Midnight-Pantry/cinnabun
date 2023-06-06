@@ -15,11 +15,11 @@ export const AuthButtons = () => (
     <button
       onclick={toggleAuthModal}
       watch={userStore}
-      bind:render={isNotAuthenticated}
+      bind:visible={isNotAuthenticated}
     >
       Log in
     </button>
-    <button onclick={onLogout} watch={userStore} bind:render={isAuthenticated}>
+    <button onclick={onLogout} watch={userStore} bind:visible={isAuthenticated}>
       Log out
     </button>
     <Portal>

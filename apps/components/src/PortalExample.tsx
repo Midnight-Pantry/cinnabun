@@ -27,7 +27,7 @@ export const PortalExample = () => {
       <Portal>
         <div
           watch={activeModal}
-          bind:render={() => activeModal.value === ActiveModal.A}
+          bind:visible={() => activeModal.value === ActiveModal.A}
         >
           <div
             style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,.5);z-index:1000"
@@ -44,7 +44,7 @@ export const PortalExample = () => {
       <Portal>
         <div
           watch={activeModal}
-          bind:render={() => activeModal.value === ActiveModal.B}
+          bind:visible={() => activeModal.value === ActiveModal.B}
         >
           <div
             style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,.5);z-index:1000"

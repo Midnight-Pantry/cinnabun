@@ -41,7 +41,7 @@ const Buttons = () => {
           Add
         </button>
       </div>
-      <p watch={context} bind:render={() => context.value > 5}>
+      <p watch={context} bind:visible={() => context.value > 5}>
         value is greater than 5
       </p>
     </>

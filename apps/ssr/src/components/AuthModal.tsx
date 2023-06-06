@@ -73,7 +73,7 @@ export const AuthModal = () => {
       className="modal-outer"
       tabIndex={-1}
       watch={authModalVisible}
-      bind:render={() => {
+      bind:visible={() => {
         if (!authModalVisible.value) resetForm()
         return authModalVisible.value
       }}
@@ -88,7 +88,7 @@ export const AuthModal = () => {
         settings={{ from: "bottom", duration: 300 }}
         properties={[{ name: "scale", from: 0, to: 1 }]}
         watch={authModalVisible}
-        bind:render={() => authModalVisible.value}
+        bind:visible={() => authModalVisible.value}
       >
         <NavigationListener
           onCapture={() => (authModalVisible.value = false)}

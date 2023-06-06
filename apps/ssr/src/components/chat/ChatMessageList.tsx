@@ -23,16 +23,10 @@ export const ChatMessageList = () => {
     : serverData
 
   return (
-    <div
-      className="chat-message-list"
-      watch={[chatMessages, userStore]}
-      bind:render
-    >
-      {() =>
-        chatMessages.value.map((message) => (
-          <ChatMessageItem message={message} />
-        ))
-      }
+    <div className="chat-message-list">
+      <Cinnabun.For each={chatMessages}>
+        {(message: IChatMessage) => <ChatMessageItem message={message} />}
+      </Cinnabun.For>
     </div>
   )
 }
@@ -43,6 +37,7 @@ const ChatMessageItem = ({ message }: { message: IChatMessage }) => {
 
   return (
     <div
+      key={message.id}
       watch={userStore}
       bind:className={(self: Cinnabun.Component) =>
         `chat-message ${isOwnMessage(getUser(self)) ? "is-owner" : ""}`

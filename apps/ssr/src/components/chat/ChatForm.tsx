@@ -29,7 +29,7 @@ export const ChatForm = () => {
 
       <button
         watch={[inputState, userStore]}
-        bind:render={isAuthenticated}
+        bind:visible={isAuthenticated}
         bind:disabled={() => !inputState.value}
         onclick={handleSubmit}
       >
@@ -38,7 +38,7 @@ export const ChatForm = () => {
 
       <button
         watch={[userStore]}
-        bind:render={isNotAuthenticated}
+        bind:visible={isNotAuthenticated}
         onclick={toggleAuthModal}
       >
         Log in to chat

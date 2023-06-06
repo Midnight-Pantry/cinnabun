@@ -103,7 +103,7 @@ export const LazyListExample = () => {
       <div
         style="margin: 2rem"
         watch={loadingMore}
-        bind:render={() => loadingMore.value}
+        bind:visible={() => loadingMore.value}
       >
         <p>loading more...</p>
       </div>
