@@ -116,7 +116,7 @@ export type ReactivityProps = {
    * </p>
    * ```
    */
-  ["bind:children"]?: boolean | ComponentFunc
+  ["bind:children"]?: boolean | ((self: Component) => ComponentChildren)
   /**
    * @description
    * In combination with 'watch', this will cause the element to set its 'visible' property
@@ -128,7 +128,7 @@ export type ReactivityProps = {
    * </p>
    * ```
    */
-  ["bind:visible"]?: boolean | (() => boolean)
+  ["bind:visible"]?: boolean | ((self: Component) => boolean)
 }
 
 export type ComponentProps = ReactivityProps &
