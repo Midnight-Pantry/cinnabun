@@ -54,6 +54,19 @@ export class SuspenseComponent extends Component {
   }
 }
 
+/**
+ * @description
+ * A component that renders a fallback while waiting for a promise to resolve
+ * @example
+ * ```tsx
+ * <Suspense promise={fetchData}>
+ *  {(loading, data) => {
+ *   if (loading) return <Loading />
+ *    return <YourComponent data={data} />
+ *  }}
+ * </Suspense>
+ * ```
+ */
 export const Suspense = (
   { prefetch, promise, cache }: SuspenseProps,
   children: [ComponentFunc]

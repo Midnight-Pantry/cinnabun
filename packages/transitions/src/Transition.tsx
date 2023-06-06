@@ -33,7 +33,7 @@ export const Transition = ({
     self.element.setAttribute("style", `${transitionProps()};${toStyle()}`)
   }
   const handleBeforeUnmount = (self: Cinnabun.Component) => {
-    if (!self.element || !Cinnabun.Cinnabun.isClient) return
+    if (!self.element || !Cinnabun.Cinnabun.isClient) return false
     const el = self.element
     let exitStyle = ""
     if (rest.absoluteExit) {

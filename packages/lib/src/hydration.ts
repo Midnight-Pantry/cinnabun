@@ -161,8 +161,6 @@ export class Hydration {
     )
       c.setPromise(c.props.promise)
 
-    c.bindEvents(c.props)
-
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
       const sChild = sc.children ? sc.children[i] : ({} as SerializedComponent)

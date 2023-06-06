@@ -11,7 +11,6 @@ export class DomInterop {
       htmlFor,
       children,
       onMounted,
-      onDestroyed,
       subscription,
       visible,
       style,
@@ -128,10 +127,15 @@ export class DomInterop {
     try {
       // handle delayed/cancellable unmounting
       if (!forceSync && component.props.onBeforeUnmounted) {
-        component.props.onBeforeUnmounted(component)?.then((res) => {
-          if (res) DomInterop.unRender(component, true)
-        })
-        return
+        const res = component.props.onBeforeUnmounted(component)
+        if (res instanceof Promise) {
+          res.then((res) => {
+            if (res) DomInterop.unRender(component, true)
+          })
+          return
+        } else if (res === false) {
+          return
+        }
       }
 
       DomInterop.removeFuncComponents(component)
@@ -176,7 +180,7 @@ export class DomInterop {
   }
 
   static render(component: Component, isRerender: boolean = false) {
-    const { children, onDestroyed, subscription, promise } = component.props
+    const { children, subscription, promise } = component.props
 
     Cinnabun.removeComponentReferences(component)
 
@@ -207,8 +211,6 @@ export class DomInterop {
     DomInterop.renderChildren(component)
 
     DomInterop.updateElement(component)
-
-    component.bindEvents({ onDestroyed })
 
     if (subscription) component.subscribeTo(subscription)
 

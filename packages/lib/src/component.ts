@@ -6,7 +6,6 @@ import {
   ComponentSubscription,
   ComponentProps,
   ComponentChild,
-  ComponentEventProps,
   ClassConstructor,
   ComponentChildren,
 } from "./types"
@@ -69,27 +68,26 @@ export class Component {
     const bindFns = Object.entries(this.props).filter(([k]) =>
       k.startsWith("bind:")
     )
-    if (bindFns.length > 0) {
-      for (const [k, v] of bindFns) {
-        const propName = k.substring(k.indexOf(":") + 1)
-        const val = this.getPrimitive(v, () => DomInterop.reRender(this))
-        const oldVal = this._props[propName]
-        this._props[propName] = val
+    for (const [k, v] of bindFns) {
+      const propName = k.substring(k.indexOf(":") + 1)
+      const val = this.getPrimitive(v, () => DomInterop.reRender(this))
+      const oldVal = this._props[propName]
+      this._props[propName] =
+        propName === "children" && val === true ? oldVal : val
 
-        if (propName === "visible" && Cinnabun.isClient) {
-          if (val !== oldVal) {
-            if (val && this.parent?._props.visible) {
-              DomInterop.reRender(this)
-            } else {
-              DomInterop.unRender(this)
-            }
+      if (propName === "visible" && Cinnabun.isClient) {
+        if (val !== oldVal) {
+          if (val && this.parent?._props.visible) {
+            DomInterop.reRender(this)
+          } else {
+            DomInterop.unRender(this)
           }
-        } else if (propName === "children") {
-          if (this._props.children) this.replaceChildren(this._props.children)
-          if (Cinnabun.isClient) DomInterop.renderChildren(this)
-        } else if (this.element) {
-          Object.assign(this.element, { [propName]: this._props[propName] })
         }
+      } else if (propName === "children") {
+        if (this._props.children) this.replaceChildren(this._props.children)
+        if (Cinnabun.isClient) DomInterop.renderChildren(this)
+      } else if (this.element) {
+        Object.assign(this.element, { [propName]: this._props[propName] })
       }
     }
   }
@@ -117,15 +115,6 @@ export class Component {
       component: this,
       onDestroyed: () => unsubscriber(),
     })
-  }
-
-  bindEvents({ onDestroyed }: ComponentEventProps) {
-    if (onDestroyed) {
-      Cinnabun.addComponentReference({
-        component: this,
-        onDestroyed: () => onDestroyed(this),
-      })
-    }
   }
 
   removeChildren(...children: ComponentChildren) {

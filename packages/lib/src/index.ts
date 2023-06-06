@@ -7,13 +7,7 @@ export { createPortal } from "./portal"
 
 import { Component } from "."
 import { FragmentComponent } from "./component"
-import {
-  ComponentChild,
-  ComponentProps,
-  JSXProps,
-  NodeChildren,
-  Tag,
-} from "./types"
+import { ComponentChildren, ComponentProps, JSXProps, Tag } from "./types"
 
 declare global {
   namespace JSX {
@@ -23,19 +17,22 @@ declare global {
   }
 }
 
-export const h = (tag: Tag, props: JSXProps, ...children: NodeChildren) => {
+export const h = (
+  tag: Tag,
+  props: JSXProps,
+  ...children: ComponentChildren
+) => {
   if (typeof tag === "function") {
     return tag({ ...props, children }, children)
   }
 
   let p = props ? props : ({} as ComponentProps)
 
-  //@ts-ignore
   p.children = children
 
   return new Component(tag, p)
 }
 
-export function fragment(_: any, children: ComponentChild[]) {
+export function fragment(_: any, children: ComponentChildren) {
   return new FragmentComponent(children)
 }
