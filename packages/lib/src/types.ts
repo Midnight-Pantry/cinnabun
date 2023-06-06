@@ -119,7 +119,8 @@ export type ReactivityProps = {
   ["bind:children"]?: boolean | ComponentFunc
   /**
    * @description
-   * In combination with 'watch', this will cause the element to rerender when the watched signal changes.
+   * In combination with 'watch', this will cause the element to set its 'visible' property
+   * to the provided value when the watched signal changes.
    * @example
    * ```tsx
    * <p watch={counter} bind:visible={() => counter.value > 5}>
