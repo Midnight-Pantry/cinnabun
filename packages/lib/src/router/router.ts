@@ -41,7 +41,7 @@ export class RouterComponent extends Component {
     const subscription = (_: PropsSetter, self: Component) => {
       return store.subscribe((val) => {
         for (const c of self.children as RouteComponent[]) {
-          if (c.props.visible) DomInterop.unRender(c)
+          if (Cinnabun.isClient && c.props.visible) DomInterop.unRender(c)
           c.props.visible = false
           c.props.params = {}
         }
