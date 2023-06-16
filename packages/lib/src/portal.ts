@@ -1,11 +1,11 @@
 import { Cinnabun } from "./cinnabun"
-import { Component } from "./component"
+import { Component, FragmentComponent } from "./component"
 import { ComponentChildren } from "./types"
 
 const portalRoots: Record<string, Component> = {}
 
 export const createPortal = (children: ComponentChildren, rootId: string) => {
-  if (!Cinnabun.isClient) return ""
+  if (!Cinnabun.isClient) return new FragmentComponent()
 
   if (portalRoots[rootId]) {
     for (const c of children) {
