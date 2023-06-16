@@ -41,11 +41,11 @@ importers:
   apps/ssr:
     dependencies:
       '@cinnabun/example-components':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../components
       '@fastify/compress':
-        specifier: ^6.4.0
-        version: 6.4.0
+        specifier: ^6.2.1
+        version: 6.2.1
       '@fastify/cookie':
         specifier: ^8.3.0
         version: 8.3.0
@@ -53,11 +53,11 @@ importers:
         specifier: ^6.7.1
         version: 6.7.1
       '@fastify/static':
-        specifier: ^6.10.2
-        version: 6.10.2
+        specifier: ^6.10.1
+        version: 6.10.1
       '@fastify/websocket':
-        specifier: ^8.1.0
-        version: 8.1.0
+        specifier: ^8.0.0
+        version: 8.0.0
       cinnabun:
         specifier: workspace:^
         version: link:../../packages/lib
@@ -65,7 +65,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/transitions
       esbuild:
-        specifier: ^0.17.19
+        specifier: ^0.17.18
         version: 0.17.19
       fastify:
         specifier: ^4.17.0
@@ -78,7 +78,7 @@ importers:
         version: 1.2.2
     devDependencies:
       '@types/node':
-        specifier: ^18.16.16
+        specifier: ^18.16.2
         version: 18.16.16
       '@types/websocket':
         specifier: ^1.0.5
@@ -745,19 +745,6 @@ packages:
       pumpify: 2.0.1
     dev: false
 
-  /@fastify/compress@6.4.0:
-    resolution: {integrity: sha512-9zsljrMmv1mf/r+a+tQQbNJz6++jzsTUVGtJxNKnhd9LXNJNGwTJ3bndkcpJYiG/AoWHwsHGYjB13JnQhR/yNw==}
-    dependencies:
-      '@fastify/accept-negotiator': 1.1.0
-      fastify-plugin: 4.5.0
-      into-stream: 6.0.0
-      mime-db: 1.52.0
-      minipass: 6.0.2
-      peek-stream: 1.1.3
-      pump: 3.0.0
-      pumpify: 2.0.1
-    dev: false
-
   /@fastify/cookie@8.3.0:
     resolution: {integrity: sha512-P9hY9GO11L20TnZ33XN3i0bt+3x0zaT7S0ohAzWO950E9PB2xnNhLYzPFJIGFi5AVN0yr5+/iZhWxeYvR6KCzg==}
     dependencies:
@@ -808,33 +795,11 @@ packages:
       fastify-plugin: 4.5.0
       glob: 8.1.0
       p-limit: 3.1.0
-      readable-stream: 4.3.0
-    dev: false
-
-  /@fastify/static@6.10.2:
-    resolution: {integrity: sha512-UoaMvIHSBLCZBYOVZwFRYqX2ufUhd7FFMYGDeSf0Z+D8jhYtwljjmuQGuanUP8kS4y/ZEV1a8mfLha3zNwsnnQ==}
-    dependencies:
-      '@fastify/accept-negotiator': 1.1.0
-      '@fastify/send': 2.1.0
-      content-disposition: 0.5.4
-      fastify-plugin: 4.5.0
-      glob: 8.1.0
-      p-limit: 3.1.0
       readable-stream: 4.4.0
     dev: false
 
   /@fastify/websocket@8.0.0:
     resolution: {integrity: sha512-7NnTJVbpWkAHwuAw9tGKJP5RBOUqLhU50xP5FMlfShWvWPZeCGioy22v8noqw1KFi+Mdo5guCMmfQRGrFfIR1w==}
-    dependencies:
-      fastify-plugin: 4.5.0
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
-
-  /@fastify/websocket@8.1.0:
-    resolution: {integrity: sha512-7Tk+ODgvS/S9IyPXuXDU1v5tpchAeSWFH0B3Ldz+cnBKy5+lEmuj4ncLhVUzXgn9w3ycX/Vhf1mEEkcemBFUIQ==}
     dependencies:
       fastify-plugin: 4.5.0
       ws: 8.13.0
@@ -934,7 +899,7 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 20.2.5
+      '@types/node': 18.16.16
     dev: false
 
   /@types/mocha@10.0.1:
@@ -947,7 +912,6 @@ packages:
 
   /@types/node@18.16.16:
     resolution: {integrity: sha512-NpaM49IGQQAUlBhHMF82QH80J08os4ZmyF9MkpCzWAGuOHqE4gTEbhzd7L3l5LmWuZ6E0OiC1FweQ4tsiW35+g==}
-    dev: true
 
   /@types/node@18.16.3:
     resolution: {integrity: sha512-OPs5WnnT1xkCBiuQrZA4+YAV4HEJejmHneyraIaxsbev5yCEr6KMwINNFP9wQeFIw8FWcoTqF3vQsa5CDaI+8Q==}
@@ -955,15 +919,12 @@ packages:
 
   /@types/node@20.0.0:
     resolution: {integrity: sha512-cD2uPTDnQQCVpmRefonO98/PPijuOnnEy5oytWJFPY1N9aJCz2wJ5kSGWO+zJoed2cY2JxQh6yBuUq4vIn61hw==}
-
-  /@types/node@20.2.5:
-    resolution: {integrity: sha512-JJulVEQXmiY9Px5axXHeYGLSjhkZEnD+MDPDGbCbIAbMslkKwmygtZFy1X6s/075Yo94sf8GuSlFfPzysQrWZQ==}
-    dev: false
+    dev: true
 
   /@types/responselike@1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 20.2.5
+      '@types/node': 18.16.16
     dev: false
 
   /@types/sinonjs__fake-timers@8.1.1:
@@ -981,7 +942,7 @@ packages:
   /@types/websocket@1.0.5:
     resolution: {integrity: sha512-NbsqiNX9CnEfC1Z0Vf4mE1SgAJ07JnRYcNex7AJ9zAVzmiGHmjKFEk7O4TJIsgv2B1sLEb6owKFZrACwdYngsQ==}
     dependencies:
-      '@types/node': 18.16.3
+      '@types/node': 18.16.16
     dev: true
 
   /@types/yauzl@2.10.0:
@@ -4431,7 +4392,7 @@ packages:
       extsprintf: 1.3.0
     dev: true
 
-  /vite-node@0.31.0(@types/node@20.0.0):
+  /vite-node@0.31.0(@types/node@18.16.16):
     resolution: {integrity: sha512-8x1x1LNuPvE2vIvkSB7c1mApX5oqlgsxzHQesYF7l5n1gKrEmrClIiZuOFbFDQcjLsmcWSwwmrWrcGWm9Fxc/g==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -4441,7 +4402,7 @@ packages:
       mlly: 1.2.0
       pathe: 1.1.0
       picocolors: 1.0.0
-      vite: 4.3.3(@types/node@20.0.0)
+      vite: 4.3.3(@types/node@18.16.16)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -4450,6 +4411,39 @@ packages:
       - sugarss
       - supports-color
       - terser
+    dev: false
+
+  /vite@4.3.3(@types/node@18.16.16):
+    resolution: {integrity: sha512-MwFlLBO4udZXd+VBcezo3u8mC77YQk+ik+fbc0GZWGgzfbPP+8Kf0fldhARqvSYmtIWoAJ5BXPClUbMTlqFxrA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 18.16.16
+      esbuild: 0.17.19
+      postcss: 8.4.23
+      rollup: 3.21.0
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: false
 
   /vite@4.3.3(@types/node@18.16.3):
@@ -4485,39 +4479,6 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vite@4.3.3(@types/node@20.0.0):
-    resolution: {integrity: sha512-MwFlLBO4udZXd+VBcezo3u8mC77YQk+ik+fbc0GZWGgzfbPP+8Kf0fldhARqvSYmtIWoAJ5BXPClUbMTlqFxrA==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 20.0.0
-      esbuild: 0.17.18
-      postcss: 8.4.23
-      rollup: 3.21.0
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: false
-
   /vitest@0.31.0:
     resolution: {integrity: sha512-JwWJS9p3GU9GxkG7eBSmr4Q4x4bvVBSswaCFf1PBNHiPx00obfhHRJfgHcnI0ffn+NMlIh9QGvG75FlaIBdKGA==}
     engines: {node: '>=v14.18.0'}
@@ -4551,7 +4512,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.5
       '@types/chai-subset': 1.3.3
-      '@types/node': 20.0.0
+      '@types/node': 18.16.16
       '@vitest/expect': 0.31.0
       '@vitest/runner': 0.31.0
       '@vitest/snapshot': 0.31.0
@@ -4571,8 +4532,8 @@ packages:
       strip-literal: 1.0.1
       tinybench: 2.5.0
       tinypool: 0.5.0
-      vite: 4.3.3(@types/node@20.0.0)
-      vite-node: 0.31.0(@types/node@20.0.0)
+      vite: 4.3.3(@types/node@18.16.16)
+      vite-node: 0.31.0(@types/node@18.16.16)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less

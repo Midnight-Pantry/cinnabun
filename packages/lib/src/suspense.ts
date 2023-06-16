@@ -68,8 +68,23 @@ export class SuspenseComponent extends Component {
  * ```
  */
 export const Suspense = (
-  { prefetch, promise, cache }: SuspenseProps,
+  {
+    promise,
+    cache,
+    prefetch,
+    "prefetch:defer": deferredPrefetch,
+  }: SuspenseProps,
   children: [ComponentFunc]
 ) => {
-  return new SuspenseComponent("", { prefetch, promise, cache, children })
+  return new SuspenseComponent(
+    "",
+    Object.assign(
+      { promise, cache, children },
+      prefetch
+        ? { prefetch }
+        : deferredPrefetch
+        ? { "prefetch:defer": deferredPrefetch }
+        : {}
+    )
+  )
 }

@@ -3,7 +3,7 @@ import { Cinnabun } from "./cinnabun"
 import { Component, FragmentComponent } from "./component"
 import { Signal } from "./signal"
 import { ComponentProps, SerializedComponent } from "./types"
-import { validHtmlProps } from "./utils"
+import { generateUUID, validHtmlProps } from "./utils"
 
 export type ServerPromise<T> = Promise<T>
 
@@ -12,18 +12,25 @@ type ServerBakeResult = {
   html: string
 }
 
+type PromiseQueueItem = {
+  promise: Promise<any>
+  callback: { (data: any): Promise<void> }
+}
 type Accumulator = {
-  html: string[]
-  promiseQueue: Promise<any>[]
+  promiseQueue: PromiseQueueItem[]
+  html: string
 }
 
 export type SSRConfig = {
   cinnabunInstance: Cinnabun
-  useFileBasedRouting?: boolean
-  stream?: Writable
+  stream: Writable | null
 }
 
 export class SSR {
+  static deferredLoaderPrefix = "cb-deferred-loader"
+  static deferralEvtName = "deferral-complete"
+  static deferralScriptIdPrefix = "deferral-"
+
   static async serverBake(
     app: Component,
     config: SSRConfig
@@ -31,20 +38,37 @@ export class SSR {
     let startTime = 0
     if (process.env.DEBUG) startTime = performance.now()
     const accumulator: Accumulator = {
-      html: [],
       promiseQueue: [],
+      html: "",
     }
 
     const serialized = await SSR.serialize(accumulator, app, config)
-
     if (process.env.DEBUG) {
       console.log(
         `render time: ${Number(performance.now() - startTime).toFixed(3)}ms`
       )
     }
+
+    SSR.render(
+      `<script id="server-props">window.__cbData={root:document.documentElement,component:${JSON.stringify(
+        { children: [serialized], props: {} }
+      )}}</script><script src="/static/index.js"></script>`,
+      config,
+      accumulator
+    )
+
+    if (accumulator.promiseQueue.length) {
+      await Promise.allSettled(
+        accumulator.promiseQueue.map(async (item) => {
+          const data = await item.promise
+          return item.callback(data)
+        })
+      )
+    }
+
     return {
       componentTree: { children: [serialized], props: {} },
-      html: accumulator.html.join(""),
+      html: accumulator.html,
     }
   }
 
@@ -58,23 +82,6 @@ export class SSR {
   }
 
   public static serializeProps(component: Component): Partial<ComponentProps> {
-    // for (const k of Object.keys(component.props)) {
-    //   // const p =
-    //   //   typeof component.props[k] === "undefined" ? true : component.props[k]
-    //   const p = component.props[k]
-    //   if (p instanceof Signal) {
-    //     res[k] = p.value
-    //   } else {
-    //     if (k === "children") continue
-    //     if (k === "promise" && "prefetch" in component.props) continue
-    //     if (k === "className") {
-    //       res.class = p
-    //       continue
-    //     }
-    //     res[k] = p
-    //   }
-    // }
-
     return validHtmlProps(component.props)
   }
 
@@ -94,7 +101,8 @@ export class SSR {
     const {
       children,
       onMounted,
-      onDestroyed,
+      onBeforeUnmounted,
+      onBeforeServerRendered,
       subscription,
       promise,
       prefetch,
@@ -106,6 +114,9 @@ export class SSR {
     const shouldRender = component.shouldRender()
 
     if (shouldRender && subscription) component.subscribeTo(subscription)
+    if (shouldRender && onBeforeServerRendered) {
+      await onBeforeServerRendered(component)
+    }
 
     if (!shouldRender || !component.tag) {
       if (shouldRender) {
@@ -158,11 +169,11 @@ export class SSR {
   }
 
   static render(content: string, config: SSRConfig, accumulator: Accumulator) {
-    if (config.stream) {
-      config.stream.write(content)
-    } else {
-      accumulator.html.push(content)
+    if (!config.stream) {
+      accumulator.html += content
+      return
     }
+    config.stream.write(content)
   }
 
   public static async serializeChildren(
@@ -172,6 +183,51 @@ export class SSR {
     config: SSRConfig
   ): Promise<(SerializedComponent | string)[]> {
     const res: (SerializedComponent | string)[] = []
+    // suspense prefetching
+    if (shouldRender) {
+      const promise = component.props.promise as { (): Promise<any> }
+      if (component.props.prefetch && "promiseCache" in component) {
+        component.promiseCache = await promise()
+        component.props.promiseCache = component.promiseCache
+      } else if (
+        component.props["prefetch:defer"] &&
+        "promiseCache" in component
+      ) {
+        if (!component.promiseCache) {
+          component.props["cb-deferralId"] = generateUUID()
+          SSR.render(
+            `<!--${SSR.deferredLoaderPrefix}:${component.props["cb-deferralId"]}-->`,
+            config,
+            accumulator
+          )
+          accumulator.promiseQueue.push({
+            promise: promise(),
+            callback: async (data) => {
+              component.promiseCache = data
+              //await SSR.serialize(accumulator, component, config)
+              const deferralId = component.props["cb-deferralId"]
+              SSR.render(
+                `<script id="${
+                  SSR.deferralScriptIdPrefix
+                }${deferralId}">document.dispatchEvent(new CustomEvent("${
+                  SSR.deferralEvtName
+                }",{
+            bubbles:true,
+            detail: {
+              deferralId: "${deferralId}",
+              data: ${JSON.stringify(data)}
+            }
+          }))
+          </script>`,
+                config,
+                accumulator
+              )
+            },
+          })
+        }
+      }
+    }
+
     for await (const c of component.children) {
       if (typeof c === "string" || typeof c === "number") {
         if (shouldRender) SSR.render(c.toString(), config, accumulator)
@@ -196,17 +252,13 @@ export class SSR {
       }
       if (typeof c === "function") {
         try {
-          if ("promiseCache" in component && component.props.prefetch) {
-            component.promiseCache = await component.props.promise()
-            component.props.promiseCache = component.promiseCache
-          }
-
           let val = c(...component.childArgs)
           if (Array.isArray(val)) val = new FragmentComponent(val)
           if (val instanceof Component) {
             val.parent = component
             const sc = await SSR.serialize(accumulator, val, config)
             res.push(sc)
+            continue
           } else if (typeof val === "string" || typeof val === "number") {
             if (shouldRender) SSR.render(val.toString(), config, accumulator)
             res.push(val.toString())

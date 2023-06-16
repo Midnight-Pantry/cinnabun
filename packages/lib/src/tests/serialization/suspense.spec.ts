@@ -25,8 +25,13 @@ describe("When serialized, a Suspense Component", function () {
       ],
     })
     it("will wait for its' promise to resolve", async function () {
-      const { html } = await SSR.serverBake(component, { cinnabunInstance })
-      expect(html).to.equal("<p><span>1</span><span>2</span><span>3</span></p>")
+      const { html } = await SSR.serverBake(component, {
+        cinnabunInstance,
+        stream: null,
+      })
+      expect(html).to.contain(
+        "<p><span>1</span><span>2</span><span>3</span></p>"
+      )
     })
   })
   describe("without the 'prefetch' flag", function () {
@@ -46,8 +51,11 @@ describe("When serialized, a Suspense Component", function () {
       ],
     })
     it("will render its' loading state", async function () {
-      const { html } = await SSR.serverBake(component, { cinnabunInstance })
-      expect(html).to.equal("<p>...loading</p>")
+      const { html } = await SSR.serverBake(component, {
+        cinnabunInstance,
+        stream: null,
+      })
+      expect(html).to.contain("<p>...loading</p>")
     })
   })
 })

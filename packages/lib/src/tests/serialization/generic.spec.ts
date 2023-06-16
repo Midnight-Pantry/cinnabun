@@ -13,8 +13,11 @@ describe("When serialized, a Generic Component", function () {
     const expected = "<div>test 123</div>"
 
     it(`produces the HTML: ${expected}`, async function () {
-      const { html } = await SSR.serverBake(component, { cinnabunInstance })
-      expect(html).to.equal(expected)
+      const { html } = await SSR.serverBake(component, {
+        cinnabunInstance,
+        stream: null,
+      })
+      expect(html).to.include(expected)
     })
   })
   describe("with primitive func children", function () {
@@ -25,8 +28,11 @@ describe("When serialized, a Generic Component", function () {
     const expected = "<div>test 123</div>"
 
     it(`produces the HTML: ${expected}`, async function () {
-      const { html } = await SSR.serverBake(component, { cinnabunInstance })
-      expect(html).to.equal(expected)
+      const { html } = await SSR.serverBake(component, {
+        cinnabunInstance,
+        stream: null,
+      })
+      expect(html).to.include(expected)
     })
   })
   describe("with componentFunc children", function () {
@@ -46,20 +52,31 @@ describe("When serialized, a Generic Component", function () {
     const expected = "<div><p>test</p><p>123</p></div>"
 
     it(`produces the HTML: ${expected}`, async function () {
-      const { html } = await SSR.serverBake(component, { cinnabunInstance })
-      expect(html).to.equal(expected)
+      const { html } = await SSR.serverBake(component, {
+        cinnabunInstance,
+        stream: null,
+      })
+      expect(html).to.include(expected)
     })
   })
   describe("with watch+bind props", function () {
     it(`can conditionally render`, async function () {
       const cinnabunInstance = new Cinnabun()
       const signal = new Signal(123)
-      const component = new Component("div", {
-        watch: signal,
-        "bind:visible": () => signal.value !== 123,
+      const parentComponent = new Component("div", {
+        id: "parent",
+        children: [
+          new Component("div", {
+            watch: signal,
+            "bind:visible": () => signal.value !== 123,
+          }),
+        ],
       })
-      const { html } = await SSR.serverBake(component, { cinnabunInstance })
-      expect(html).to.equal("")
+      const { html } = await SSR.serverBake(parentComponent, {
+        cinnabunInstance,
+        stream: null,
+      })
+      expect(html).to.include('<div id="parent"></div>')
     })
 
     it("can dynamically render children", async function () {
@@ -72,8 +89,11 @@ describe("When serialized, a Generic Component", function () {
           (v) => new Component("li", { children: [v] })
         ),
       })
-      const { html } = await SSR.serverBake(component, { cinnabunInstance })
-      expect(html).to.equal("<ul><li>test</li><li>123</li></ul>")
+      const { html } = await SSR.serverBake(component, {
+        cinnabunInstance,
+        stream: null,
+      })
+      expect(html).to.include("<ul><li>test</li><li>123</li></ul>")
     })
   })
 })

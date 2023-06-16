@@ -22,8 +22,11 @@ describe("When serialized, a Router Component", function () {
       }),
     ])
 
-    const { html } = await SSR.serverBake(router, { cinnabunInstance })
-    expect(html).to.equal("<h1>Test</h1>")
+    const { html } = await SSR.serverBake(router, {
+      cinnabunInstance,
+      stream: null,
+    })
+    expect(html).to.contain("<h1>Test</h1>")
   })
 
   it("will provide path params to child routes, and they can provide them to their child component", async function () {
@@ -43,7 +46,10 @@ describe("When serialized, a Router Component", function () {
       }),
     ])
 
-    const { html } = await SSR.serverBake(router, { cinnabunInstance })
-    expect(html).to.equal("<h1>moose</h1>")
+    const { html } = await SSR.serverBake(router, {
+      cinnabunInstance,
+      stream: null,
+    })
+    expect(html).to.include("<h1>moose</h1>")
   })
 })

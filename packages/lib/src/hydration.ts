@@ -2,6 +2,7 @@ import { Cinnabun } from "./cinnabun"
 import { Component, FragmentComponent } from "./component"
 import { DomInterop } from "./domInterop"
 import { Signal } from "./signal"
+import { SSR } from "./ssr"
 import { SuspenseComponent } from "./suspense"
 import {
   SSRProps,
@@ -47,7 +48,7 @@ export class Hydration {
     // hydration validation breaks with streaming,
     // something to do with the way the browser parses the viewport meta tag 😢
 
-    //Hydration.validate(tray)
+    Hydration.validate(tray)
   }
 
   static async lazyHydrate(
@@ -80,15 +81,13 @@ export class Hydration {
     if (!c) return
 
     if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
-      Cinnabun.rootMap.set(
-        parentElement,
-        Hydration.getParentOffset(parentElement) + 1
-      )
+      Hydration.updateParentOffset(parentElement, 1)
       return
     }
     if (typeof c === "function") {
       const usePromiseCache =
-        "promiseCache" in parent.props && parent.props.prefetch
+        "promiseCache" in parent.props &&
+        (parent.props.prefetch || parent.props["prefetch:defer"])
 
       let val = usePromiseCache
         ? c(...[false, parent.props.promiseCache])
@@ -97,6 +96,7 @@ export class Hydration {
       if (Array.isArray(val)) val = new FragmentComponent(val)
       if (val instanceof Component) {
         if (!val.shouldRender()) return
+        DomInterop.removeFuncComponents(parent)
         Hydration.hydrateComponent(parent, val, sc, parentElement)
         parent.funcComponents.push(val)
       }
@@ -142,13 +142,30 @@ export class Hydration {
     if (!c.shouldRender()) return
 
     if (c.tag) {
-      c.element = parentElement.childNodes[
-        Hydration.getParentOffset(parentElement)
-      ] as HTMLElement
-      Cinnabun.rootMap.set(
-        parentElement,
-        Hydration.getParentOffset(parentElement) + 1
-      )
+      if (!c.element) {
+        const offset = Hydration.getParentOffset(parentElement)
+        let node = parentElement.childNodes[offset]
+        try {
+          if (!node) {
+            console.error("failed to hydrate", c, parentElement)
+            return
+          }
+          if (
+            node.nodeType === Node.COMMENT_NODE &&
+            node.nodeValue?.includes(SSR.deferredLoaderPrefix)
+          ) {
+            const comment = node
+            node = node.nextSibling!
+            comment.parentNode?.removeChild(comment)
+            Hydration.handleDeferral(parent, node)
+          }
+        } catch (error) {
+          console.error(error, node)
+          debugger
+        }
+        c.element = node as HTMLElement
+      }
+      Hydration.updateParentOffset(parentElement, 1)
       DomInterop.updateElement(c)
     }
 
@@ -157,7 +174,8 @@ export class Hydration {
       c.props.promise &&
       "setPromise" in c &&
       typeof c.setPromise === "function" &&
-      !c.props.prefetch
+      !c.props.prefetch &&
+      !c.props["prefetch:defer"]
     )
       c.setPromise(c.props.promise)
 
@@ -170,7 +188,7 @@ export class Hydration {
       }
       if (typeof sChild === "string" || typeof sChild === "number") {
         const el = c.element ?? parentElement
-        Cinnabun.rootMap.set(el, Hydration.getParentOffset(el) + 1)
+        Hydration.updateParentOffset(el, 1)
         continue
       }
 
@@ -180,10 +198,68 @@ export class Hydration {
     c.props.hydrating = false
   }
 
+  static handleDeferral(parent: Component, node: ChildNode) {
+    const handleDeferredContentArrival = (evt: Event) => {
+      const { deferralId, data } = (evt as CustomEvent).detail as {
+        deferralId: string
+        data: any
+      }
+      if (deferralId === parent.props["cb-deferralId"]) {
+        const evtScript = document.getElementById(
+          `${SSR.deferralScriptIdPrefix}${deferralId}`
+        )
+        if (evtScript) {
+          const parentEl = node.parentElement!
+          evtScript.parentNode?.removeChild(evtScript)
+          Hydration.updateParentOffset(parentEl, -1)
+
+          if ("promiseCache" in parent) parent.promiseCache = data
+          DomInterop.reRender(parent)
+        }
+      }
+      window.removeEventListener(
+        SSR.deferralEvtName,
+        handleDeferredContentArrival
+      )
+    }
+    window.addEventListener(SSR.deferralEvtName, handleDeferredContentArrival)
+  }
+
+  static updateParentOffset(parentElement: Element | ChildNode, n: number) {
+    Cinnabun.rootMap.set(
+      parentElement,
+      Hydration.getParentOffset(parentElement) + n
+    )
+  }
+
   static getParentOffset(parentElement: Element | ChildNode): number {
     return Cinnabun.rootMap.get(parentElement) ?? 0
   }
 
+  static createComponentChild(
+    sc: SerializedComponent | string | number,
+    parentElement: HTMLElement
+  ): Component | string | number | undefined {
+    if (typeof sc === "string" || typeof sc === "number") {
+      return sc
+    }
+
+    const newComponent = new Component(sc.tag ?? "", { ...sc.props })
+    let element: HTMLElement | undefined
+    if (newComponent.tag) {
+      const offset = Hydration.getParentOffset(parentElement) ?? 0
+      element = parentElement.childNodes[offset] as HTMLElement
+    }
+    if (element) {
+      newComponent.element = element
+      Hydration.updateParentOffset(parentElement, 1)
+    }
+    for (const c of sc.children) {
+      const child = Hydration.createComponentChild(c, element ?? parentElement)
+      if (child) newComponent.children.push(child)
+    }
+    return newComponent
+  }
   static createKeyNodeChild(
     sc: SerializedComponent,
     parentElement: HTMLElement
@@ -191,7 +267,7 @@ export class Hydration {
     if (typeof sc === "string" || typeof sc === "number") {
       return sc
     }
-    const newComponent = new Component(sc.tag!, { ...sc.props })
+    const newComponent = new Component(sc.tag ?? "", { ...sc.props })
     if (newComponent.tag) {
       const element = Array.from(parentElement.childNodes).find(
         (cn) =>
