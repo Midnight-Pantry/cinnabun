@@ -43,6 +43,23 @@ export type ComponentSubscription = {
   (fn: PropsSetter, self: Component): { (): void }
 }
 
+type SuspensePrefetchProps = Either<
+  {
+    /**
+     * @description
+     * If true, the promise will only be called during Server Side Rendering and will halt progress.
+     */
+    prefetch?: boolean
+  },
+  {
+    /**
+     * @description
+     * If true, the promise will be called during Server Side Rendering but will not halt progress.
+     */
+    "prefetch:defer"?: boolean
+  }
+>
+
 export type SuspenseProps = {
   /**
    * @description
@@ -55,12 +72,8 @@ export type SuspenseProps = {
    * If false, the promise will be called every time the component is rendered.
    */
   cache?: boolean
-  /**
-   * @description
-   * If true, the promise will only be called during Server Side Rendering.
-   */
-  prefetch?: boolean
-}
+} & SuspensePrefetchProps
+
 export type SuspenseChild =
   | ComponentChild
   | { (loading: boolean, data: any): ComponentChild }
@@ -76,19 +89,24 @@ export type ComponentEventProps = {
    * A function that will be called when the component is mounted to the DOM.
    * @example
    */
-  onMounted?: { (c: Component): void }
+  onMounted?: { (self: Component): void }
   /**
    * @description
    * A function that will be called when the component is unmounted from the DOM.
    */
-  onUnmounted?: { (c: Component): void }
+  onUnmounted?: { (self: Component): void }
   /**
    * @description
    * A function that will be called when the component is about to be unmounted from the DOM.
    * If the function returns a promise, the component will not be unmounted until the promise resolves.
    * If the promise resolves to false, the component will not be unmounted.
    */
-  onBeforeUnmounted?: { (c: Component): Promise<boolean> | boolean }
+  onBeforeUnmounted?: { (self: Component): Promise<boolean> | boolean }
+  /**
+   * @description
+   * A function that will be called when the component is about to be rendered on the server.
+   */
+  onBeforeServerRendered?: { (self: Component): Promise<void> }
 }
 export type ReactivityProps = {
   subscription?: ComponentSubscription
