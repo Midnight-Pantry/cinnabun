@@ -22,7 +22,7 @@ if (isDev) {
     try {
       log("Dim", "  evaluating application... 🔍")
       const cinnabunInstance = new Cinnabun()
-      await SSR.serverBake(Template(App), { cinnabunInstance })
+      await SSR.serverBake(Template(App), { cinnabunInstance, stream: null })
       log("Dim", "  good to go! ✅")
     } catch (error) {
       if ("message" in (error as Error)) {
@@ -116,23 +116,16 @@ app.get("/*", { onRequest: [app.authenticate] }, async (req, res) => {
     stream: res.raw,
   }
 
-  res.header("Content-Type", "text/html").status(200)
-  res.header("Transfer-Encoding", "chunked")
+  res.headers({
+    "Content-Type": "text/html",
+    "Transfer-Encoding": "chunked",
+    Connection: "keep-alive",
+  })
   res.raw.write("<!DOCTYPE html><html>")
 
-  const { componentTree } = await SSR.serverBake(Template(App), config)
+  await SSR.serverBake(Template(App), config)
 
-  res.raw.write(`
-      <script id="server-props">
-        window.__cbData = {
-          root: document.documentElement,
-          component: ${JSON.stringify(componentTree)}
-        }
-      </script>
-      <script src="/static/index.js"></script>
-    `)
-  res.raw.write("</html>")
-  res.raw.end()
+  res.raw.end(`</html>`)
 })
 
 app.listen({ port }, function (err) {

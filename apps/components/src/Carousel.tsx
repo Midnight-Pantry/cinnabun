@@ -1,6 +1,6 @@
 import * as Cinnabun from "cinnabun"
 import "./styles/carousel.css"
-import { For } from "cinnabun"
+import { For, Component } from "cinnabun"
 
 type CarouselImage = {
   src: string
@@ -33,7 +33,7 @@ export const Carousel = (props: CarouselProps) => {
     goToIndex(currentIndex.value - 1)
   }
 
-  function onMounted(component: Cinnabun.Component): void {
+  function onMounted(component: Component): void {
     carouselInner = component.element as HTMLDivElement
     // get the height of the shortest image
     let minHeight = Infinity
@@ -68,7 +68,7 @@ export const Carousel = (props: CarouselProps) => {
           &lt;
         </button>
         <button
-          onclick={() => goToNext()}
+          onclick={goToNext}
           watch={currentIndex}
           bind:disabled={() => currentIndex.value === totalItems - 1}
         >

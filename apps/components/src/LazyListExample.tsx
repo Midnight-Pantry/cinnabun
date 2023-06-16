@@ -23,7 +23,6 @@ args.subscribe((v) => {
 async function loadNextProducts(): Promise<void> {
   loadingMore.value = true
   // simulate network latency
-  await sleep(500)
   const res = await getProducts()
   loadingMore.value = false
   products.value.push(...res.products)
@@ -79,25 +78,23 @@ export const LazyListExample = () => {
 
   return (
     <>
-      <Suspense prefetch cache promise={getProducts}>
+      <Suspense prefetch:defer cache promise={getProducts}>
         {(loading: boolean, res: ProductAPIResponse) => {
           if (loading) return <p>loading...</p>
           products.value = res.products
           return (
-            <>
-              <div
-                className="card-list"
-                onMounted={() => document?.addEventListener("scroll", onScroll)}
-                onUnmounted={() =>
-                  document?.removeEventListener("scroll", onScroll)
-                }
-              >
-                <For
-                  each={products}
-                  template={(p) => <ProductCard product={p} />}
-                />
-              </div>
-            </>
+            <div
+              className="card-list"
+              onMounted={() => document?.addEventListener("scroll", onScroll)}
+              onUnmounted={() =>
+                document?.removeEventListener("scroll", onScroll)
+              }
+            >
+              <For
+                each={products}
+                template={(p) => <ProductCard product={p} />}
+              />
+            </div>
           )
         }}
       </Suspense>
