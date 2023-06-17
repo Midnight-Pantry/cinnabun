@@ -212,6 +212,7 @@ export class Hydration {
           const parentEl = node.parentElement!
           evtScript.parentNode?.removeChild(evtScript)
           Hydration.updateParentOffset(parentEl, -1)
+          parentEl.removeChild(node)
 
           if ("promiseCache" in parent) parent.promiseCache = data
           DomInterop.reRender(parent)
