@@ -96,7 +96,7 @@ export class DomInterop {
       return child.value.toString()
     }
     if (child instanceof Component) {
-      if (!child.props.visible) return ""
+      if (!child.props.visible || child.isStatic) return ""
       return DomInterop.render(child)
     }
     if (typeof child === "function") {
@@ -104,7 +104,7 @@ export class DomInterop {
       if (Array.isArray(c)) c = new FragmentComponent(c)
       const res = DomInterop.renderChild(component, c, idx)
       if (c instanceof Component) {
-        if (!c.props.visible) return ""
+        if (!c.props.visible || c.isStatic) return ""
         c.parent = component
         component.funcComponents.push(c)
       }

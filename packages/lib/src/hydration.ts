@@ -147,7 +147,8 @@ export class Hydration {
         let node = parentElement.childNodes[offset]
         try {
           if (!node) {
-            console.error("failed to hydrate", c, parentElement)
+            DomInterop.reRender(c)
+            //console.error("failed to hydrate", c, parentElement)
             return
           }
           if (
