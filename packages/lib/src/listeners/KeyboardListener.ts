@@ -3,7 +3,7 @@ import { ComponentChild, ComponentChildren } from "../types"
 
 type KeyboardListenerProps = {
   keys: string[]
-  onCapture: (keys: string[]) => void
+  onCapture: (keys: string[], e: Event) => void
   requireAll?: boolean
 }
 
@@ -17,7 +17,7 @@ export const KeyboardListener = (
 
   const triggerCallback = (e: KeyboardEvent) => {
     if (!self || self.children.length === 0) {
-      onCapture(currentKeys)
+      onCapture(currentKeys, e)
       currentKeys = []
       return
     }
@@ -25,14 +25,14 @@ export const KeyboardListener = (
     // if so, don't trigger callback
     for (const c of self.children) {
       if (componentIsTarget(c, e)) {
-        onCapture(currentKeys)
+        onCapture(currentKeys, e)
         currentKeys = []
         return
       }
     }
     for (const fc of self.funcComponents) {
       if (componentIsTarget(fc, e)) {
-        onCapture(currentKeys)
+        onCapture(currentKeys, e)
         currentKeys = []
         return
       }
