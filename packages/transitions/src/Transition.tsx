@@ -1,18 +1,6 @@
 import * as Cinnabun from "cinnabun"
 import { PropsWithChildren } from "cinnabun/types"
-
-export type TransitionProperty = {
-  name: string
-  from: string | number
-  to: string | number
-  ms?: number
-}
-
-type TransitionProps = {
-  properties: TransitionProperty[]
-  reverseExit?: boolean
-  absoluteExit?: boolean
-}
+import { TransitionProps } from "./types"
 
 export const Transition = ({
   children,

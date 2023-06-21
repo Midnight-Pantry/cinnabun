@@ -1,6 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import { PropsWithChildren } from "cinnabun/types"
-import { Transition, TransitionProperty } from "./Transition"
+import { Transition } from "./Transition"
+import { TransitionProperty } from "./types"
 
 type SlideDirection = "left" | "top" | "right" | "bottom"
 type SlideSettings = {

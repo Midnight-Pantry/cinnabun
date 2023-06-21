@@ -1,0 +1,12 @@
+export type TransitionProperty = {
+  name: string
+  from: string | number
+  to: string | number
+  ms?: number
+}
+
+export type TransitionProps = {
+  properties: TransitionProperty[]
+  reverseExit?: boolean
+  absoluteExit?: boolean
+}
