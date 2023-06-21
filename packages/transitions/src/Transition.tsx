@@ -14,7 +14,7 @@ export const Transition = ({
   })
   return new Component(tag, {
     children,
-    initialStyle,
+    style: initialStyle,
     onMounted,
     onBeforeUnmounted,
     ...rest,
