@@ -142,13 +142,11 @@ export class Hydration {
     if (!c.shouldRender()) return
 
     if (c.tag && !c.element) {
-      //if (c.props.href === "/login/google") debugger
       const offset = Hydration.getParentOffset(parentElement)
       let node = parentElement.childNodes[offset]
       try {
         if (!node) {
           DomInterop.reRender(c)
-          //console.error("failed to hydrate", c, parentElement)
           return
         }
         if (
