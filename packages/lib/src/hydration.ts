@@ -141,31 +141,30 @@ export class Hydration {
 
     if (!c.shouldRender()) return
 
-    if (c.tag) {
-      if (!c.element) {
-        const offset = Hydration.getParentOffset(parentElement)
-        let node = parentElement.childNodes[offset]
-        try {
-          if (!node) {
-            DomInterop.reRender(c)
-            //console.error("failed to hydrate", c, parentElement)
-            return
-          }
-          if (
-            node.nodeType === Node.COMMENT_NODE &&
-            node.nodeValue?.includes(SSR.deferredLoaderPrefix)
-          ) {
-            const comment = node
-            node = node.nextSibling!
-            comment.parentNode?.removeChild(comment)
-            Hydration.handleDeferral(parent, node)
-          }
-        } catch (error) {
-          console.error(error, node)
-          debugger
+    if (c.tag && !c.element) {
+      //if (c.props.href === "/login/google") debugger
+      const offset = Hydration.getParentOffset(parentElement)
+      let node = parentElement.childNodes[offset]
+      try {
+        if (!node) {
+          DomInterop.reRender(c)
+          //console.error("failed to hydrate", c, parentElement)
+          return
         }
-        c.element = node as HTMLElement
+        if (
+          node.nodeType === Node.COMMENT_NODE &&
+          node.nodeValue?.includes(SSR.deferredLoaderPrefix)
+        ) {
+          const comment = node
+          node = node.nextSibling!
+          comment.parentNode?.removeChild(comment)
+          Hydration.handleDeferral(parent, node)
+        }
+      } catch (error) {
+        console.error(error, node)
+        debugger
       }
+      c.element = node as HTMLElement
       Hydration.updateParentOffset(parentElement, 1)
       DomInterop.updateElement(c)
     }
