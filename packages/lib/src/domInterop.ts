@@ -97,6 +97,7 @@ export class DomInterop {
     }
     if (child instanceof Component) {
       if (!child.props.visible || child.isStatic) return ""
+      child.parent = component
       return DomInterop.render(child)
     }
     if (typeof child === "function") {
