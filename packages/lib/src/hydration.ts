@@ -179,7 +179,7 @@ export class Hydration {
 
     for (let i = 0; i < c.children.length; i++) {
       const child = c.children[i]
-      const sChild = sc.children ? sc.children[i] : ({} as SerializedComponent)
+      const sChild = sc?.children ? sc.children[i] : ({} as SerializedComponent)
 
       if (child instanceof Signal) {
         DomInterop.renderChild(c, child, i)
