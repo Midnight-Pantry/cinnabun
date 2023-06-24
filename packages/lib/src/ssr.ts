@@ -52,7 +52,7 @@ export class SSR {
     SSR.render(
       `<script id="server-props">window.__cbData={root:document.documentElement,component:${JSON.stringify(
         { children: [serialized], props: {} }
-      )}}</script><script src="/static/index.js"></script>`,
+      )}}</script><script src="/static/index.js" type="module"></script>`,
       config,
       accumulator
     )
