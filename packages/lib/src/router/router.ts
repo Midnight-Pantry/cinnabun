@@ -16,7 +16,7 @@ export class RouteComponent extends Component {
   }
 
   get childArgs() {
-    return [{ params: this.props.params }]
+    return [{ params: this.props.params, query: this.props.query }]
   }
 }
 
@@ -57,6 +57,7 @@ export class RouterComponent extends Component {
             nextRoute = c
             c.props.visible = !!matchRes.routeMatch
             c.props.params = matchRes.params ?? {}
+            c.props.query = matchRes.query ?? {}
             break
           }
         }
@@ -84,6 +85,7 @@ export class RouterComponent extends Component {
     path: string
   ): {
     params: any
+    query: any
     routeMatch: RegExpMatchArray | null
   } {
     const cPath: string = this.getParentPath() + c.props.path
