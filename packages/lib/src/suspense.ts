@@ -26,19 +26,15 @@ export class SuspenseComponent extends Component {
     onfulfilled?: ((value: any) => void | PromiseLike<void>) | null | undefined,
     onrejected?: ((reason: any) => PromiseLike<never>) | null | undefined
   ) {
-    if (onfulfilled) {
-      this.promiseCache = onfulfilled
-      if (Cinnabun.isClient) {
-        DomInterop.unRender(this)
-        DomInterop.reRender(this)
-      }
-      if (!this.props.cache) this.promiseCache = undefined
-    } else if (onrejected) {
+    if (onrejected) {
       console.error("handlePromise() - unhandle case 'onrejected'")
       debugger //todo
-    } else {
-      console.error("handlePromise() - unhandle case 'unknown'")
-      debugger //todo
+      return
+    }
+    this.promiseCache = onfulfilled
+    if (Cinnabun.isClient) {
+      DomInterop.unRender(this)
+      DomInterop.reRender(this)
     }
   }
 
