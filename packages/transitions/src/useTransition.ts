@@ -14,6 +14,10 @@ export const useTransition = (props: TransitionProps): UseTransitionProps => {
     return props.properties.map((p) => `${p.name}: ${p.to}`).join(";")
   }
 
+  const minTransitionTime = Math.max(
+    ...props.properties.map((p) => p.ms ?? 300)
+  )
+
   const handleMount = (self: Component) => {
     if (!self.element || !Cinnabun.isClient) return
     self.element.setAttribute("style", `${transitionProps()};${toStyle()}`)
@@ -25,7 +29,7 @@ export const useTransition = (props: TransitionProps): UseTransitionProps => {
     return new Promise<boolean>((res) => {
       setTimeout(() => {
         return res(true)
-      }, 300)
+      }, minTransitionTime)
     })
   }
 
