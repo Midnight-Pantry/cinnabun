@@ -13,12 +13,29 @@ type SlideProps = {
   properties?: TransitionProperty[]
   reverseExit?: boolean
   absoluteExit?: boolean
+  unit?:
+    | "%"
+    | "px"
+    | "em"
+    | "rem"
+    | "vw"
+    | "vh"
+    | "vmin"
+    | "vmax"
+    | "ex"
+    | "ch"
+    | "cm"
+    | "mm"
+    | "in"
+    | "pt"
+    | "pc"
 }
 
 export const SlideInOut = ({
   children,
   settings,
   properties = [],
+  unit = "%",
   ...rest
 }: PropsWithChildren & SlideProps) => {
   const ms = settings.duration ?? 300
@@ -26,7 +43,7 @@ export const SlideInOut = ({
     case "bottom":
       properties.push({
         name: "translate",
-        from: "0 100vh",
+        from: `0 100${unit}`,
         to: "0",
         ms,
       })
@@ -34,7 +51,7 @@ export const SlideInOut = ({
     case "top":
       properties.push({
         name: "translate",
-        from: "0 -100vh",
+        from: `0 -100${unit}`,
         to: "0",
         ms,
       })
@@ -42,7 +59,7 @@ export const SlideInOut = ({
     case "left":
       properties.push({
         name: "translate",
-        from: "-100vw",
+        from: `-100${unit}`,
         to: "0",
         ms,
       })
@@ -50,7 +67,7 @@ export const SlideInOut = ({
     case "right":
       properties.push({
         name: "translate",
-        from: "100vw",
+        from: `100${unit}`,
         to: "0",
         ms,
       })
