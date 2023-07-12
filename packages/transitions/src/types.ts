@@ -9,4 +9,5 @@ export type TransitionProps = {
   properties: TransitionProperty[]
   reverseExit?: boolean
   absoluteExit?: boolean
+  cancelExit?: { (): boolean }
 }

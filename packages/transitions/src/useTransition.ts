@@ -28,6 +28,10 @@ export const useTransition = (props: TransitionProps): UseTransitionProps => {
 
     return new Promise<boolean>((res) => {
       setTimeout(() => {
+        if (props.cancelExit && props.cancelExit()) {
+          handleMount(self)
+          return res(false)
+        }
         return res(true)
       }, minTransitionTime)
     })
