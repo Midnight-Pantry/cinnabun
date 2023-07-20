@@ -1,12 +1,15 @@
 import { Cinnabun, Component } from "cinnabun"
-import { TransitionProps } from "./types"
+import { TransitionProperty } from "./types"
 
 type UseTransitionProps = {
   onMounted: (self: Component) => void
   onBeforeUnmounted: (self: Component) => Promise<boolean> | boolean
   initialStyle: string
 }
-export const useTransition = (props: TransitionProps): UseTransitionProps => {
+export const useTransition = (props: {
+  properties: TransitionProperty[]
+  cancelExit?: { (): boolean }
+}): UseTransitionProps => {
   const fromStyle = () => {
     return props.properties.map((p) => `${p.name}: ${p.from}`).join(";")
   }

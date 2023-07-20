@@ -6,6 +6,7 @@ export type TransitionProperty = {
 }
 
 export type TransitionProps = {
+  tag?: string
   properties: TransitionProperty[]
   reverseExit?: boolean
   absoluteExit?: boolean

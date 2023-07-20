@@ -1,14 +1,13 @@
-import * as Cinnabun from "cinnabun"
 import { PropsWithChildren } from "cinnabun/types"
 import { Transition } from "./Transition"
-import { TransitionProperty } from "./types"
+import { TransitionProperty, TransitionProps } from "./types"
 
 type SlideDirection = "left" | "top" | "right" | "bottom"
 type SlideSettings = {
   from: SlideDirection
   duration?: number
 }
-type SlideProps = {
+type SlideProps = Partial<TransitionProps> & {
   settings: SlideSettings
   properties?: TransitionProperty[]
   reverseExit?: boolean
@@ -32,50 +31,23 @@ type SlideProps = {
 }
 
 export const SlideInOut = ({
-  children,
   settings,
   properties = [],
   unit = "%",
   ...rest
 }: PropsWithChildren & SlideProps) => {
-  const ms = settings.duration ?? 300
-  switch (settings.from) {
-    case "bottom":
-      properties.push({
-        name: "translate",
-        from: `0 100${unit}`,
-        to: "0",
-        ms,
-      })
-      break
-    case "top":
-      properties.push({
-        name: "translate",
-        from: `0 -100${unit}`,
-        to: "0",
-        ms,
-      })
-      break
-    case "left":
-      properties.push({
-        name: "translate",
-        from: `-100${unit}`,
-        to: "0",
-        ms,
-      })
-      break
-    case "right":
-      properties.push({
-        name: "translate",
-        from: `100${unit}`,
-        to: "0",
-        ms,
-      })
-      break
-  }
-  return (
-    <Transition {...rest} {...{ properties }}>
-      {children}
-    </Transition>
-  )
+  properties.push({
+    name: "translate",
+    from:
+      settings.from === "bottom"
+        ? `0 100${unit}`
+        : settings.from === "top"
+        ? `0 -100${unit}`
+        : settings.from === "left"
+        ? `-100${unit}`
+        : `100${unit}`,
+    to: "0",
+    ms: settings.duration ?? 300,
+  })
+  return Transition({ ...rest, properties })
 }

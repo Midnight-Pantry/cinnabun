@@ -1,4 +1,3 @@
-import * as Cinnabun from "cinnabun"
 import { Route } from "cinnabun/router"
 import { RouteProps } from "cinnabun/types"
 import { SlideInOut } from "./SlideInOut"
@@ -11,15 +10,14 @@ export const Experimental_AnimatedRoute = ({
     <Route
       path={path}
       component={(props: any[]) => {
-        return (
-          <SlideInOut settings={{ from: "left" }} absoluteExit>
-            {typeof Component === "function" ? (
-              <Component {...props} />
-            ) : (
-              Component
-            )}
-          </SlideInOut>
-        )
+        return SlideInOut({
+          tag: "",
+          settings: { from: "left" },
+          absoluteExit: true,
+          children: [
+            typeof Component === "function" ? Component(...props) : Component,
+          ],
+        })
       }}
     />
   )
