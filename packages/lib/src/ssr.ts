@@ -162,8 +162,7 @@ export class SSR {
     )
 
     if (renderClosingTag) {
-      const cTag = `</${component.tag}>`
-      SSR.render(cTag, config, accumulator)
+      SSR.render(`</${component.tag}>`, config, accumulator)
     }
     return res
   }
@@ -207,7 +206,7 @@ export class SSR {
               //await SSR.serialize(accumulator, component, config)
               const deferralId = component.props["cb-deferralId"]
               SSR.render(
-                `<script id="${
+                `<script type="module" id="${
                   SSR.deferralScriptIdPrefix
                 }${deferralId}">document.dispatchEvent(new CustomEvent("${
                   SSR.deferralEvtName
