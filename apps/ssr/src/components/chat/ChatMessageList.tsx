@@ -1,5 +1,5 @@
 import * as Cinnabun from "cinnabun"
-import { Cinnabun as cb } from "cinnabun"
+import { Cinnabun as cb, For, type Component } from "cinnabun"
 import { IChatMessage } from "../../types/chat"
 import { LiveSocket } from "../../client/liveSocket"
 import { prefetchChatMessages } from "../../server/actions/chat"
@@ -24,7 +24,7 @@ export const ChatMessageList = () => {
 
   return (
     <div className="chat-message-list">
-      <Cinnabun.For
+      <For
         each={chatMessages}
         template={(msg) => <ChatMessageItem message={msg} />}
       />
@@ -40,7 +40,7 @@ const ChatMessageItem = ({ message }: { message: IChatMessage }) => {
     <div
       key={message.id}
       watch={userStore}
-      bind:className={(self: Cinnabun.Component) =>
+      bind:className={(self: Component) =>
         `chat-message ${isOwnMessage(getUser(self)) ? "is-owner" : ""}`
       }
     >
