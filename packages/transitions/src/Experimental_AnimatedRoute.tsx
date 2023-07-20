@@ -6,19 +6,17 @@ export const Experimental_AnimatedRoute = ({
   path,
   component: Component,
 }: RouteProps) => {
-  return (
-    <Route
-      path={path}
-      component={(props: any[]) => {
-        return SlideInOut({
-          tag: "",
-          settings: { from: "left" },
-          absoluteExit: true,
-          children: [
-            typeof Component === "function" ? Component(...props) : Component,
-          ],
-        })
-      }}
-    />
-  )
+  return Route({
+    path,
+    component: (props: any[]) => {
+      return SlideInOut({
+        tag: "",
+        settings: { from: "left" },
+        absoluteExit: true,
+        children: [
+          typeof Component === "function" ? Component(...props) : Component,
+        ],
+      })
+    },
+  })
 }
