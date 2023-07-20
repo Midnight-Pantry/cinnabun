@@ -1,7 +1,6 @@
 export { Component } from "./component"
 export { Signal, createSignal, computed } from "./signal"
 export { Suspense } from "./suspense"
-export { lazy } from "./lazy"
 export { For } from "./for"
 export { createPortal } from "./portal"
 
