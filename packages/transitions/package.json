@@ -1,6 +1,6 @@
 {
   "name": "cinnabun-transitions",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Fancy transitions for Cinnabun components",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cinnabun": "^0.1.26"
+    "cinnabun": "^0.1.46"
   }
 }
