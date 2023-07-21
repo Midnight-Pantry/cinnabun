@@ -276,13 +276,3 @@ export class SSR {
     return res
   }
 }
-
-export function useRequestData<T>(
-  self: Component,
-  requestDataPath: string,
-  fallback: T
-) {
-  return Cinnabun.isClient
-    ? fallback
-    : self.cbInstance?.getServerRequestData<T>(requestDataPath)
-}

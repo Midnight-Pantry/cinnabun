@@ -1,4 +1,3 @@
-import { useRequestData } from "../ssr"
 import { matchPath } from "."
 import { Signal, Component } from ".."
 import { Cinnabun } from "../cinnabun"
@@ -51,7 +50,7 @@ export class RouterComponent extends Component {
           const c = self.children[i] as RouteComponent
           const matchRes = (self as RouterComponent).matchRoute(
             c,
-            useRequestData<string>(self, "path", val)!
+            this.useRequestData<string>("path", val)!
           )
           if (matchRes.routeMatch) {
             nextRoute = c

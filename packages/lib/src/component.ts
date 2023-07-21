@@ -251,6 +251,12 @@ export class Component {
       return false
     }
   }
+
+  useRequestData<T>(requestDataPath: string, fallback: T) {
+    return Cinnabun.isClient
+      ? fallback
+      : this.cbInstance?.getServerRequestData<T>(requestDataPath)
+  }
 }
 
 export class FragmentComponent extends Component {
