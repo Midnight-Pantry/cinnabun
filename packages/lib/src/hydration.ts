@@ -1,9 +1,8 @@
 import { Cinnabun } from "./cinnabun"
-import { Component, FragmentComponent } from "./component"
+import { Component, FragmentComponent, SuspenseComponent } from "./component"
 import { DomInterop } from "./domInterop"
 import { Signal } from "./signal"
 import { SSR } from "./ssr"
-import { SuspenseComponent } from "./suspense"
 import {
   SSRProps,
   ComponentChild,

@@ -248,3 +248,23 @@ export type DiffCheckResult = {
   result: DiffType
   node?: Node
 }
+
+export type TemplateFunc<T> = { (item: T, index: number): Component }
+export type ForProps<T> = {
+  each: Signal<T[]> | T[]
+  /**
+   * @description
+   * A function that returns a component for each item in the array.
+   * The function will be called with the item and its index.
+   * ##### *Ensure components have a unique key to enable partial rerendering!*
+   *
+   * @example
+   * ```tsx
+   * <For
+   *  each={products}
+   *  template={(p) => <ProductCard product={p} />}
+   * />
+   * ```
+   */
+  template?: TemplateFunc<T>
+}

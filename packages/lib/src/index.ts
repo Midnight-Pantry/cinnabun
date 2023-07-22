@@ -1,11 +1,8 @@
-export { Component } from "./component"
+export { Component, For, Suspense } from "./component"
 export { Signal, createSignal, computed } from "./signal"
-export { Suspense } from "./suspense"
-export { For } from "./for"
 export { createPortal } from "./portal"
 
-import { Component } from "."
-import { FragmentComponent } from "./component"
+import { FragmentComponent, Component } from "./component"
 import { ComponentChildren, ComponentProps, JSXProps, Tag } from "./types"
 
 declare global {

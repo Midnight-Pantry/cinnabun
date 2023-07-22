@@ -1,6 +1,5 @@
-import { FragmentComponent } from "./component"
+import { FragmentComponent, SuspenseComponent } from "./component"
 import { Hydration } from "./hydration"
-import { SuspenseComponent } from "./suspense"
 import { ComponentProps, LazyComponentModule } from "./types"
 
 export const lazy = (

@@ -1,6 +1,6 @@
 import * as Cinnabun from "cinnabun"
 import "./styles/todo-list.css"
-import { For, createSignal, computed } from "cinnabun"
+import { createSignal, computed, For } from "cinnabun"
 import { generateUUID } from "./utils"
 import * as Icons from "./icons"
 import { IconButton } from "./IconButton"

@@ -4,7 +4,7 @@ import { pathStore } from "./state"
 
 export const Nav = () => (
   <nav>
-    <ul>
+    {/* <ul>
       <li>
         <Link to="/" store={pathStore}>
           Signals
@@ -45,6 +45,6 @@ export const Nav = () => (
           Portals
         </Link>
       </li>
-    </ul>
+    </ul> */}
   </nav>
 )

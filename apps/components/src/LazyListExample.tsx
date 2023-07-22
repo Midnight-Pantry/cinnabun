@@ -1,7 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import "./styles/card-list.css"
 import { For } from "cinnabun"
-import { Suspense, createSignal } from "cinnabun"
+import { createSignal, Suspense } from "cinnabun"
 import { ProductAPIResponse, Product } from "./types/products"
 import { Carousel } from "./Carousel"
 import { sleep } from "cinnabun/utils"

@@ -38,7 +38,7 @@ importers:
   apps/ssr:
     dependencies:
       '@cinnabun/example-components':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^
         version: link:../components
       '@fastify/compress':
         specifier: ^6.2.1
@@ -270,7 +270,7 @@ importers:
   packages/transitions:
     dependencies:
       cinnabun:
-        specifier: ^0.1.26
+        specifier: ^0.1.46
         version: link:../lib
 
 packages:

@@ -1,5 +1,4 @@
-import { SuspenseComponent } from "../../suspense"
-import { Component } from "../.."
+import { Component, SuspenseComponent } from "../../component"
 import { Cinnabun } from "../../cinnabun"
 import { SSR } from "../../ssr"
 import { expect } from "chai"
