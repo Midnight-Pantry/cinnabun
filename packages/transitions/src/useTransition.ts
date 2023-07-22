@@ -1,4 +1,4 @@
-import { Cinnabun, Component } from "cinnabun"
+import { Cinnabun, type Component } from "cinnabun"
 import { TransitionProperty } from "./types"
 
 type UseTransitionProps = {

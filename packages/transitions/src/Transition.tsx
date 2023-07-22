@@ -6,7 +6,7 @@ import { useTransition } from "./useTransition"
 export const Transition = ({
   tag = "div",
   children,
-  properties,
+  properties = [],
   cancelExit,
   ...rest
 }: PropsWithChildren & TransitionProps) => {

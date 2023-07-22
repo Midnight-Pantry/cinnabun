@@ -131,7 +131,7 @@ export class DomInterop {
         const res = component.props.onBeforeUnmounted(component)
         if (res instanceof Promise) {
           res.then((res) => {
-            if (res) DomInterop.unRender(component, true)
+            if (res && component.mounted) DomInterop.unRender(component, true)
           })
           return
         } else if (res === false) {

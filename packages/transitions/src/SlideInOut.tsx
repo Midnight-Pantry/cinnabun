@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "cinnabun/types"
-import { Transition } from "./Transition"
 import { TransitionProperty, TransitionProps } from "./types"
+import { useTransition } from "./useTransition"
+import { Component } from "cinnabun"
 
 type SlideDirection = "left" | "top" | "right" | "bottom"
 type SlideSettings = {
@@ -31,9 +32,12 @@ type SlideProps = Partial<TransitionProps> & {
 }
 
 export const SlideInOut = ({
+  tag = "article",
   settings,
+  children,
   properties = [],
   unit = "%",
+  cancelExit,
   ...rest
 }: PropsWithChildren & SlideProps) => {
   properties.push({
@@ -49,5 +53,15 @@ export const SlideInOut = ({
     to: "0",
     ms: settings.duration ?? 300,
   })
-  return Transition({ ...rest, properties })
+  const { onMounted, onBeforeUnmounted, initialStyle } = useTransition({
+    properties,
+    cancelExit,
+  })
+  return new Component(tag, {
+    children,
+    style: initialStyle,
+    onMounted,
+    onBeforeUnmounted,
+    ...rest,
+  })
 }

@@ -84,7 +84,7 @@ export class Component {
           if (val && this.parent?._props.visible) {
             DomInterop.reRender(this)
           } else {
-            DomInterop.unRender(this)
+            if (this.mounted) DomInterop.unRender(this)
           }
         }
       } else if (propName === "children") {

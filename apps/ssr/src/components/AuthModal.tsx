@@ -11,6 +11,7 @@ let authModalToggler: HTMLElement | null = null
 
 export const toggleAuthModal = () => {
   authModalVisible.value = !authModalVisible.value
+  console.log("toggleAuthModal", authModalVisible.value)
 
   if (authModalVisible.value)
     authModalToggler = document.activeElement as HTMLElement
@@ -73,10 +74,7 @@ export const AuthModal = () => {
       className="modal-outer"
       tabIndex={-1}
       watch={authModalVisible}
-      bind:visible={() => {
-        if (!authModalVisible.value) resetForm()
-        return authModalVisible.value
-      }}
+      bind:visible={() => authModalVisible.value}
       onmouseup={(e: MouseEvent) => {
         if (!authModalVisible.value) return
         const el = e.target as HTMLDivElement
@@ -88,7 +86,11 @@ export const AuthModal = () => {
         settings={{ from: "bottom", duration: 300 }}
         properties={[{ name: "scale", from: 0, to: 1 }]}
         watch={authModalVisible}
-        bind:visible={() => authModalVisible.value}
+        bind:visible={() => {
+          if (!authModalVisible.value) resetForm()
+          console.log("authModalVisible", authModalVisible.value)
+          return authModalVisible.value
+        }}
       >
         <NavigationListener
           onCapture={() => (authModalVisible.value = false)}
