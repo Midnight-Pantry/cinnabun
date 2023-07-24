@@ -18,7 +18,7 @@ export const App = () => {
     <div style="display: flex; minHeight: 100vh">
       <h1>Cinnabun JS</h1>
       <br />
-      {/* <Nav />
+      <Nav />
 
       <main style="text-align: center; flex-grow: 1">
         <Router store={pathStore}>
@@ -41,7 +41,7 @@ export const App = () => {
           <Route path="/lazy-list" component={<LazyListExample />} />
           <Route path="/portals" component={<PortalExample />} />
         </Router>
-      </main> */}
+      </main>
     </div>
   )
 }
