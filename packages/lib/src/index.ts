@@ -1,6 +1,7 @@
 export { Component, For, Suspense } from "./component"
 export { Signal, createSignal, computed } from "./signal"
 export { createPortal } from "./portal"
+export { useRef } from "./ref"
 
 import { FragmentComponent, Component } from "./component"
 import { ComponentChildren, ComponentProps, JSXProps, Tag } from "./types"

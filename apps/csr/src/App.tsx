@@ -1,4 +1,5 @@
 import * as Cinnabun from "cinnabun"
+import { useRef } from "cinnabun"
 import { Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
 import {

@@ -30,9 +30,15 @@ export class Component {
     const changed = this._mounted !== val
     this._mounted = val
     if (changed && val && this._props.onMounted) {
-      setTimeout(() => this._props.onMounted!(this), 0)
+      setTimeout(() => {
+        this._props.onMounted!(this)
+      }, 0)
     } else if (changed && !val && this._props.onUnmounted) {
       this._props.onUnmounted(this)
+    }
+
+    if (changed && this._props.ref) {
+      this._props.ref.value = this.mounted && this.element ? this.element : null
     }
   }
 
@@ -62,6 +68,7 @@ export class Component {
         })
       }
     }
+    //if (this.props.ref) this.props.ref.value = this.element ?? null
   }
 
   get childArgs(): any[] {

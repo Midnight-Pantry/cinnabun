@@ -109,6 +109,7 @@ export type ComponentEventProps = {
   onBeforeServerRendered?: { (self: Component): Promise<void> }
 }
 export type ReactivityProps = {
+  ref?: Signal<null | Element>
   subscription?: ComponentSubscription
   /**
    * @description

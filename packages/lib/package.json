@@ -1,10 +1,10 @@
 {
   "name": "cinnabun",
-  "version": "0.1.48",
+  "version": "0.1.49",
   "description": "A reactive, component-based web framework built with Typescript & esbuild",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Robby6Strings/cinnabun"
+    "url": "https://github.com/Midnight-Pantry/cinnabun"
   },
   "main": "index.ts",
   "type": "commonjs",
