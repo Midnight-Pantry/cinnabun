@@ -216,6 +216,7 @@ export type LinkProps = ComponentProps & {
   to: string
   activeClass?: string
   useHash?: boolean
+  onBeforeNavigate?: { (): boolean }
 }
 
 export type SerializedComponent = {

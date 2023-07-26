@@ -16,10 +16,19 @@ export const setPath = (store: Signal<string>, newPath: string) => {
 }
 
 export const Link = (props: LinkProps, children: Component[]) => {
-  const { to, store, className, activeClass, useHash, ...rest } = props
+  const {
+    to,
+    store,
+    className,
+    activeClass,
+    useHash,
+    onBeforeNavigate,
+    ...rest
+  } = props
 
   const onclick = (e: MouseEvent) => {
     e.preventDefault()
+    if (onBeforeNavigate && !onBeforeNavigate()) return
     if (useHash) return setHash(store, to)
     setPath(store, to)
   }
