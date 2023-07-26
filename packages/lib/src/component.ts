@@ -334,6 +334,7 @@ export class SuspenseComponent extends Component {
   promiseFunc: { (): Promise<any> } | undefined
   promiseInstance: Promise<any> | undefined
   promiseCache: any
+  promiseLoading: boolean = true
 
   constructor(
     public tag: string,
@@ -343,7 +344,7 @@ export class SuspenseComponent extends Component {
   }
 
   get childArgs(): any[] {
-    return [!this.promiseCache, this.promiseCache]
+    return [this.promiseLoading, this.promiseCache]
   }
   resetPromise() {
     this.promiseFunc = undefined
@@ -353,6 +354,7 @@ export class SuspenseComponent extends Component {
     onfulfilled?: ((value: any) => void | PromiseLike<void>) | null | undefined,
     onrejected?: ((reason: any) => PromiseLike<never>) | null | undefined
   ) {
+    this.promiseLoading = false
     if (onrejected) {
       console.error("handlePromise() - unhandle case 'onrejected'")
       debugger //todo
@@ -367,10 +369,12 @@ export class SuspenseComponent extends Component {
 
   setPromise(promise: { (): Promise<any> }) {
     if (!this.promiseFunc && promise) {
+      this.promiseLoading = true
       this.promiseFunc = promise
       this.promiseInstance = this.promiseFunc()
       this.promiseInstance.then(this.handlePromise.bind(this))
     } else if (this.promiseFunc && !this.props.cache) {
+      this.promiseLoading = true
       this.promiseInstance = this.promiseFunc()
       this.promiseInstance.then(this.handlePromise.bind(this))
     }
