@@ -211,7 +211,10 @@ export class Hydration {
           Hydration.updateParentOffset(parentEl, -1)
           parentEl.removeChild(node)
 
-          if ("promiseCache" in parent) parent.promiseCache = data
+          if ("promiseCache" in parent) {
+            parent.promiseCache = data
+            if ("promiseLoading" in parent) parent.promiseLoading = false
+          }
           DomInterop.reRender(parent)
         }
       }

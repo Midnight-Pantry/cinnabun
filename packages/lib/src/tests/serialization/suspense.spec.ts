@@ -28,6 +28,7 @@ describe("When serialized, a Suspense Component", function () {
         cinnabunInstance,
         stream: null,
       })
+
       expect(html).to.contain(
         "<p><span>1</span><span>2</span><span>3</span></p>"
       )

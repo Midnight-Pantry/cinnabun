@@ -1,5 +1,5 @@
 import * as Cinnabun from "cinnabun"
-import { createSignal } from "cinnabun"
+import { createSignal, Cinnabun as cb } from "cinnabun"
 
 const _context = createSignal(0)
 
@@ -24,7 +24,9 @@ const Heading = () => {
 const Buttons = () => {
   const { add, subtract, context } = useGlobalContext()
   const ref = Cinnabun.useRef()
-  ref.subscribe(console.log)
+  if (cb.isClient) {
+    ref.subscribe(console.log)
+  }
   return (
     <>
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>

@@ -347,6 +347,7 @@ export class SuspenseComponent extends Component {
     return [this.promiseLoading, this.promiseCache]
   }
   resetPromise() {
+    this.promiseLoading = true
     this.promiseFunc = undefined
     this.promiseCache = undefined
   }
@@ -395,23 +396,8 @@ export class SuspenseComponent extends Component {
  * ```
  */
 export const Suspense = (
-  {
-    promise,
-    cache,
-    prefetch,
-    "prefetch:defer": deferredPrefetch,
-  }: SuspenseProps,
+  { promise, cache, ...rest }: SuspenseProps,
   children: [ComponentFunc]
 ) => {
-  return new SuspenseComponent(
-    "",
-    Object.assign(
-      { promise, cache, children },
-      prefetch
-        ? { prefetch }
-        : deferredPrefetch
-        ? { "prefetch:defer": deferredPrefetch }
-        : {}
-    )
-  )
+  return new SuspenseComponent("", { promise, cache, children, ...rest })
 }

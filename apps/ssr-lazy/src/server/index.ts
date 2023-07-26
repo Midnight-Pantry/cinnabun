@@ -16,7 +16,7 @@ if (isDev) {
   try {
     log("Dim", "  evaluating application... 🔍")
     const cinnabunInstance = new Cinnabun()
-    await SSR.serverBake(Template(App), { cinnabunInstance })
+    await SSR.serverBake(Template(App), { cinnabunInstance, stream: null })
     log("Dim", "  good to go! ✅")
   } catch (error) {
     if ("message" in (error as Error)) {

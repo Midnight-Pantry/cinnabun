@@ -188,6 +188,7 @@ export class SSR {
       if (component.props.prefetch && "promiseCache" in component) {
         component.promiseCache = await promise()
         component.props.promiseCache = component.promiseCache
+        if ("promiseLoading" in component) component.promiseLoading = false
       } else if (
         component.props["prefetch:defer"] &&
         "promiseCache" in component

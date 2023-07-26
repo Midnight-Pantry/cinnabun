@@ -1,4 +1,5 @@
 import * as Cinnabun from "cinnabun"
+import { lazy } from "cinnabun/src/lazy"
 import { Link, Route, Router } from "cinnabun/router"
 import { pathStore } from "./state"
 import { Logo } from "./Logo"
@@ -21,15 +22,10 @@ export const App = () => {
       </Link>
       <main style="text-align:center; flex-grow: 1;">
         <Router store={pathStore}>
-          <Route
-            path="/"
-            component={() => Cinnabun.lazy(import("./Page"), { state })}
-          />
+          <Route path="/" component={() => lazy(import("./Page"), { state })} />
           <Route
             path="/:test"
-            component={(props) =>
-              Cinnabun.lazy(import("./Page"), { ...props, state })
-            }
+            component={(props) => lazy(import("./Page"), { ...props, state })}
           />
         </Router>
       </main>
