@@ -9,9 +9,17 @@ export const setHash = (store: Signal<string>, newHash: string) => {
   store.value = newHash
 }
 
-export const setPath = (store: Signal<string>, newPath: string) => {
+export const setPath = (
+  store: Signal<string>,
+  newPath: string,
+  replace: boolean = false
+) => {
   if (window.location.pathname === newPath) return
-  window.history.pushState({}, "", newPath)
+  if (replace) {
+    window.history.replaceState({}, "", newPath)
+  } else {
+    window.history.pushState({}, "", newPath)
+  }
   store.value = newPath
 }
 
