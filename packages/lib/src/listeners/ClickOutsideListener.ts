@@ -20,7 +20,6 @@ export const ClickOutsideListener = ({
     if (!ref.value) return
     if (ref.value === tgt) return
     if (ref.value.contains(tgt)) return
-    console.log("click outside", tgt, ref.value)
     onCapture()
   }
   return new Component(tag, {
