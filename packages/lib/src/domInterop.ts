@@ -403,7 +403,12 @@ export class DomInterop {
 
     for (let i = 0; i < component.parent.children.length; i++) {
       const c = component.parent.children[i]
-      if (c === component) break
+      if (c === component) {
+        if (i === component.parent.children.length - 1) {
+          start++
+        }
+        break
+      }
       start += DomInterop.getRenderedNodeCount(c)
     }
     if (component.parent.element)
