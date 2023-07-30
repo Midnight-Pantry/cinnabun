@@ -5,7 +5,7 @@ import { PropsWithChildren } from "../types"
 
 type ClickOutsideListenerProps = PropsWithChildren & {
   tag: string
-  onCapture: () => void
+  onCapture: (e: MouseEvent) => void
 }
 
 export const ClickOutsideListener = ({
@@ -20,7 +20,7 @@ export const ClickOutsideListener = ({
     if (!ref.value) return
     if (ref.value === tgt) return
     if (ref.value.contains(tgt)) return
-    onCapture()
+    onCapture(e)
   }
   return new Component(tag, {
     ...rest,

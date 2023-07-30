@@ -1,5 +1,5 @@
 import * as Cinnabun from "cinnabun"
-import { createSignal, Cinnabun as cb } from "cinnabun"
+import { createSignal } from "cinnabun"
 
 const _context = createSignal(0)
 
@@ -23,10 +23,7 @@ const Heading = () => {
 
 const Buttons = () => {
   const { add, subtract, context } = useGlobalContext()
-  const ref = Cinnabun.useRef()
-  if (cb.isClient) {
-    ref.subscribe(console.log)
-  }
+
   return (
     <>
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
@@ -45,7 +42,7 @@ const Buttons = () => {
           Add
         </button>
       </div>
-      <p ref={ref} watch={context} bind:visible={() => context.value > 5}>
+      <p watch={context} bind:visible={() => context.value > 5}>
         value is greater than 5
       </p>
     </>
