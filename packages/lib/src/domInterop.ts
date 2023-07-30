@@ -141,9 +141,11 @@ export class DomInterop {
 
       DomInterop.removeFuncComponents(component)
       if (component.element) {
+        component.element.remove()
         component.unMount()
-        return component.element.remove()
       }
+      component.unMount()
+
       for (const c of component.children) {
         if (c instanceof Component) {
           DomInterop.unRender(c)
