@@ -169,8 +169,7 @@ export class DomInterop {
       console.error("Failed to get component mount element", component, el)
       return
     }
-    //element.children[idx] is our actual previous child but be need to insert before the next.
-    const prevChild = element.childNodes[idx - 1]
+    const prevChild = element.childNodes[idx > 0 ? idx : 0]
 
     if (prevChild) {
       element.insertBefore(el, prevChild)
@@ -404,15 +403,12 @@ export class DomInterop {
     for (let i = 0; i < component.parent.children.length; i++) {
       const c = component.parent.children[i]
       if (c === component) {
-        if (i === component.parent.children.length - 1) {
-          start++
-        }
         break
       }
       start += DomInterop.getRenderedNodeCount(c)
     }
     if (component.parent.element)
-      return { element: component.parent.element, idx: start + 1 }
+      return { element: component.parent.element, idx: start }
 
     return DomInterop.getMountLocation(component.parent, start)
   }
