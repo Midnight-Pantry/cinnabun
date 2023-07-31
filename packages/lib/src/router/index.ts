@@ -32,7 +32,7 @@ export function matchPath(
   }
 
   let params: any = {}
-  let routeMatch = path.match(new RegExp(regexPath))
+  let routeMatch = path.split("?")[0].match(new RegExp(regexPath))
   if (routeMatch !== null) {
     params = routeMatch.slice(1).reduce((str, value, index) => {
       if (str === null) params = {}
