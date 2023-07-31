@@ -281,6 +281,7 @@ export class ForComponent<T> extends Component {
     const reactiveItems = items instanceof Signal ? items : new Signal(items)
 
     super("", {
+      children: reactiveItems.value.map(mapPredicate),
       subscription: (_, self) =>
         reactiveItems.subscribe((newItems) => {
           const newChildren = newItems.map(mapPredicate)
