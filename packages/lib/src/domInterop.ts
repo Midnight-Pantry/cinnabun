@@ -64,10 +64,9 @@ export class DomInterop {
     if (!component.props.visible) return
     if (!component.element) return
     DomInterop.removeFuncComponents(component)
-
-    component.element.replaceChildren(
-      ...DomInterop.getRenderedChildren(component)
-    )
+    // calling element.replaceChildren does funky things with select state. this is a workaround 😞
+    component.element.innerHTML = ""
+    component.element.append(...DomInterop.getRenderedChildren(component))
   }
 
   static renderChild(
