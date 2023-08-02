@@ -33,7 +33,9 @@ export class DomInterop {
     if (Object.keys(rest).length) {
       for (const [k, v] of Object.entries(rest)) {
         if (k.includes(":")) continue
-        if (k === "hydrating") continue
+        if (["hydrating", "key", "ref", "visible", "watch"].indexOf(k) > -1)
+          continue
+
         if (k.startsWith("on")) {
           Object.assign(component.element, { [k]: v })
           continue

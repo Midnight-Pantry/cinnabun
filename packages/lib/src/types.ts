@@ -109,6 +109,17 @@ export type ComponentEventProps = {
   onBeforeServerRendered?: { (self: Component): Promise<void> }
 }
 export type ReactivityProps = {
+  /**
+   * @description
+   * A signal to bind to the Element produced by the component. Reverts to 'null' when the component is unmounted.
+   * @example
+   * ```tsx
+   * import { useRef } from "cinnabun"
+   *
+   * const ref = useRef()
+   * <p ref={ref} />
+   * ```
+   */
   ref?: Signal<null | Element>
   subscription?: ComponentSubscription
   /**
