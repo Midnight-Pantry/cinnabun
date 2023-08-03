@@ -166,7 +166,7 @@ export type ComponentProps = ReactivityProps &
     id?: string
     innerText?: string | number | Signal<string> | Signal<number>
     className?: string
-    children?: ComponentChild[]
+    children?: ComponentChildren
     /**
      * @description
      * Determines if the component should be rendered.
