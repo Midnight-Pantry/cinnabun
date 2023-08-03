@@ -1,5 +1,11 @@
 export { Component, For, Suspense } from "./component"
-export { Signal, createSignal, computed } from "./signal"
+export {
+  Signal,
+  createSignal,
+  computed,
+  useComputed,
+  useSignal,
+} from "./signal"
 export { createPortal } from "./portal"
 export { useRef } from "./ref"
 

@@ -26,10 +26,10 @@ export class Signal<T> {
     }
   }
 
-  subscribe(func: { (val: T): any }) {
+  subscribe(func: { (val: T): any }, triggerCallback: boolean = true) {
     this._subscribers.add(func)
     this.logSubscriberCount()
-    func(this._val)
+    if (triggerCallback) func(this._val)
     return () => this.unsubscribe(func)
   }
   unsubscribe(func: { (val: T): any }) {
@@ -57,6 +57,36 @@ export function computed<T>(signal: Signal<any>, func: { (): T }): Signal<T> {
   return _signal as Signal<T>
 }
 
+export function useComputed<T>(
+  func: { (): T },
+  signalArray: Signal<any>[]
+): Signal<T> {
+  const _signal = new Signal<T | null>(null)
+  const update = () => {
+    _signal.value = func()
+  }
+  for (const signal of signalArray) {
+    signal.subscribe(update, false)
+  }
+
+  update()
+
+  return _signal as Signal<T>
+}
+
 export function createSignal<T>(initialValue: T) {
   return new Signal<T>(initialValue)
+}
+
+export function useSignal<T>(initialValue: T) {
+  const signal = new Signal<T>(initialValue)
+  const setter = (valOrFunc: T | { (prev: T): T }) => {
+    if (typeof valOrFunc === "function") {
+      signal.value = (valOrFunc as { (prev: T): T })(signal.value)
+    } else {
+      signal.value = valOrFunc
+    }
+  }
+
+  return [signal, setter] as const
 }
