@@ -1,19 +1,27 @@
 import * as Cinnabun from "cinnabun"
-import { createSignal } from "cinnabun"
+import { useComputed, useSignal } from "cinnabun"
 
 export const SignalsExample = () => {
-  const count = createSignal(0)
+  const [count, setCount] = useSignal(0)
+  const [count2, setCount2] = useSignal(0)
+
+  useComputed(() => {
+    console.log("count changed", count.value + count2.value)
+    return 123
+  }, [count, count2])
 
   return (
     <>
       <h1>{count}</h1>
-      <button onclick={() => count.value++}>click me</button>
+      <h1>{count2}</h1>
+      <button onclick={() => setCount((prev) => prev + 1)}>click me</button>
+      <button onclick={() => setCount2((prev) => prev + 1)}>click me</button>
       <br />
       <br />
       <input
         value={count}
         onkeyup={(e: Event) => {
-          count.value = parseInt((e.target as HTMLInputElement).value)
+          setCount(parseInt((e.target as HTMLInputElement).value))
         }}
       />
     </>
