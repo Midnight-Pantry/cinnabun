@@ -98,7 +98,7 @@ export class Component {
         if (this._props.children) this.replaceChildren(this._props.children)
         if (Cinnabun.isClient) DomInterop.renderChildren(this)
       } else if (this.element) {
-        Object.assign(this.element, { [propName]: this._props[propName] })
+        DomInterop.applyElementProp(this, propName, val)
       }
     }
   }

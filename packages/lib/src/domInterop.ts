@@ -7,52 +7,53 @@ import { jsPropToHtmlProp, validHtmlProps } from "./utils"
 export class DomInterop {
   static updateElement(component: Component) {
     if (!component.element) return
-    const {
-      htmlFor,
-      children,
-      onMounted,
-      subscription,
-      visible,
-      style,
-      promise,
-      ...rest
-    } = component.props
+    const { children, onMounted, subscription, visible, promise, ...rest } =
+      component.props
 
-    const isSVG = component.isSVG()
-
-    if (style) {
-      if (typeof style === "object") {
-        Object.assign(component.element.style, style)
-      } else {
-        component.element.setAttribute("style", style)
-      }
-    }
-    if (htmlFor && "htmlFor" in component.element) {
-      component.element.htmlFor = htmlFor
-    }
     if (Object.keys(rest).length) {
       for (const [k, v] of Object.entries(rest)) {
-        if (k.includes(":")) continue
-        if (["hydrating", "key", "ref", "visible", "watch"].indexOf(k) > -1)
-          continue
-
-        if (k.startsWith("on")) {
-          Object.assign(component.element, { [k]: v })
-          continue
-        }
-        if (isSVG) {
-          component.element.setAttribute(
-            jsPropToHtmlProp(k),
-            component.getPrimitive(v, () => DomInterop.updateElement(component))
-          )
-        } else {
-          Object.assign(component.element, {
-            [k]: component.getPrimitive(v, () =>
-              DomInterop.updateElement(component)
-            ),
-          })
-        }
+        DomInterop.applyElementProp(component, k, v)
       }
+    }
+  }
+
+  static applyElementProp(component: Component, k: string, v: any) {
+    if (!component.element) return
+    if (k.includes(":")) return
+    if (["hydrating", "key", "ref", "visible", "watch"].indexOf(k) > -1) return
+
+    if (k === "style") {
+      if (typeof v === "object") {
+        Object.assign(component.element.style, v)
+      } else {
+        component.element.setAttribute("style", v)
+      }
+      return
+    }
+    if (k === "htmlFor" && "htmlFor" in component.element) {
+      component.element.htmlFor = v
+      return
+    }
+    if (k === "contenteditable" && "contentEditable" in component.element) {
+      component.element.contentEditable = v
+      return
+    }
+
+    if (k.startsWith("on")) {
+      Object.assign(component.element, { [k]: v })
+      return
+    }
+    if (component.isSVG()) {
+      component.element.setAttribute(
+        jsPropToHtmlProp(k),
+        component.getPrimitive(v, () => DomInterop.updateElement(component))
+      )
+    } else {
+      Object.assign(component.element, {
+        [k]: component.getPrimitive(v, () =>
+          DomInterop.updateElement(component)
+        ),
+      })
     }
   }
 
