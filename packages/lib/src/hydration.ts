@@ -117,7 +117,7 @@ export class Hydration {
     }
     if (sc?.children && sc.children.length > 0 && c.children.length === 0) {
       const serializedChildrenWithKeys = sc.children.filter(
-        (c) => typeof c === "object" && c.props.key
+        (c) => typeof c === "object" && typeof c.props.key !== "undefined"
       )
       for (let i = 0; i < serializedChildrenWithKeys.length; i++) {
         const sChild = serializedChildrenWithKeys[i] as SerializedComponent
@@ -274,7 +274,7 @@ export class Hydration {
         (cn) =>
           cn instanceof HTMLElement &&
           cn.tagName.toLowerCase() === sc.tag?.toLowerCase() &&
-          cn.getAttribute("key")!.toString() === sc.props.key.toString()
+          cn.getAttribute("key")?.toString() === sc.props.key.toString()
       )
       if (element) {
         newComponent.element = element as HTMLElement
