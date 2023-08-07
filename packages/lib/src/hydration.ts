@@ -132,7 +132,7 @@ export class Hydration {
             parentElement as HTMLElement
           )
           if (!newChild) continue
-          newChild.parent = c
+          if (newChild instanceof Component) newChild.parent = c
           c.children.push(newChild)
         }
       }
@@ -264,7 +264,7 @@ export class Hydration {
   static createKeyNodeChild(
     sc: SerializedComponent,
     parentElement: HTMLElement
-  ): Component | undefined {
+  ): ComponentChild | undefined {
     if (typeof sc === "string" || typeof sc === "number") {
       return sc
     }
