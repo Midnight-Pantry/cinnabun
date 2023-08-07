@@ -6,7 +6,6 @@ export const SignalsExample = () => {
 
   useComputed(() => {
     console.log("count changed", count.value)
-    return 123
   }, [count])
 
   return (
