@@ -20,7 +20,8 @@ export class DomInterop {
   static applyElementProp(component: Component, k: string, v: any) {
     if (!component.element) return
     if (k.includes(":")) return
-    if (["hydrating", "key", "ref", "visible", "watch"].indexOf(k) > -1) return
+    if (["hydrating", "key", "ref", "visible", "watch", "cache"].includes(k))
+      return
 
     if (k === "style") {
       if (typeof v === "object") {
@@ -328,24 +329,24 @@ export class DomInterop {
           }
           case DiffType.NONE:
           default:
-            {
-              // recurse into children and ensure they are up to date
-              const oldC = parent.children.find(
-                (c) => c instanceof Component && c.props.key === diff.key
-              ) as Component
-              const newC = newChildren.find(
-                (c) => c instanceof Component && c.props.key === diff.key
-              )
-              if (newC) Cinnabun.removeComponentReferences(newC)
-              if (oldC && newC) {
-                DomInterop.diffMergeChildren(
-                  oldC,
-                  newC.children.filter(
-                    (c) => c instanceof Component
-                  ) as Component[]
-                )
-              }
-            }
+            // {
+            //   // recurse into children and ensure they are up to date
+            //   const oldC = parent.children.find(
+            //     (c) => c instanceof Component && c.props.key === diff.key
+            //   ) as Component
+            //   const newC = newChildren.find(
+            //     (c) => c instanceof Component && c.props.key === diff.key
+            //   )
+            //   if (newC) Cinnabun.removeComponentReferences(newC)
+            //   if (oldC && newC) {
+            //     DomInterop.diffMergeChildren(
+            //       oldC,
+            //       newC.children.filter(
+            //         (c) => c instanceof Component
+            //       ) as Component[]
+            //     )
+            //   }
+            // }
 
             break
         }

@@ -336,13 +336,6 @@ export class SuspenseComponent extends Component {
   promiseCache: any
   promiseLoading: boolean = true
 
-  constructor(
-    public tag: string,
-    props: SuspenseProps & { children: [ComponentFunc] }
-  ) {
-    super(tag, props)
-  }
-
   get childArgs(): any[] {
     return [this.promiseLoading, this.promiseCache]
   }
@@ -396,8 +389,13 @@ export class SuspenseComponent extends Component {
  * ```
  */
 export const Suspense = (
-  { promise, cache, ...rest }: SuspenseProps,
+  { tag, promise, cache, ...rest }: SuspenseProps & { tag?: string },
   children: [ComponentFunc]
 ) => {
-  return new SuspenseComponent("", { promise, cache, children, ...rest })
+  return new SuspenseComponent(tag ?? "div", {
+    promise,
+    cache,
+    children,
+    ...rest,
+  })
 }

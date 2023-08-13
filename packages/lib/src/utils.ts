@@ -62,6 +62,8 @@ export const validHtmlProps = (props: ComponentProps & Record<string, any>) => {
     if (k === "innerText") return
     if (k === "children") return
     if (k === "promise") return
+    if (k === "ref") return
+    if (k === "cache") return
     if (k === "className") {
       validProps.class = props[k]
       return
