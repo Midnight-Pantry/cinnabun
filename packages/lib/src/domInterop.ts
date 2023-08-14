@@ -50,6 +50,14 @@ export class DomInterop {
         component.getPrimitive(v, () => DomInterop.updateElement(component))
       )
     } else {
+      if (k.includes("-")) {
+        component.element.setAttribute(
+          k,
+          component.getPrimitive(v, () => DomInterop.updateElement(component))
+        )
+        return
+      }
+
       Object.assign(component.element, {
         [k]: component.getPrimitive(v, () =>
           DomInterop.updateElement(component)
