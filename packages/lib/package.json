@@ -1,6 +1,6 @@
 {
   "name": "cinnabun",
-  "version": "0.1.59",
+  "version": "0.1.60",
   "description": "A reactive, component-based web framework built with Typescript & esbuild",
   "repository": {
     "type": "git",
