@@ -336,6 +336,10 @@ export class SuspenseComponent extends Component {
   promiseCache: any
   promiseLoading: boolean = true
 
+  constructor(props: SuspenseProps, children: [ComponentFunc]) {
+    super("", { ...props, children })
+  }
+
   get childArgs(): any[] {
     return [this.promiseLoading, this.promiseCache]
   }
@@ -376,26 +380,33 @@ export class SuspenseComponent extends Component {
 }
 
 /**
- * @description
- * A component that renders a fallback while waiting for a promise to resolve
+ * A component that renders a fallback while waiting for a promise to resolve.
+ * - You can optionally cache the promise result using the **cache** flag.
+ * - When used with SSR you can also:
+ *    - Use the **prefetch** flag to fetch the data and render on the server, resulting in no 'loading' _(this will halt rendering until the promise resolves, but may be useful for SEO or security)_
+ *    - Use the **prefetch:defer** flag to asynchronously load the data on the server and give the results back to the client as part of the initial request
+ * ---
  * @example
+ * ##### - using cache
  * ```tsx
- * <Suspense promise={fetchData}>
+ * <Suspense promise={fetchData} cache>
  *  {(loading, data) => {
- *   if (loading) return <Loading />
+ *    if (loading) return <Loading />
+ *    return <YourComponent data={data} />
+ *  }}
+ * </Suspense>
+ * ```
+ *
+ * ##### - using prefetch:defer
+ * ```tsx
+ * <Suspense promise={fetchData} prefetch:defer>
+ *  {(loading, data) => {
+ *    if (loading) return <Loading />
  *    return <YourComponent data={data} />
  *  }}
  * </Suspense>
  * ```
  */
-export const Suspense = (
-  { tag, promise, cache, ...rest }: SuspenseProps & { tag?: string },
-  children: [ComponentFunc]
-) => {
-  return new SuspenseComponent(tag ?? "div", {
-    promise,
-    cache,
-    children,
-    ...rest,
-  })
+export const Suspense = (props: SuspenseProps, children: [ComponentFunc]) => {
+  return new SuspenseComponent(props, children)
 }
