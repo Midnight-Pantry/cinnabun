@@ -13,7 +13,7 @@ import { socketHandler } from "./socket"
 import { configureAuthRoutes } from "./auth"
 import { configureChatRoutes } from "./chat"
 import { Template } from "../Template"
-import { log } from "../../logger.js"
+import { log } from "../../.cb/logger.js"
 
 const isDev = process.env.NODE_ENV === "development"
 
@@ -101,7 +101,7 @@ const app = fastify()
 configureAuthRoutes(app)
 configureChatRoutes(app)
 if (isDev) {
-  import("../../sse").then(({ configureSSE }) => configureSSE(app))
+  import("../../.cb/sse").then(({ configureSSE }) => configureSSE(app))
 }
 
 app.get("/*", { onRequest: [app.authenticate] }, async (req, res) => {

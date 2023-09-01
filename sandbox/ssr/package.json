@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "build": "node build --prod",
-    "dev": "node build --debug",
-    "prod": "node build --prod && node dist/server",
+    "build": "node .cb/build --prod",
+    "dev": "node .cb/build --debug",
+    "prod": "node .cb/build --prod && node dist/server",
     "test": "echo \"Error: no test specified\""
   },
   "keywords": [],

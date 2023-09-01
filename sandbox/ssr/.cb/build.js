@@ -4,7 +4,10 @@ const { log, fmt } = require("./logger.js")
 
 const { exec, ChildProcess } = require("node:child_process")
 const EventEmitter = require("events")
-const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
+const {
+  regexPatterns,
+  replaceServerFunctions,
+} = require("./transform.plugin.js")
 
 function getArgs() {
   return {
@@ -63,7 +66,7 @@ const sharedSettings = {
   minify: true,
   format: "cjs",
   target: "esnext",
-  tsconfig: "_tsconfig.json",
+  tsconfig: ".cb/_tsconfig.json",
   jsx: "transform",
   jsxFactory: "Cinnabun.h",
   jsxFragment: "Cinnabun.fragment",
