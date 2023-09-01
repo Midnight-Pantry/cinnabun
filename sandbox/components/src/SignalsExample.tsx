@@ -1,12 +1,8 @@
 import * as Cinnabun from "cinnabun"
-import { useComputed, useSignal } from "cinnabun"
+import { useSignal } from "cinnabun"
 
 export const SignalsExample = () => {
   const [count, setCount] = useSignal(0)
-
-  useComputed(() => {
-    console.log("count changed", count.value)
-  }, [count])
 
   return (
     <>
