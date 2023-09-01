@@ -94,6 +94,7 @@ export class RouterComponent extends Component {
 }
 
 if (Cinnabun.isClient) {
+  RouterComponent.pathStore.value = window.location.pathname
   window.addEventListener("popstate", (e) => {
     RouterComponent.pathStore.value =
       (e.target as Window)?.location.pathname ?? "/"
