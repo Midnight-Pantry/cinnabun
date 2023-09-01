@@ -1,0 +1,12 @@
+header {
+  height: 150px;
+  padding: 1rem;
+  color: white;
+  width: 100%;
+  display: flex;
+
+}
+
+.header-logo {
+  max-height: 150px;
+}
