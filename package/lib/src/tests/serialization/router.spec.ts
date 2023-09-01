@@ -10,8 +10,7 @@ describe("When serialized, a Router Component", function () {
     const cinnabunInstance = new Cinnabun()
     cinnabunInstance.setServerRequestData({ path: "/test", data: {} })
 
-    const pathStore = new Signal<string>("/")
-    const router = Router({ store: pathStore }, [
+    const router = Router({ store: new Signal("/") }, [
       Route({
         path: "/",
         component: new Component("h1", { children: ["Home"] }),
@@ -33,7 +32,7 @@ describe("When serialized, a Router Component", function () {
     const cinnabunInstance = new Cinnabun()
     cinnabunInstance.setServerRequestData({ path: "/moose", data: {} })
 
-    const pathStore = new Signal<string>("/moose")
+    const pathStore = new Signal("/moose")
     const router = Router({ store: pathStore }, [
       Route({
         path: "/",
