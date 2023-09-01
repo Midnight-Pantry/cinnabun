@@ -6,4 +6,7 @@ export default defineConfig({
     jsxFactory: "Cinnabun.h",
     jsxFragment: "Cinnabun.fragment",
   },
+  build: {
+    outDir: "../../docs",
+  },
 })

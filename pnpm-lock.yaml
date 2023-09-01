@@ -6,19 +6,6 @@ settings:
 
 importers:
 
-  docs:
-    dependencies:
-      cinnabun:
-        specifier: workspace:^
-        version: link:../package/lib
-    devDependencies:
-      typescript:
-        specifier: ^5.0.2
-        version: 5.1.6
-      vite:
-        specifier: ^4.4.5
-        version: 4.4.9
-
   package/create-cinnabun-app:
     dependencies:
       commander:
@@ -101,6 +88,19 @@ importers:
       vite:
         specifier: ^4.3.3
         version: 4.3.3
+
+  sandbox/docs:
+    dependencies:
+      cinnabun:
+        specifier: workspace:^
+        version: link:../../package/lib
+    devDependencies:
+      typescript:
+        specifier: ^5.0.2
+        version: 5.1.6
+      vite:
+        specifier: ^4.4.5
+        version: 4.4.9
 
   sandbox/ssr:
     dependencies:
