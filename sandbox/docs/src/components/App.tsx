@@ -1,14 +1,17 @@
 import * as Cinnabun from "cinnabun"
 import { Route, Router } from "cinnabun/router"
 import { Header } from "./Header"
+import { Docs } from "./Docs/Page"
+import { pathStore } from "../state"
 
 export const App = () => {
   return (
     <>
       <Header />
       <main>
-        <Router>
+        <Router store={pathStore}>
           <Route path="/" component={<div>Home</div>} />
+          <Route path="/docs" component={Docs} />
         </Router>
       </main>
       <footer></footer>
