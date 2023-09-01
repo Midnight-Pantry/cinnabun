@@ -1,49 +1,32 @@
 import * as Cinnabun from "cinnabun"
 import { Link } from "cinnabun/router"
-import { pathStore } from "./state"
 
 export const Nav = () => (
   <nav>
     <ul>
       <li>
-        <Link to="/" store={pathStore}>
-          Signals
-        </Link>
+        <Link to="/">Signals</Link>
       </li>
       <li>
-        <Link to="/context" store={pathStore}>
-          Context
-        </Link>
+        <Link to="/context">Context</Link>
       </li>
       <li>
-        <Link to="/suspense" store={pathStore}>
-          Suspense
-        </Link>
+        <Link to="/suspense">Suspense</Link>
       </li>
       <li>
-        <Link to="/nested-routing" store={pathStore}>
-          Nested Routing
-        </Link>
+        <Link to="/nested-routing">Nested Routing</Link>
       </li>
       <li>
-        <Link to="/todo" store={pathStore}>
-          ToDo
-        </Link>
+        <Link to="/todo">ToDo</Link>
       </li>
       <li>
-        <Link to="/fc-with-children" store={pathStore}>
-          FC w/ Children
-        </Link>
+        <Link to="/fc-with-children">FC w/ Children</Link>
       </li>
       <li>
-        <Link to="/lazy-list" store={pathStore}>
-          Lazy List
-        </Link>
+        <Link to="/lazy-list">Lazy List</Link>
       </li>
       <li>
-        <Link to="/portals" store={pathStore}>
-          Portals
-        </Link>
+        <Link to="/portals">Portals</Link>
       </li>
     </ul>
   </nav>

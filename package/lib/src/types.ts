@@ -223,7 +223,7 @@ export type RouteProps = {
 }
 
 export type LinkProps = ComponentProps & {
-  store: Signal<string>
+  store?: Signal<string>
   to: string
   activeClass?: string
   useHash?: boolean

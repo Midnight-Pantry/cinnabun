@@ -1,7 +1,6 @@
 import * as Cinnabun from "cinnabun"
 import { useRef } from "cinnabun"
 import { Route, Router } from "cinnabun/router"
-import { pathStore } from "./state"
 import {
   SignalsExample,
   ContextExample,
@@ -22,14 +21,11 @@ export const App = () => {
       <Nav />
 
       <main style="text-align: center; flex-grow: 1">
-        <Router store={pathStore}>
+        <Router>
           <Route path="/" component={<SignalsExample />} />
           <Route path="/context" component={<ContextExample />} />
           <Route path="/suspense" component={<SuspenseExample cache />} />
-          <Route
-            path="/nested-routing"
-            component={<NestedRoutingExample {...{ pathStore }} />}
-          />
+          <Route path="/nested-routing" component={<NestedRoutingExample />} />
           <Route path="/todo" component={<ToDoExample />} />
           <Route
             path="/fc-with-children"

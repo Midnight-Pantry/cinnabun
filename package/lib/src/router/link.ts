@@ -1,7 +1,7 @@
 import { LinkProps } from "../types"
 import { Component, Signal } from ".."
 import { Cinnabun } from "../cinnabun"
-import { matchPath } from "../router"
+import { RouterComponent, matchPath } from "../router"
 
 export const setHash = (store: Signal<string>, newHash: string) => {
   if (store.value === newHash) return
@@ -26,7 +26,7 @@ export const setPath = (
 export const Link = (props: LinkProps, children: Component[]) => {
   const {
     to,
-    store,
+    store = RouterComponent.pathStore,
     className,
     activeClass,
     useHash,

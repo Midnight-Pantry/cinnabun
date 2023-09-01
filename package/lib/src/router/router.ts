@@ -20,15 +20,15 @@ export class RouteComponent extends Component {
 }
 
 export class RouterComponent extends Component {
-  constructor(store: Signal<string>, children: RouteComponent[]) {
+  static pathStore = new Signal<string>("/")
+
+  constructor(
+    store: Signal<string> = RouterComponent.pathStore,
+    children: RouteComponent[]
+  ) {
     if (children.some((c) => !(c instanceof RouteComponent)))
       throw new Error("Must provide Route as child of Router")
 
-    if (Cinnabun.isClient) {
-      window.addEventListener("popstate", (e) => {
-        store.value = (e.target as Window)?.location.pathname ?? "/"
-      })
-    }
     // Sort children by path depth so that the most specific path is matched first
     children.sort((a, b) => {
       return (
@@ -93,12 +93,19 @@ export class RouterComponent extends Component {
   }
 }
 
+if (Cinnabun.isClient) {
+  window.addEventListener("popstate", (e) => {
+    RouterComponent.pathStore.value =
+      (e.target as Window)?.location.pathname ?? "/"
+  })
+}
+
 export const Route = ({ path, component }: RouteProps) => {
   return new RouteComponent(path, component)
 }
 
 export const Router = (
-  { store }: { store: Signal<string> },
+  { store }: { store?: Signal<string> },
   children: RouteComponent[]
 ) => {
   return new RouterComponent(store, children)

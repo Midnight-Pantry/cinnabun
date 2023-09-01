@@ -10,8 +10,6 @@ const getUserDataFromToken = () => {
   return parseJwt(tkn)
 }
 
-export const pathStore = createSignal(isClient ? window.location.pathname : "/")
-
 export const userStore = createSignal<{ username: string } | null>(
   isClient ? getUserDataFromToken() : null
 )
