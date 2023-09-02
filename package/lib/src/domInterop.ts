@@ -193,9 +193,15 @@ export class DomInterop {
   }
 
   static render(component: Component, isRerender: boolean = false) {
-    const { children, subscription, promise } = component.props
-
+    const { children, subscription, promise, renderHtmlAtOwnPeril } =
+      component.props
     Cinnabun.removeComponentReferences(component)
+    if (renderHtmlAtOwnPeril) {
+      const template = document.createElement("template")
+      template.innerHTML = renderHtmlAtOwnPeril()
+      component.mounted = true
+      return template.content
+    }
 
     if (!component.tag) {
       const f = document.createDocumentFragment()

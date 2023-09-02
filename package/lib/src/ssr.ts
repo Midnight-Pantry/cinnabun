@@ -101,6 +101,7 @@ export class SSR {
       onBeforeUnmounted,
       onBeforeServerRendered,
       subscription,
+      renderHtmlAtOwnPeril,
       promise,
       prefetch,
       visible,
@@ -109,6 +110,11 @@ export class SSR {
     } = component.props
 
     const shouldRender = component.shouldRender()
+    if (shouldRender && renderHtmlAtOwnPeril) {
+      const renderResult = renderHtmlAtOwnPeril()
+      SSR.render(renderResult, config, accumulator)
+      return res
+    }
 
     if (shouldRender && subscription) component.subscribeTo(subscription)
     if (shouldRender && onBeforeServerRendered) {

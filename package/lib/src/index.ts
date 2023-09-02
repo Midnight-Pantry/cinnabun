@@ -1,4 +1,4 @@
-export { Component, For, Suspense } from "./component"
+export { Component, For, Suspense, RawHtml } from "./component"
 export {
   Signal,
   createSignal,

@@ -183,13 +183,18 @@ export class Hydration {
       if (child instanceof Signal) {
         DomInterop.renderChild(c, child, i)
       }
+      const parentEl = c.element ?? parentElement
       if (typeof sChild === "string" || typeof sChild === "number") {
-        const el = c.element ?? parentElement
-        Hydration.updateParentOffset(el, 1)
+        Hydration.updateParentOffset(parentEl, 1)
+        continue
+      }
+      if (child instanceof Component && "renderHtmlAtOwnPeril" in child.props) {
+        Hydration.updateParentOffset(parentEl, 1)
+        child.mounted = true
         continue
       }
 
-      Hydration.hydrateComponent(c, child, sChild, c.element ?? parentElement)
+      Hydration.hydrateComponent(c, child, sChild, parentEl)
     }
     c.mounted = true
     c.props.hydrating = false

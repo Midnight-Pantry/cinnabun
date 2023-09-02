@@ -410,3 +410,14 @@ export class SuspenseComponent extends Component {
 export const Suspense = (props: SuspenseProps, children: [ComponentFunc]) => {
   return new SuspenseComponent(props, children)
 }
+
+export const RawHtml = (
+  props: ComponentProps & { html?: string },
+  ...children: string[]
+) => {
+  const { html, ...rest } = props
+  return new Component("", {
+    renderHtmlAtOwnPeril: () => (html ?? "").concat(children.join("")),
+    ...rest,
+  })
+}
