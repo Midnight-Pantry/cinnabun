@@ -18,6 +18,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
+input[type="checkbox"] {
+  min-height: 1.25rem;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -163,4 +167,8 @@ nav a::after {
 
 .gap {
   gap: 1rem;
+}
+
+.gap-sm {
+  gap: .5rem;
 }

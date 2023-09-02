@@ -85,20 +85,23 @@ export const Docs = () => {
 }`}
               />
               <p>
-                In Cinnabun, signals are used to compose simple{" "}
+                In Cinnabun, signals can be used to compose simple{" "}
                 <i>if-this-then-that</i> or <i>when-this-then-that</i> user
                 interfaces. They can be declared anywhere, and modified any how.{" "}
                 <br />
+                <br />
+                Signals can be used to control the visibility of elements, the
+                value of inputs, the content of elements, and more.
+                <br />
+                <br />A signal can be <i>'watched'</i> (subscribed to) by an
+                element, where you can <i>'bind'</i> the specified element
+                attribute or component property to the result of an expression.
+                If you want to use the signal's value for an element attribute,
+                it can be automatically bound using the shorthand syntax.
               </p>
               <CodeBlock
-                code={`const showText = new Signal(true)
-const Greeting = () => {
-  return (
-    <span watch={showText} bind:visible={() => showText.value}>
-      Hello, World!
-    </span>
-  );
-}
+                code={`const showText = new Signal(true) // this could live anywhere :D
+
 const App = () => {
   return (
     <>
@@ -109,13 +112,24 @@ const App = () => {
           showText.value = (e.target as HTMLInputElement).checked
         }}
       />
-      <Greeting />
+      {/* //Alternatively: 
+      <input
+        type="checkbox"
+        watch={showText}
+        bind:checked={() => showText.value}
+        onchange={(e: Event) => {
+          showText.value = (e.target as HTMLInputElement).checked
+        }}
+      /> */}
+      <span watch={showText} bind:visible={() => showText.value}>
+        Hello, World!
+      </span>
     </>
   )
 }
 `}
               />
-              <div className="code-preview flex gap align-items-center">
+              <div className="code-preview flex gap-sm align-items-center">
                 <input
                   type="checkbox"
                   checked={showText}
@@ -123,7 +137,6 @@ const App = () => {
                     showText.value = (e.target as HTMLInputElement).checked
                   }}
                 />
-
                 <span watch={showText} bind:visible={() => showText.value}>
                   Hello, World!
                 </span>
