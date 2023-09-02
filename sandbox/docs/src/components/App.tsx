@@ -10,8 +10,8 @@ export const App = () => {
       <Header />
       <main>
         <Router store={pathStore}>
-          <Route path="/" component={<div>Home</div>} />
-          <Route path="/docs" component={Docs} />
+          <Route path="/cinnabun" component={<div>Home</div>} />
+          <Route path="/cinnabun/docs" component={Docs} />
         </Router>
       </main>
       <footer></footer>

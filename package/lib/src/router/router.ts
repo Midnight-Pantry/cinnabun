@@ -20,7 +20,9 @@ export class RouteComponent extends Component {
 }
 
 export class RouterComponent extends Component {
-  static pathStore = new Signal<string>("/")
+  static pathStore = new Signal<string>(
+    Cinnabun.isClient ? window.location.pathname : "/"
+  )
 
   constructor(
     store: Signal<string> = RouterComponent.pathStore,
