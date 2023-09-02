@@ -61,27 +61,29 @@ header {
   padding: 1rem;
   color: white;
   width: 100%;
-  display: flex;
   background: #392988;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 980px;
+  margin: 0 auto;
 }
 
 header svg {
-  height: 40px;
+  height: 50px;
 }
 
-header h1 {
-  margin: 0;
-  margin-left: 1rem;
-  font-size: 1.5rem;
-  font-weight: 500;
-}
-
-header a, header a:hover {
+header button {
   color: #fff;
-  margin-left: auto;
+  margin-left:auto;
 }
-
 #app {
   flex-direction: column;
   margin: 0;
@@ -95,15 +97,25 @@ main {
   padding: 1rem;
 }
 
+h1 {
+  font-size: 1.5rem;
+  line-height: 1.1;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.15rem;
+}
+
 @media screen and (min-width: 768px) {
   main {
     max-width: 768px;
   }
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
 }
 
 
@@ -205,11 +217,6 @@ nav a::after {
   gap: .5rem;
 }
 
-#getting-started {
-  padding: 1rem;
-  background-color: rgba(255, 255, 255, .075);
-  margin-top: 1rem;
-}
 
 .tab-box {
   display: flex;

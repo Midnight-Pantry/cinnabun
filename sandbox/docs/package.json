@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "cinnabun": "workspace:^",
+    "cinnabun-transitions": "workspace:^",
     "prismjs": "^1.29.0"
   }
 }

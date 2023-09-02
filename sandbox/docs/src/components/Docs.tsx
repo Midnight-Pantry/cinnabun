@@ -3,10 +3,9 @@ import { CodeBlock } from "./CodeBlock"
 
 export const Docs = () => {
   const showText = new Cinnabun.Signal(true)
-
+  const clicks = new Cinnabun.Signal(0)
   return (
     <div>
-      <h1 style="margin-bottom:0">Cinnabun</h1>
       <p className="text-subtext">
         A lightweight library for building reactive web applications with no
         (zero!) dependencies sent to the client and weighing less than 5kb.
@@ -29,15 +28,29 @@ export const Docs = () => {
           When a signal is updated, it will notify all of its subscribers.
         </p>
         <CodeBlock
-          code={`class Signal {
+          code={`class SignalExample {
   constructor(initialValue) {
-    this.value = initialValue
-    this.subscribers = []
+    this.value = initialValue // the value of the signal
+    this.subscribers = [] // array of functions
   }
 
-  subscribe(fn) {
-    this.subscribers.push(fn)
-    fn(this.value)
+  get value() {
+    return this._value
+  }
+  set value(newValue) {
+    this._value = newValue
+    this.notify()
+  }
+
+  notify() {
+    this.subscribers.forEach((subscriber) => {
+      subscriber(this._value)
+    })
+  }
+  
+  subscribe(func) {
+    this.subscribers.add(func)
+    return () => this.unsubscribe(func)
   }
 
   unsubscribe(fn) {
@@ -45,17 +58,21 @@ export const Docs = () => {
       return subscriber !== fn
     })
   }
-
-  update(newValue) {
-    this.value = newValue
-    this.subscribers.forEach((subscriber) => {
-      subscriber(this.value)
-    })
-  }
 }`}
         />
+        <p>In their most basic form, signals can be quite powerful.</p>
+        <CodeBlock
+          code={`const mySignal = new Signal("Hello, World!")
+
+mySignal.subscribe((value) => {
+  console.log(value) // logs "Hello, World!"
+}
+
+mySignal.value = "Goodbye, World!" // logs "Goodbye, World!"`}
+        />
+
         <p>
-          In Cinnabun, signals can be used to compose simple{" "}
+          In Cinnabun, signals are used to compose simple{" "}
           <i>if-this-then-that</i> or <i>when-this-then-that</i> user
           interfaces. They can be declared anywhere, and modified any how.{" "}
           <br />
@@ -69,8 +86,25 @@ export const Docs = () => {
           the signal's value for an element attribute, it can be automatically
           bound using the shorthand syntax.
         </p>
+        <div className="code-preview ">
+          <div className="flex gap-sm align-items-center">
+            <input
+              type="checkbox"
+              checked={showText}
+              onchange={(e: Event) => {
+                showText.value = (e.target as HTMLInputElement).checked
+                clicks.value++
+              }}
+            />
+            <span watch={showText} bind:visible={() => showText.value}>
+              Hello, World!
+            </span>
+          </div>
+          {clicks} clicks
+        </div>
         <CodeBlock
-          code={`const showText = new Signal(true) // this could live anywhere :D
+          code={`const showText = new Signal(true)
+const clicks = new Signal(0)
 
 const App = () => {
   return (
@@ -79,7 +113,8 @@ const App = () => {
         type="checkbox"
         checked={showText}
         onchange={(e: Event) => {
-          showText.value = (e.target as HTMLInputElement).checked
+          showText.value = (e.target as HTMLInputElement).checked;
+          clicks.value++
         }}
       />
       {/* //Alternatively: 
@@ -94,23 +129,13 @@ const App = () => {
       <span watch={showText} bind:visible={() => showText.value}>
         Hello, World!
       </span>
+      <br />
+      {clicks} clicks
     </>
   )
 }
 `}
         />
-        <div className="code-preview flex gap-sm align-items-center">
-          <input
-            type="checkbox"
-            checked={showText}
-            onchange={(e: Event) => {
-              showText.value = (e.target as HTMLInputElement).checked
-            }}
-          />
-          <span watch={showText} bind:visible={() => showText.value}>
-            Hello, World!
-          </span>
-        </div>
       </section>
     </div>
   )

@@ -11,3 +11,12 @@ function getPath(src: string) {
 window.addEventListener("popstate", (e) => {
   pathStore.value = getPath((e.target as Window)?.location.pathname)
 })
+
+export const instructionsModalOpen = createSignal(false)
+instructionsModalOpen.subscribe((open) => {
+  if (open) {
+    document.body.style.overflow = "hidden"
+  } else {
+    document.body.style.overflow = ""
+  }
+})

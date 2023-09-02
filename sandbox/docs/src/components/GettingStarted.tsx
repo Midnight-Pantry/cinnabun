@@ -3,19 +3,18 @@ import { CodeBlock } from "./CodeBlock"
 
 export const GettingStarted = () => {
   return (
-    <section id="getting-started">
-      <h2 style="margin-top:0">Getting Started</h2>
+    <>
       <small style="display:block;margin-bottom:.5rem;">
         <i>
           Recommended: use the{" "}
           <a href="https://www.npmjs.com/package/create-cinnabun-app">
             quick-start CLI tool
           </a>{" "}
-          to quickly scaffold a new project.
+          to skip the boilerplate and quickly scaffold a new project.
         </i>
       </small>
       <Instructions />
-    </section>
+    </>
   )
 }
 
