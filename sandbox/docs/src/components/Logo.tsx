@@ -14,7 +14,7 @@ export const Logo = ({ className = "" }: { className?: string }) => {
           cy="217.05"
           rx="61.747"
           ry="9.5258"
-          fill="#b8b8ba"
+          fill="#222"
           style="paint-order:fill markers stroke"
         />
         <path
