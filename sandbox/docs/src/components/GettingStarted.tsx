@@ -7,7 +7,10 @@ export const GettingStarted = () => {
       <small style="display:block;margin-bottom:.5rem;">
         <i>
           Recommended: use the{" "}
-          <a href="https://www.npmjs.com/package/create-cinnabun-app">
+          <a
+            href="https://www.npmjs.com/package/create-cinnabun-app"
+            target="_new"
+          >
             quick-start CLI tool
           </a>{" "}
           to skip the boilerplate and quickly scaffold a new project.
