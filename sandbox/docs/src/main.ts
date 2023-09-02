@@ -1,5 +1,5 @@
 import "./styles/style.css"
-import "./styles/Navigation.css"
+import "./styles/prism-okaidia.css"
 import { Cinnabun } from "cinnabun"
 import { App } from "./components/App"
 
