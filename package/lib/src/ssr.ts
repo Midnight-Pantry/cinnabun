@@ -4,6 +4,7 @@ import { Component, FragmentComponent } from "./component"
 import { Signal } from "./signal"
 import { ComponentProps, SerializedComponent } from "./types"
 import { generateUUID, validHtmlProps } from "./utils"
+import { CONSTANTS } from "./constants"
 
 export type ServerPromise<T> = Promise<T>
 
@@ -27,10 +28,6 @@ export type SSRConfig = {
 }
 
 export class SSR {
-  static deferredLoaderPrefix = "cb-deferred-loader"
-  static deferralEvtName = "deferral-complete"
-  static deferralScriptIdPrefix = "deferral-"
-
   static async serverBake(
     app: Component,
     config: SSRConfig
@@ -196,7 +193,7 @@ export class SSR {
         if (!component.promiseCache) {
           component.props["cb-deferralId"] = generateUUID()
           SSR.render(
-            `<!--${SSR.deferredLoaderPrefix}:${component.props["cb-deferralId"]}-->`,
+            `<!--${CONSTANTS.ssr_deferredLoaderPrefix}:${component.props["cb-deferralId"]}-->`,
             config,
             accumulator
           )
@@ -208,9 +205,9 @@ export class SSR {
               const deferralId = component.props["cb-deferralId"]
               SSR.render(
                 `<script type="module" id="${
-                  SSR.deferralScriptIdPrefix
+                  CONSTANTS.ssr_deferralScriptIdPrefix
                 }${deferralId}">document.dispatchEvent(new CustomEvent("${
-                  SSR.deferralEvtName
+                  CONSTANTS.ssr_deferralEvtName
                 }",{
             bubbles:true,
             detail: {

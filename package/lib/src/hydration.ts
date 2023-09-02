@@ -1,8 +1,8 @@
 import { Cinnabun } from "./cinnabun"
 import { Component, FragmentComponent, SuspenseComponent } from "./component"
+import { CONSTANTS } from "./constants"
 import { DomInterop } from "./domInterop"
 import { Signal } from "./signal"
-import { SSR } from "./ssr"
 import {
   SSRProps,
   ComponentChild,
@@ -150,7 +150,7 @@ export class Hydration {
         }
         if (
           node.nodeType === Node.COMMENT_NODE &&
-          node.nodeValue?.includes(SSR.deferredLoaderPrefix)
+          node.nodeValue?.includes(CONSTANTS.ssr_deferredLoaderPrefix)
         ) {
           const comment = node
           node = node.nextSibling!
@@ -203,7 +203,7 @@ export class Hydration {
       }
       if (deferralId === parent.props["cb-deferralId"]) {
         const evtScript = document.getElementById(
-          `${SSR.deferralScriptIdPrefix}${deferralId}`
+          `${CONSTANTS.ssr_deferralScriptIdPrefix}${deferralId}`
         )
         if (evtScript) {
           const parentEl = node.parentElement!
@@ -219,11 +219,14 @@ export class Hydration {
         }
       }
       window.removeEventListener(
-        SSR.deferralEvtName,
+        CONSTANTS.ssr_deferralEvtName,
         handleDeferredContentArrival
       )
     }
-    window.addEventListener(SSR.deferralEvtName, handleDeferredContentArrival)
+    window.addEventListener(
+      CONSTANTS.ssr_deferralEvtName,
+      handleDeferredContentArrival
+    )
   }
 
   static updateParentOffset(parentElement: Element | ChildNode, n: number) {
