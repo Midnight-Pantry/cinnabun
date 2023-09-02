@@ -91,7 +91,7 @@ export const App = () => {
 
 <br />
 
-## View more examples and comprehensive usage at https://github.com/Midnight-Pantry/cinnabun/tree/main/apps
+## View more examples and comprehensive usage at https://github.com/Midnight-Pantry/cinnabun/tree/main/sandbox
 
 # Contributors
 
