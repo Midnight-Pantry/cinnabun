@@ -11,12 +11,12 @@ export const Header = () => {
       <nav>
         <ul>
           <li>
-            <Link store={pathStore} to="/">
+            <Link store={pathStore} to="/cinnabun">
               Home
             </Link>
           </li>
           <li>
-            <Link store={pathStore} to="/docs">
+            <Link store={pathStore} to="/cinnabun/docs">
               Docs
             </Link>
           </li>
