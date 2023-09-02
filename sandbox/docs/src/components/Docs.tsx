@@ -6,12 +6,14 @@ export const Docs = () => {
 
   return (
     <div>
-      <h1>What is Cinnabun?</h1>
+      <h1 style="margin-bottom:0">Cinnabun</h1>
       <p className="text-subtext">
-        Cinnabun is a lightweight library for building reactive web applications
-        with no (zero!) dependencies sent to the client and weighing less than
-        5kb.
+        A lightweight library for building reactive web applications with no
+        (zero!) dependencies sent to the client and weighing less than 5kb.
       </p>
+      <br />
+      <hr style="opacity:.3" />
+      <br />
       <h2>Why another framework?</h2>
       <p>
         I wanted to build a framework that was easy to use, understand and

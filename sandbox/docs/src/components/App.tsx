@@ -8,7 +8,6 @@ export const App = () => {
     <>
       <header>
         <Logo />
-        <span style="font-size: 1.5rem;font-weight: bold;">Cinnabun</span>
         <a href="#getting-started">Getting Started</a>
       </header>
       <main>

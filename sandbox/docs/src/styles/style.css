@@ -5,6 +5,7 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.6;
+  letter-spacing: .25px;
   font-weight: 400;
 
   color: rgba(255, 255, 255, 0.87);
@@ -27,6 +28,10 @@ input[type="checkbox"] {
   min-height: 1.25rem;
 }
 
+ul {
+  padding-left: 1.25rem;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -42,7 +47,6 @@ body {
 
 p, span {
   font-weight: lighter;
-  letter-spacing: .25px;
 }
 
 .text-lg {

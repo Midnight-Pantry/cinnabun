@@ -132,7 +132,7 @@ Cinnabun.bake(App(), root)`}
         </li>
       </ul>
       <br />
-      <hr />
+      <hr style="opacity:.3" />
       <i className="text-lg" style="display:block;margin:0;text-align:center;">
         Configuration is done! 👌
       </i>

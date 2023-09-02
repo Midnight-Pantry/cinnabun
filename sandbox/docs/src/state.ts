@@ -1,8 +1,6 @@
-import { Cinnabun, createSignal } from "cinnabun"
+import { createSignal } from "cinnabun"
 
-export const pathStore = createSignal<string>(
-  Cinnabun.isClient ? getPath(window.location.pathname) : "/"
-)
+export const pathStore = createSignal<string>(getPath(window.location.pathname))
 
 function getPath(src: string) {
   return src.length > 1 && src.charAt(src.length - 1) === "/"
@@ -10,8 +8,6 @@ function getPath(src: string) {
     : src
 }
 
-if (Cinnabun.isClient) {
-  window.addEventListener("popstate", (e) => {
-    pathStore.value = getPath((e.target as Window)?.location.pathname)
-  })
-}
+window.addEventListener("popstate", (e) => {
+  pathStore.value = getPath((e.target as Window)?.location.pathname)
+})
