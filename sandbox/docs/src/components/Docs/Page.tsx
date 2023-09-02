@@ -1,8 +1,4 @@
 import * as Cinnabun from "cinnabun"
-import { SideNav } from "./SideNav"
-import { Route, Router } from "cinnabun/router"
-import { DocContent } from "./DocContent"
-import { pathStore } from "../../state"
 
 export const Docs = () => {
   return (
@@ -12,13 +8,16 @@ export const Docs = () => {
           <h1>Docs</h1>
         </div>
         <div className="page-content">
-          <div className="page-content__sidebar">
-            <SideNav />
-          </div>
           <div className="page-content__main">
-            <Router store={pathStore}>
-              <Route path="/:title" component={DocContent} />
-            </Router>
+            <section>
+              <h2>Getting Started</h2>
+              <p>
+                Cinnabun is a library for building web applications. It is
+                designed to be simple, flexible, and fast. It's a
+                zero-dependencies-to-the-client (ZDC) library that ships a tiny
+                bundle weighing around 4kb.
+              </p>
+            </section>
           </div>
         </div>
       </div>
