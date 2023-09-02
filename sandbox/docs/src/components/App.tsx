@@ -1,7 +1,5 @@
 import * as Cinnabun from "cinnabun"
-import { Route, Router } from "cinnabun/router"
 import { Docs } from "./Docs"
-import { pathStore } from "../state"
 import { GettingStarted } from "./GettingStarted"
 import { Logo } from "./Logo"
 
@@ -10,7 +8,7 @@ export const App = () => {
     <>
       <header>
         <Logo />
-        <h1>Cinnabun</h1>
+        <span style="font-size: 1.5rem;font-weight: bold;">Cinnabun</span>
         <a href="#getting-started">Getting Started</a>
       </header>
       <main>

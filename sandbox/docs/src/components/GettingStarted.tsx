@@ -4,7 +4,7 @@ import { CodeBlock } from "./CodeBlock"
 export const GettingStarted = () => {
   return (
     <section id="getting-started">
-      <h2>Getting Started</h2>
+      <h2 style="margin-top:0">Getting Started</h2>
       <small style="display:block;margin-bottom:.5rem;">
         <i>
           Recommended: use the{" "}
@@ -77,15 +77,13 @@ const CsrInstructions = () => {
         </li>
         <li>
           Add the following entry to your typescript config (tsconfig.json):
-          <pre className="code-preview">
-            <code>
-              {`{
+          <CodeBlock
+            code={`{
   ...
   "jsx": "preserve"
   ...
 }`}
-            </code>
-          </pre>
+          />
         </li>
         <li>
           Create a Vite config (vite.config.ts) like so:

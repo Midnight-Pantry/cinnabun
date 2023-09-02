@@ -36,6 +36,7 @@ export const App = () => {
         <h1>Cinnabun JS - SSR</h1>
         <Logo />
       </div>
+
       <br />
       <ProductList />
       <Nav />
@@ -53,7 +54,9 @@ export const App = () => {
             path="/fc-with-children"
             component={
               <FCWithChildrenExample>
-                <h4>This is a Functional Component child!</h4>
+                <Cinnabun.RawHtml>
+                  {"<h4>This is a Functional Component child!</h4>"}
+                </Cinnabun.RawHtml>
               </FCWithChildrenExample>
             }
           />

@@ -5,14 +5,14 @@ export const Docs = () => {
   const showText = new Cinnabun.Signal(true)
 
   return (
-    <article>
-      <h2>What is Cinnabun?</h2>
-      <p>
+    <div>
+      <h1>What is Cinnabun?</h1>
+      <p className="text-subtext">
         Cinnabun is a lightweight library for building reactive web applications
         with no (zero!) dependencies sent to the client and weighing less than
         5kb.
       </p>
-      <h3>Why another framework?</h3>
+      <h2>Why another framework?</h2>
       <p>
         I wanted to build a framework that was easy to use, understand and
         extend. With a moderate understanding of JS and a few basic pub/sub
@@ -20,7 +20,7 @@ export const Docs = () => {
         full-stack web applications with Cinnabun.
       </p>
       <section>
-        <h3>How does it work?</h3>
+        <h2>How does it work?</h2>
         <p>
           Cinnabun uses the Signal concept thoroughly. <i>Everywhere.</i> <br />
           A signal is a reactive object that can be subscribed to and updated.
@@ -110,6 +110,6 @@ const App = () => {
           </span>
         </div>
       </section>
-    </article>
+    </div>
   )
 }
