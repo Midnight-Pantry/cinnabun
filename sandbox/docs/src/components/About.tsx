@@ -1,7 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import { CodeBlock } from "./CodeBlock"
 
-export const Docs = () => {
+export const About = () => {
   const showText = new Cinnabun.Signal(true)
   const clicks = new Cinnabun.Signal(0)
   return (

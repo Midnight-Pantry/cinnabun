@@ -20,3 +20,12 @@ instructionsModalOpen.subscribe((open) => {
     document.body.style.overflow = ""
   }
 })
+
+export const scrolled = createSignal(false)
+const scrollMin = 100
+scrolled.value = window.scrollY > scrollMin
+window.addEventListener("scroll", () => {
+  const isPastMin = window.scrollY > scrollMin
+  if (scrolled.value === isPastMin) return
+  scrolled.value = isPastMin
+})

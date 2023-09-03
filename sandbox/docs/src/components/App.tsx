@@ -1,43 +1,51 @@
 import * as Cinnabun from "cinnabun"
-import { Docs } from "./Docs"
+import { Link, Route, Router } from "cinnabun/router"
+import { About } from "./About"
 import { GettingStarted } from "./GettingStarted"
 import { Logo } from "./Logo"
-import { Modal, ModalBody, ModalHeader } from "./modal/Modal"
-import { instructionsModalOpen } from "../state"
-import { CloseIcon } from "./CloseIcon"
+import { pathStore } from "../state"
+
+const NavLinks = () => {
+  return (
+    <>
+      <Link store={pathStore} to="/getting-started">
+        Get Started
+      </Link>
+      <Link store={pathStore} to="/components">
+        Components
+      </Link>
+    </>
+  )
+}
 
 export const App = () => {
   return (
     <>
       <header>
         <div className="header-inner">
-          <Logo />
-          <h1 style="margin:0; color: rgba(255,255,255,.85);">Cinnabun</h1>
-          <button onclick={() => (instructionsModalOpen.value = true)}>
-            Get Started
-          </button>
+          <Link store={pathStore} to="/">
+            <Logo />
+          </Link>
+
+          <nav>
+            <Link store={pathStore} to="/">
+              Cinnabun
+            </Link>
+            <NavLinks />
+          </nav>
         </div>
+        <nav className="mobile">
+          <NavLinks />
+        </nav>
       </header>
+
       <main>
-        <Docs />
+        <Router store={pathStore}>
+          <Route path="/" component={About} />
+          <Route path="/getting-started" component={GettingStarted} />
+        </Router>
       </main>
       <footer></footer>
-      <Modal
-        visible={instructionsModalOpen}
-        toggle={() => (instructionsModalOpen.value = false)}
-      >
-        <ModalHeader>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <h3 className="modal-title">Getting Started</h3>
-            <button onclick={() => (instructionsModalOpen.value = false)}>
-              <CloseIcon />
-            </button>
-          </div>
-        </ModalHeader>
-        <ModalBody>
-          <GettingStarted />
-        </ModalBody>
-      </Modal>
     </>
   )
 }
