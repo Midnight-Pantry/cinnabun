@@ -16,6 +16,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 130px;
+}
+
+@media screen and (min-width:768px) {
+  :root {
+    scroll-padding-top: 100px;
+  }
 }
 
 @media screen and (prefers-reduced-motion: reduce) {
@@ -81,7 +88,13 @@ header:before {
 }
 
 header svg {
-  height: 50px;
+  height: 36px;
+}
+
+@media screen and (min-width:768px) {
+  header svg {
+    height: 50px;
+  }
 }
 
 .header-inner {
@@ -114,6 +127,16 @@ header nav {
 
 header nav.mobile {
   background: #231760;
+}
+
+footer {
+  width: 100%;
+  text-align: center;
+  background: rgba(0, 0, 0, .15);
+}
+
+.heart {
+  color: #ef364c;
 }
 
 

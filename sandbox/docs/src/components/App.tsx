@@ -4,12 +4,13 @@ import { About } from "./About"
 import { GettingStarted } from "./GettingStarted"
 import { Logo } from "./Logo"
 import { pathStore } from "../state"
+import { Components } from "./Components"
 
 const NavLinks = () => {
   return (
     <>
       <Link store={pathStore} to="/getting-started">
-        Get Started
+        Getting Started
       </Link>
       <Link store={pathStore} to="/components">
         Components
@@ -23,14 +24,10 @@ export const App = () => {
     <>
       <header>
         <div className="header-inner">
-          <Link store={pathStore} to="/">
+          <Link className="flex" store={pathStore} to="/">
             <Logo />
           </Link>
-
           <nav>
-            <Link store={pathStore} to="/">
-              Cinnabun
-            </Link>
             <NavLinks />
           </nav>
         </div>
@@ -43,9 +40,23 @@ export const App = () => {
         <Router store={pathStore}>
           <Route path="/" component={About} />
           <Route path="/getting-started" component={GettingStarted} />
+          <Route path="/components" component={Components} />
         </Router>
       </main>
-      <footer></footer>
+      <footer>
+        <p>
+          <small>
+            Made with <span className="heart">❤</span> by{" "}
+            <a
+              href="https://github.com/Midnight-Pantry"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              The Midnight Pantry
+            </a>
+          </small>
+        </p>
+      </footer>
     </>
   )
 }

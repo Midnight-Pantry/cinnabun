@@ -2,6 +2,7 @@ import * as Cinnabun from "cinnabun"
 import { CodeBlock } from "./CodeBlock"
 
 export const GettingStarted = () => {
+  document.title = "Cinnabun - Getting Started"
   return (
     <>
       <small style="display:block;margin-bottom:.5rem;">
@@ -132,12 +133,10 @@ Cinnabun.bake(App(), root)`}
           </strong>{" "}
           to start the dev server
         </li>
+        <li>
+          Good to go! <span className="text-lg">🥳🎉</span>
+        </li>
       </ul>
-      <br />
-      <hr style="opacity:.3" />
-      <i className="text-lg" style="display:block;margin:0;text-align:center;">
-        Configuration is done! 👌
-      </i>
     </div>
   )
 }

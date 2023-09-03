@@ -2,6 +2,7 @@ import * as Cinnabun from "cinnabun"
 import { CodeBlock } from "./CodeBlock"
 
 export const About = () => {
+  document.title = "Cinnabun"
   const showText = new Cinnabun.Signal(true)
   const clicks = new Cinnabun.Signal(0)
   return (
