@@ -7,8 +7,9 @@ export const Docs = () => {
   return (
     <div>
       <p className="text-subtext">
-        A lightweight library for building reactive web applications with no
-        (zero!) dependencies sent to the client and weighing less than 5kb.
+        A lightweight framework/library for building reactive web applications
+        with no (zero!) dependencies sent to the client and weighing less than
+        5kb.
       </p>
       <br />
       <hr style="opacity:.3" />
@@ -112,8 +113,8 @@ const App = () => {
       <input
         type="checkbox"
         checked={showText}
-        onchange={(e: Event) => {
-          showText.value = (e.target as HTMLInputElement).checked;
+        onchange={(e) => {
+          showText.value = e.target.checked
           clicks.value++
         }}
       />
@@ -122,8 +123,9 @@ const App = () => {
         type="checkbox"
         watch={showText}
         bind:checked={() => showText.value}
-        onchange={(e: Event) => {
-          showText.value = (e.target as HTMLInputElement).checked
+        onchange={(e) => {
+          showText.value = e.target.checked
+          clicks.value++
         }}
       /> */}
       <span watch={showText} bind:visible={() => showText.value}>
