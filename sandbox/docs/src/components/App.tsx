@@ -9,10 +9,10 @@ import { Components } from "./Components"
 const NavLinks = () => {
   return (
     <>
-      <Link store={pathStore} to="/getting-started">
+      <Link store={pathStore} to="/cinnabun/getting-started">
         Getting Started
       </Link>
-      <Link store={pathStore} to="/components">
+      <Link store={pathStore} to="/cinnabun/components">
         Components
       </Link>
     </>
@@ -24,7 +24,7 @@ export const App = () => {
     <>
       <header>
         <div className="header-inner">
-          <Link className="flex" store={pathStore} to="/">
+          <Link className="flex" store={pathStore} to="/cinnabun">
             <Logo />
           </Link>
           <nav>
@@ -38,9 +38,9 @@ export const App = () => {
 
       <main>
         <Router store={pathStore}>
-          <Route path="/" component={About} />
-          <Route path="/getting-started" component={GettingStarted} />
-          <Route path="/components" component={Components} />
+          <Route path="/cinnabun" component={About} />
+          <Route path="/cinnabun/getting-started" component={GettingStarted} />
+          <Route path="/cinnabun/components" component={Components} />
         </Router>
       </main>
       <footer>
