@@ -4,6 +4,8 @@ import { Component } from "../component"
 type ViewportListenerEvent = {
   width: number
   height: number
+  scrollX: number
+  scrollY: number
   landscape: boolean
 }
 
@@ -19,6 +21,8 @@ export const ViewportListener = ({
   let state: ViewportListenerEvent = {
     width: 0,
     height: 0,
+    scrollX: 0,
+    scrollY: 0,
     landscape: false,
   }
   let lastState: ViewportListenerEvent = { ...state }
@@ -28,6 +32,8 @@ export const ViewportListener = ({
     state = {
       width: window.innerWidth,
       height: window.innerHeight,
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
       landscape: window.innerWidth > window.innerHeight,
     }
   }
@@ -36,11 +42,14 @@ export const ViewportListener = ({
     onMounted() {
       if (!Cinnabun.isClient) return
       window.addEventListener("resize", handleResize)
+      document.addEventListener("scroll", handleResize)
       interval = window.setInterval(() => {
         if (
           state.width === lastState.width &&
           state.height === lastState.height &&
-          state.landscape === lastState.landscape
+          state.landscape === lastState.landscape &&
+          state.scrollX === lastState.scrollX &&
+          state.scrollY === lastState.scrollY
         )
           return
         lastState = { ...state }
@@ -50,6 +59,7 @@ export const ViewportListener = ({
     onUnmounted() {
       if (!Cinnabun.isClient) return
       window.removeEventListener("resize", handleResize)
+      document.removeEventListener("scroll", handleResize)
       if (typeof interval !== "undefined") {
         window.clearInterval(interval)
         interval = undefined
