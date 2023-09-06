@@ -1,6 +1,6 @@
-import { Component, Signal } from "../.."
-import { Cinnabun } from "../../cinnabun"
-import { SSR } from "../../ssr"
+import { Component, Signal } from "../../index.js"
+import { Cinnabun } from "../../cinnabun.js"
+import { SSR } from "../../ssr.js"
 import { expect } from "chai"
 import "mocha"
 

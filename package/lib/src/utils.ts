@@ -1,5 +1,5 @@
-import { Signal } from "./signal"
-import { ComponentProps } from "./types"
+import { Signal } from "./signal.js"
+import { ComponentProps } from "./types.js"
 
 export const sleep = async (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -68,7 +68,7 @@ export const validHtmlProps = (props: ComponentProps & Record<string, any>) => {
       validProps.class = props[k]
       return
     }
-    if (props[k] instanceof Signal) {
+    if (Signal.isSignal(props[k])) {
       validProps[k] = props[k].value
       return
     }

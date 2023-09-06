@@ -1,5 +1,5 @@
-import { Component } from "./"
-import { Signal } from "./"
+import { Component } from "./component.js"
+import { Signal } from "./signal.js"
 
 export type ClassConstructor<InstanceType = any> = {
   new (...args: any[]): InstanceType

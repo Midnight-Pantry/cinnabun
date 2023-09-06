@@ -40,7 +40,7 @@ export const KeyboardListener = (
   }
 
   function componentIsTarget(c: ComponentChild, e: Event) {
-    if (c instanceof Component) {
+    if (Component.isComponent(c)) {
       if (e.target === c.element) return true
       const childIsTarget = c.children.some((child) =>
         componentIsTarget(child, e)

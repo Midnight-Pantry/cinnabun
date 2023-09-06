@@ -1,15 +1,15 @@
-import { Cinnabun } from "./cinnabun"
-import { Component, FragmentComponent, SuspenseComponent } from "./component"
-import { CONSTANTS } from "./constants"
-import { DomInterop } from "./domInterop"
-import { Signal } from "./signal"
+import { Cinnabun } from "./cinnabun.js"
+import { Component, FragmentComponent, SuspenseComponent } from "./component.js"
+import { CONSTANTS } from "./constants.js"
+import { DomInterop } from "./domInterop.js"
+import { Signal } from "./signal.js"
 import {
   SSRProps,
   ComponentChild,
   SerializedComponent,
   LazyComponentModule,
   ComponentProps,
-} from "./types"
+} from "./types.js"
 
 export class Hydration {
   static validate(component: Component) {
@@ -23,7 +23,7 @@ export class Hydration {
         console.error("component hydration failed", component)
     }
     for (const c of component.children) {
-      if (c instanceof Component) Hydration.validate(c)
+      if (Component.isComponent(c)) Hydration.validate(c)
     }
   }
   static hydrate(app: Component, ssrProps: SSRProps) {
@@ -79,7 +79,7 @@ export class Hydration {
   ) {
     if (!c) return
 
-    if (typeof c === "string" || typeof c === "number" || c instanceof Signal) {
+    if (typeof c === "string" || typeof c === "number" || Signal.isSignal(c)) {
       Hydration.updateParentOffset(parentElement, 1)
       return
     }
@@ -93,7 +93,7 @@ export class Hydration {
         : c(...parent.childArgs)
 
       if (Array.isArray(val)) val = new FragmentComponent(val)
-      if (val instanceof Component) {
+      if (Component.isComponent(val)) {
         if (!val.shouldRender()) return
         DomInterop.removeFuncComponents(parent)
         Hydration.hydrateComponent(parent, val, sc, parentElement)
@@ -111,7 +111,7 @@ export class Hydration {
     if (sc?.props && Object.keys(sc.props).length) {
       for (const [k, v] of Object.entries(sc.props)) {
         const curProp = c.props[k]
-        if (curProp instanceof Signal) continue
+        if (Signal.isSignal(curProp)) continue
         c.props[k] = v
       }
     }
@@ -132,7 +132,7 @@ export class Hydration {
             parentElement as HTMLElement
           )
           if (!newChild) continue
-          if (newChild instanceof Component) newChild.parent = c
+          if (Component.isComponent(newChild)) newChild.parent = c
           c.children.push(newChild)
         }
       }
@@ -180,7 +180,7 @@ export class Hydration {
       const child = c.children[i]
       const sChild = sc?.children ? sc.children[i] : ({} as SerializedComponent)
 
-      if (child instanceof Signal) {
+      if (Signal.isSignal(child)) {
         DomInterop.renderChild(c, child, i)
       }
       const parentEl = c.element ?? parentElement
@@ -188,7 +188,10 @@ export class Hydration {
         Hydration.updateParentOffset(parentEl, 1)
         continue
       }
-      if (child instanceof Component && "renderHtmlAtOwnPeril" in child.props) {
+      if (
+        Component.isComponent(child) &&
+        "renderHtmlAtOwnPeril" in child.props
+      ) {
         Hydration.updateParentOffset(parentEl, 1)
         child.mounted = true
         continue

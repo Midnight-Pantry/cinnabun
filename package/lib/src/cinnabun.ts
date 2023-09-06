@@ -1,7 +1,7 @@
-import { Component } from "."
-import { DomInterop } from "./domInterop"
-import { ClassConstructor, WatchedElementRef } from "./types"
-export { h, fragment } from "."
+import { Component } from "./component.js"
+import { DomInterop } from "./domInterop.js"
+import { ClassConstructor, WatchedElementRef } from "./types.js"
+export { h, fragment } from "./index.js"
 
 export type RuntimeService<Class> = InstanceType<ClassConstructor<Class>>
 
@@ -77,7 +77,7 @@ export class Cinnabun {
 
   static removeComponentChildReferences(component: Component) {
     for (const c of component.children) {
-      if (c instanceof Component) Cinnabun.removeComponentReferences(c)
+      if (Component.isComponent(c)) Cinnabun.removeComponentReferences(c)
     }
   }
 

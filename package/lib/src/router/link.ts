@@ -1,7 +1,8 @@
-import { LinkProps } from "../types"
-import { Component, Signal } from ".."
-import { Cinnabun } from "../cinnabun"
-import { RouterComponent, matchPath } from "../router"
+import { LinkProps } from "../types.js"
+import { Component, Signal } from "../index.js"
+import { Cinnabun } from "../cinnabun.js"
+import { RouterComponent } from "./router.js"
+import { matchPath } from "./index.js"
 
 export const setHash = (store: Signal<string>, newHash: string) => {
   if (store.value === newHash) return

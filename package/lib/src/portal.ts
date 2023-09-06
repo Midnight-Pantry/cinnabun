@@ -1,6 +1,6 @@
-import { Cinnabun } from "./cinnabun"
-import { Component, FragmentComponent } from "./component"
-import { ComponentChildren } from "./types"
+import { Cinnabun } from "./cinnabun.js"
+import { Component, FragmentComponent } from "./component.js"
+import { ComponentChildren } from "./types.js"
 
 const portalRoots: Record<string, Component> = {}
 

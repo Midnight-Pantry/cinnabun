@@ -1,16 +1,16 @@
-export { Component, For, Suspense, RawHtml } from "./component"
+export { Component, For, Suspense, RawHtml } from "./component.js"
 export {
   Signal,
   createSignal,
   computed,
   useComputed,
   useSignal,
-} from "./signal"
-export { createPortal } from "./portal"
-export { useRef } from "./ref"
+} from "./signal.js"
+export { createPortal } from "./portal.js"
+export { useRef } from "./ref.js"
 
-import { FragmentComponent, Component } from "./component"
-import { ComponentChildren, ComponentProps, JSXProps, Tag } from "./types"
+import { FragmentComponent, Component } from "./component.js"
+import { ComponentChildren, ComponentProps, JSXProps, Tag } from "./types.js"
 
 declare global {
   namespace JSX {

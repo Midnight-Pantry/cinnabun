@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "CommonJS",
+    "module": "ES2020",
     "lib": ["ESNext", "DOM", "dom.iterable"],
     "types": ["node"],
     "moduleResolution": "Node",

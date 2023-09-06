@@ -1,18 +1,17 @@
-import { Cinnabun } from "./cinnabun"
-import { DomInterop } from "./domInterop"
+import { Cinnabun } from "./cinnabun.js"
+import { DomInterop } from "./domInterop.js"
 
-import { Signal } from "./signal"
+import { Signal } from "./signal.js"
 import {
   ComponentSubscription,
   ComponentProps,
   ComponentChild,
-  ClassConstructor,
   ComponentChildren,
   TemplateFunc,
   ForProps,
   SuspenseProps,
   ComponentFunc,
-} from "./types"
+} from "./types.js"
 
 export class Component {
   parent: Component | null = null
@@ -21,6 +20,31 @@ export class Component {
   element: HTMLElement | SVGSVGElement | undefined
   cbInstance: Cinnabun | undefined
   isStatic: boolean = false
+
+  static isComponent(obj: any): obj is Component {
+    if (typeof obj !== "object") return false
+    return (
+      obj instanceof Component ||
+      [
+        "parent",
+        "children",
+        "funcComponents",
+        "element",
+        "cbInstance",
+        "isStatic",
+        "props",
+      ].every((k) => k in obj)
+    )
+  }
+
+  static isComponentChild(obj: any): obj is ComponentChild {
+    return (
+      typeof obj === "string" ||
+      typeof obj === "number" ||
+      typeof obj === "function" ||
+      Component.isComponent(obj)
+    )
+  }
 
   private _mounted: boolean = false
   get mounted() {
@@ -104,7 +128,7 @@ export class Component {
   }
 
   getPrimitive(prop: any, signalCallback?: { (): void }): any {
-    if (prop instanceof Signal) {
+    if (Signal.isSignal(prop)) {
       if (signalCallback)
         this.subscribeTo((_, __) => prop.subscribe(signalCallback.bind(this)))
       return prop.value
@@ -131,7 +155,7 @@ export class Component {
   removeChildren(...children: ComponentChildren) {
     for (const child of children) {
       const idx = this.children.indexOf(child)
-      if (child instanceof Component) {
+      if (Component.isComponent(child)) {
         this.destroyComponentRefs(child)
         child.parent = null
         DomInterop.unRender(child)
@@ -143,7 +167,7 @@ export class Component {
   insertChildren(index: number, ...children: ComponentChildren) {
     this.children.splice(index, 0, ...children)
     for (const child of children) {
-      if (child instanceof Component) {
+      if (Component.isComponent(child)) {
         child.parent = this
         DomInterop.reRender(child)
       }
@@ -153,7 +177,7 @@ export class Component {
   appendChildren(...children: ComponentChildren) {
     this.children.push(...children)
     for (const child of children) {
-      if (child instanceof Component) {
+      if (Component.isComponent(child)) {
         child.parent = this
         DomInterop.reRender(child)
       }
@@ -163,7 +187,7 @@ export class Component {
   prependChildren(...children: ComponentChildren) {
     this.children.unshift(...children)
     for (const child of children) {
-      if (child instanceof Component) {
+      if (Component.isComponent(child)) {
         child.parent = this
         DomInterop.reRender(child)
       }
@@ -189,7 +213,7 @@ export class Component {
   linkChildren() {
     for (let i = 0; i < this.children.length; i++) {
       const c = this.children[i]
-      if (c instanceof Component) {
+      if (Component.isComponent(c)) {
         c.parent = this
         c.cbInstance = this.cbInstance
         c.linkChildren()
@@ -228,21 +252,9 @@ export class Component {
     if (this.props.onDestroyed) this.props.onDestroyed(this)
   }
 
-  getParentOfType<Class extends ClassConstructor<Component>>(
-    classRef: Class
-  ): InstanceType<Class> | undefined {
-    if (!this.parent) return undefined
-
-    if (this.parent instanceof classRef)
-      return this.parent as InstanceType<Class>
-
-    //@ts-ignore (screw typescript, this is correct)
-    return this.parent.getParentOfType(classRef)
-  }
-
   unMount() {
     for (const c of this.children) {
-      if (c instanceof Component) c.unMount()
+      if (Component.isComponent(c)) c.unMount()
     }
     this.mounted = false
   }
@@ -250,7 +262,7 @@ export class Component {
   recursiveCall(func: { (c: Component): void }) {
     func(this)
     for (const c of this.children) {
-      if (c instanceof Component) c.recursiveCall(func)
+      if (Component.isComponent(c)) c.recursiveCall(func)
     }
   }
 
@@ -278,7 +290,7 @@ export class FragmentComponent extends Component {
 
 export class ForComponent<T> extends Component {
   constructor(items: Signal<T[]> | T[], mapPredicate: TemplateFunc<T>) {
-    const reactiveItems = items instanceof Signal ? items : new Signal(items)
+    const reactiveItems = Signal.isSignal(items) ? items : new Signal(items)
 
     super("", {
       subscription: (_, self) =>
@@ -289,7 +301,7 @@ export class ForComponent<T> extends Component {
           let uniqueKeys = true
           for (const child of newChildren) {
             //prettier-ignore
-            if (newChildren.filter((c) => c.props.key === child.props.key).length > 1) {
+            if (newChildren.filter((c:Component) => c.props.key === child.props.key).length > 1) {
               uniqueKeys = false
               console.error("non-unique key found in <For/>", child.props.key)
               console.error(

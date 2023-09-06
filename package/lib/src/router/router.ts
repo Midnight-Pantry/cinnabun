@@ -1,10 +1,11 @@
-import { matchPath } from "."
-import { Signal, Component } from ".."
-import { Cinnabun } from "../cinnabun"
-import { DomInterop } from "../domInterop"
-import { ComponentChild, PropsSetter, RouteProps } from "../types"
+import { matchPath } from "./index.js"
+import { Signal, Component } from "../index.js"
+import { Cinnabun } from "../cinnabun.js"
+import { DomInterop } from "../domInterop.js"
+import { ComponentChild, PropsSetter, RouteProps } from "../types.js"
 
 export class RouteComponent extends Component {
+  isRouteComponent: boolean = true
   constructor(path: string, component: ComponentChild) {
     super("", {
       path,
@@ -16,6 +17,11 @@ export class RouteComponent extends Component {
 
   get childArgs() {
     return [{ params: this.props.params, query: this.props.query }]
+  }
+
+  static isRouteComponent(val: any): val is RouteComponent {
+    if (typeof val !== "object") return false
+    return val instanceof RouteComponent || "isRouteComponent" in val
   }
 }
 
@@ -72,13 +78,28 @@ export class RouterComponent extends Component {
 
   getParentPath() {
     let parentPath = ""
-    let parentRoute = this.getParentOfType(RouteComponent)
+    let parentRoute = this.getParentRoute(this)
 
     while (parentRoute) {
       parentPath = parentRoute.props.path + parentPath
-      parentRoute = parentRoute.getParentOfType(RouteComponent)
+      parentRoute = this.getParentRoute(parentRoute)
     }
     return parentPath
+  }
+
+  getParentRoute(component: Component) {
+    if (!component.parent) return undefined
+
+    if (RouteComponent.isRouteComponent(component.parent))
+      return component.parent
+
+    let parent: Component | null = component.parent
+
+    while (parent) {
+      if (RouteComponent.isRouteComponent(parent)) return parent
+      parent = parent.parent
+    }
+    return undefined
   }
 
   matchRoute(

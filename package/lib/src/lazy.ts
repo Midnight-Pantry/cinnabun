@@ -1,6 +1,6 @@
-import { FragmentComponent, SuspenseComponent } from "./component"
-import { Hydration } from "./hydration"
-import { ComponentProps, LazyComponentModule } from "./types"
+import { FragmentComponent, SuspenseComponent } from "./component.js"
+import { Hydration } from "./hydration.js"
+import { ComponentProps, LazyComponentModule } from "./types.js"
 
 export const lazy = (
   modulePromise: LazyComponentModule,

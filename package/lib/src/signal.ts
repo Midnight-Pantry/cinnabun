@@ -11,6 +11,13 @@ export class Signal<T> {
     this._name = name
   }
 
+  static isSignal(val: any): val is Signal<any> {
+    if (typeof val !== "object") return false
+    return (
+      val instanceof Signal || ["_val", "_subscribers"].every((k) => k in val)
+    )
+  }
+
   get value() {
     return this._val
   }

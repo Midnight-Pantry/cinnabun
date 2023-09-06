@@ -1,8 +1,8 @@
-import { Component, Signal } from "."
-import { Cinnabun } from "./cinnabun"
-import { FragmentComponent } from "./component"
-import { ComponentChild, DiffCheckResult, DiffType } from "./types"
-import { jsPropToHtmlProp, validHtmlProps } from "./utils"
+import { Signal } from "./index.js"
+import { Cinnabun } from "./cinnabun.js"
+import { Component, FragmentComponent } from "./component.js"
+import { ComponentChild, DiffCheckResult, DiffType } from "./types.js"
+import { jsPropToHtmlProp, validHtmlProps } from "./utils.js"
 
 export class DomInterop {
   static updateElement(component: Component) {
@@ -86,7 +86,7 @@ export class DomInterop {
     child: ComponentChild,
     idx: number
   ): string | Node {
-    if (child instanceof Signal) {
+    if (Signal.isSignal(child)) {
       component.subscribeTo((_, __) =>
         child.subscribe(() => {
           const { element } = component.element
@@ -106,7 +106,7 @@ export class DomInterop {
       )
       return child.value.toString()
     }
-    if (child instanceof Component) {
+    if (Component.isComponent(child)) {
       if (!child.props.visible || child.isStatic) return ""
       child.parent = component
       return DomInterop.render(child)
@@ -115,7 +115,7 @@ export class DomInterop {
       let c = child(...component.childArgs)
       if (Array.isArray(c)) c = new FragmentComponent(c)
       const res = DomInterop.renderChild(component, c, idx)
-      if (c instanceof Component) {
+      if (Component.isComponent(c)) {
         if (!c.props.visible || c.isStatic) return ""
         c.parent = component
         component.funcComponents.push(c)
@@ -158,7 +158,7 @@ export class DomInterop {
       component.unMount()
 
       for (const c of component.children) {
-        if (c instanceof Component) {
+        if (Component.isComponent(c)) {
           DomInterop.unRender(c)
         } else if (c instanceof Node) {
           c.parentNode?.removeChild(c)
@@ -434,7 +434,7 @@ export class DomInterop {
 
   static getRenderedNodeCount(child: ComponentChild): number {
     let count = 0
-    if (child instanceof Component) {
+    if (Component.isComponent(child)) {
       if (!child.props.visible) return 0
       if (child.tag) return 1
 

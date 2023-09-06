@@ -1,10 +1,10 @@
 import { Writable } from "stream"
-import { Cinnabun } from "./cinnabun"
-import { Component, FragmentComponent } from "./component"
-import { Signal } from "./signal"
-import { ComponentProps, SerializedComponent } from "./types"
-import { generateUUID, validHtmlProps } from "./utils"
-import { CONSTANTS } from "./constants"
+import { Cinnabun } from "./cinnabun.js"
+import { Component, FragmentComponent } from "./component.js"
+import { Signal } from "./signal.js"
+import { ComponentProps, SerializedComponent } from "./types.js"
+import { generateUUID, validHtmlProps } from "./utils.js"
+import { CONSTANTS } from "./constants.js"
 
 export type ServerPromise<T> = Promise<T>
 
@@ -25,6 +25,7 @@ type Accumulator = {
 export type SSRConfig = {
   cinnabunInstance: Cinnabun
   stream: Writable | null
+  disableJs?: boolean
 }
 
 export class SSR {
@@ -45,14 +46,15 @@ export class SSR {
         `render time: ${Number(performance.now() - startTime).toFixed(3)}ms`
       )
     }
-
-    SSR.render(
-      `<script id="server-props">window.__cbData={root:document.documentElement,component:${JSON.stringify(
-        { children: [serialized], props: {} }
-      )}}</script><script src="/static/index.js" type="module"></script>`,
-      config,
-      accumulator
-    )
+    if (!config.disableJs) {
+      SSR.render(
+        `<script id="server-props">window.__cbData={root:document.documentElement,component:${JSON.stringify(
+          { children: [serialized], props: {} }
+        )}}</script><script src="/static/index.js" type="module"></script>`,
+        config,
+        accumulator
+      )
+    }
 
     if (accumulator.promiseQueue.length) {
       await Promise.allSettled(
@@ -238,12 +240,12 @@ export class SSR {
         continue
       }
 
-      if (c instanceof Signal) {
+      if (Signal.isSignal(c)) {
         if (shouldRender) SSR.render(c.value.toString(), config, accumulator)
         res.push(c.value.toString())
         continue
       }
-      if (typeof c === "object" && !(c instanceof Component)) {
+      if (typeof c === "object" && !Component.isComponent(c)) {
         //just a safety thing, so we see '[Object object]' in the frontend
         //instead of crashing from trying to serialize the object as a component
 
@@ -257,7 +259,7 @@ export class SSR {
         try {
           let val = c(...component.childArgs)
           if (Array.isArray(val)) val = new FragmentComponent(val)
-          if (val instanceof Component) {
+          if (Component.isComponent(val)) {
             val.parent = component
             const sc = await SSR.serialize(accumulator, val, config)
             res.push(sc)
