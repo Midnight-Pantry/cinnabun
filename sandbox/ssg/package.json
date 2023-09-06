@@ -1,0 +1,21 @@
+{
+  "name": "ssg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node .cb/build --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cinnabun": "workspace:^"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.2",
+    "glob": "^10.3.4",
+    "tree-kill": "^1.2.2"
+  }
+}
